@@ -1,4 +1,4 @@
-import styles from '../styles/Contact_button.module.css';
+import styles from '../styles/ContactButton.module.css';
 
 type ImgProps = {
   imgProps: {

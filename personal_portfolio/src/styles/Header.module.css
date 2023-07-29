@@ -1,9 +1,25 @@
-ul {
+.contactsButtonUl {
     margin: 0;
     padding: 0;
 }
 
-ul > li {
+.languageButtonUl {
+    margin: 0;
+    padding: 0;
+}
+
+.languageButtonUl > li {
     display: inline-block;
     list-style: none;
 }
+
+.contactsButtonUl > li {
+    display: inline-block;
+    list-style: none;
+}
+
+.h1Header {
+    display: flex;
+    justify-content: space-between;  
+}
+

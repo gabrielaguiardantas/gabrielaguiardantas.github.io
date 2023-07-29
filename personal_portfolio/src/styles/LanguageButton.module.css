@@ -1,0 +1,12 @@
+.languageButton {
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-size: cover;
+    border: none;
+    cursor: pointer;
+    overflow: hidden;
+    outline: none;
+    border-image-repeat: stretch;
+    box-sizing: border-box;
+    height: 40%;
+}
