@@ -1,0 +1,34 @@
+nav {
+    margin: 0;
+    padding: 0;
+    position: fixed;
+    z-index: 1;
+    width: 0%;
+    top: 65%;
+    transform: translate(-50%, -50%);
+    letter-spacing: -.095em;
+}
+  
+nav a {
+    text-decoration: none;
+    position: relative; 
+    display: block;
+    height: 60px;
+    line-height: 23px;
+    font-size: 30px;
+    color: inherit;
+    transition: .5s;
+    text-transform: capitalize;
+}
+
+nav a:hover {
+    color: #6eb40a;
+    text-shadow: 0 0 5px #6eb40a;
+}
+
+.active {
+    color: #6eb40a;
+    text-shadow: 0 0 5px #6eb40a;
+    font-size: 5rem;
+}
+
