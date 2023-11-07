@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import family_img from "../../assets/family_img.jpg";
 
 function PopUp(props: { props: () => void }) {
   useEffect(() => {
@@ -20,7 +21,7 @@ function PopUp(props: { props: () => void }) {
   return (
     <img
       className="family_img"
-      src="/src/assets/family_img.jpg"
+      src={family_img}
       alt="Family Picture"
       width="30%"
       height="30%"
