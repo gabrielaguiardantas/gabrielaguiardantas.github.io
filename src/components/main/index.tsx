@@ -2,6 +2,7 @@ import About from "../../pages/about";
 import Contact from "../../pages/contact";
 import Stacks from "../../pages/stacks";
 import Projects from "../../pages/projects";
+import Versions from "../../pages/versions";
 import "./main.css";
 
 function Main() {
@@ -10,6 +11,7 @@ function Main() {
       <About />
       <Stacks />
       <Projects />
+      <Versions />
       <Contact />
     </main>
   );

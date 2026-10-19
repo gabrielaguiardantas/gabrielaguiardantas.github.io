@@ -4,13 +4,13 @@ import "./nav-bar.css";
 import { useEffect } from "react";
 import { handleClick, handleScroll } from "./nav-bar";
 
-const NAV_SECTIONS = [{ eng: "about", ptBr: "sobre" }, { eng: "stacks", ptBr: "stacks" }, { eng: "projects", ptBr: "projetos" }, { eng: "contact", ptBr: "contato" }]
+const NAV_SECTIONS = [{ eng: "about", ptBr: "sobre" }, { eng: "stacks", ptBr: "stacks" }, { eng: "projects", ptBr: "projetos" }, { eng: "versions", ptBr: "versões" }, { eng: "contact", ptBr: "contato" }]
 
 function NavBar() {
   const language_page = useSelector((state: RootState) => state.language);
 
   useEffect(() => {
-    document.getElementById("a_about")?.classList.add("active");
+    handleScroll();
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
