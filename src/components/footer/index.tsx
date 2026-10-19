@@ -15,7 +15,7 @@ function Footer() {
               {<a href="https://code.visualstudio.com/"> Visual Studio Code</a>}
               , tendo como base {<a href="https://react.dev/"> React</a>} e
               {<a href="https://vitejs.dev/"> Vite</a>}. 
-              &#169; 2026 Gabriel A. Dantas - Todos os direitos reservados. v1.1
+              &#169; 2023 Gabriel A. Dantas - Todos os direitos reservados. v1.0
             </>
           ) : ( 
             <>
@@ -23,7 +23,7 @@ function Footer() {
               {<a href="https://www.typescriptlang.org/"> Typescript</a>} on
               {<a href="https://code.visualstudio.com/"> Visual Studio Code</a>}
               , having as base {<a href="https://react.dev/"> React</a>} and
-              {<a href="https://vitejs.dev/"> Vite</a>}. &#169; 2026 Gabriel A. Dantas - All rights reserved. v1.1
+              {<a href="https://vitejs.dev/"> Vite</a>}. &#169; 2023 Gabriel A. Dantas - All rights reserved. v1.0
             </>
           )}
         </p>
