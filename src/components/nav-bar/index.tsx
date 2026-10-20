@@ -1,5 +1,4 @@
-import { useSelector } from "react-redux";
-import { RootState } from "../../types";
+import { useLanguage } from "../../context/language";
 import "./nav-bar.css";
 import { useEffect } from "react";
 import { handleClick, handleScroll } from "./nav-bar";
@@ -7,7 +6,7 @@ import { handleClick, handleScroll } from "./nav-bar";
 const NAV_SECTIONS = [{ eng: "about", ptBr: "sobre" }, { eng: "stacks", ptBr: "stacks" }, { eng: "projects", ptBr: "projetos" }, { eng: "versions", ptBr: "versões" }, { eng: "contact", ptBr: "contato" }]
 
 function NavBar() {
-  const language_page = useSelector((state: RootState) => state.language);
+  const language_page = useLanguage().language;
 
   useEffect(() => {
     handleScroll();

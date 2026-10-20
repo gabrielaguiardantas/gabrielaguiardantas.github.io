@@ -1,12 +1,11 @@
-import { useSelector } from "react-redux";
+import { useLanguage } from "../../context/language";
 import "./stacks.css";
-import { RootState } from "../../types";
 import { stacksArray } from "./stacksData";
 
 
 
 function Stacks() {
-  const languagePage = useSelector((state: RootState) => state.language);
+  const languagePage = useLanguage().language;
   return (
     <section id="stacks" role="stacks" className="stacks">
       <h1>Stacks</h1>

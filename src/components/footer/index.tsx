@@ -1,9 +1,8 @@
-import { useSelector } from "react-redux";
-import { RootState } from "../../types";
+import { useLanguage } from "../../context/language";
 import "./footer.css";
 
 function Footer() {
-  const language_page = useSelector((state: RootState) => state.language);
+  const language_page = useLanguage().language;
   return (
     <footer>
       <div>

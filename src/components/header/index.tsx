@@ -7,10 +7,9 @@ import facebook from "../../assets/facebook.svg";
 import LanguageButton from "../language-button";
 import brazil from "../../assets/brazil.svg";
 import uk from "../../assets/uk.svg";
-import { useSelector } from "react-redux";
-import { RootState } from "../../types";
+import { Language, useLanguage } from "../../context/language";
 
-const languagePropsArray = [
+const languagePropsArray: { img: string; alt: Language }[] = [
   { img: brazil, alt: "portuguese" },
   { img: uk, alt: "english" },
 ];
@@ -39,7 +38,7 @@ const contactPropsArray = [
 ];
 
 function Header() {
-  const language_page = useSelector((state: RootState) => state.language);
+  const language_page = useLanguage().language;
   return (
     <header className={styles.container}>
       <a href="/">Gabriel Aguiar Dantas </a>

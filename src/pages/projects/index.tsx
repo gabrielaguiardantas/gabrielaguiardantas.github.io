@@ -1,11 +1,10 @@
-import { useSelector } from "react-redux";
-import { RootState } from "../../types/index.ts";
+import { useLanguage } from "../../context/language";
 import { githubPages } from "../stacks/centralIconsFile.ts";
 import "./projects.css";
 import { projectsArray } from "./projectsData.ts";
 
 function Projects() {
-  const language_page = useSelector((state: RootState) => state.language);
+  const language_page = useLanguage().language;
   return (
     <section id="projects" role="projects" className="projects">
       <h1>{language_page === "portuguese" ? <>Projetos</> : <>Projects</>}</h1>

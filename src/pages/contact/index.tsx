@@ -1,9 +1,8 @@
-import { useSelector } from "react-redux";
-import { RootState } from "../../types";
+import { useLanguage } from "../../context/language";
 import "./contact.css";
 
 function Contact() {
-  const language_page = useSelector((state: RootState) => state.language);
+  const language_page = useLanguage().language;
   return (
     <section id="contact" role="contact">
       <h1>{language_page === "portuguese" ? <>Contato</> : <>Contact</>}</h1>

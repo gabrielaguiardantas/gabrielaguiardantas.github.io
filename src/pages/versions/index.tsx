@@ -1,10 +1,9 @@
-import { useSelector } from "react-redux";
-import { RootState } from "../../types";
+import { useLanguage } from "../../context/language";
 import "./versions.css";
 import { versionsArray } from "./versionsData";
 
 function Versions() {
-  const languagePage = useSelector((state: RootState) => state.language);
+  const languagePage = useLanguage().language;
   const isPortuguese = languagePage === "portuguese";
   return (
     <section id="versions" role="versions" className="versions">

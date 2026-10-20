@@ -1,10 +1,9 @@
-import { useDispatch } from "react-redux";
-import { actionCreator } from "../../redux/actions";
+import { Language, useLanguage } from "../../context/language";
 
 type LanguageImgProps = {
   languageImgProps: {
     img: string;
-    alt: string;
+    alt: Language;
   };
 };
 
@@ -12,9 +11,9 @@ function LanguageButton(props: LanguageImgProps) {
   const {
     languageImgProps: { img, alt },
   } = props;
-  const dispatch = useDispatch();
+  const { setLanguage } = useLanguage();
   return (
-    <button onClick={() => dispatch(actionCreator(alt))}>
+    <button onClick={() => setLanguage(alt)}>
       <img src={img} alt={alt} height="35px" width="60px" />
     </button>
   );

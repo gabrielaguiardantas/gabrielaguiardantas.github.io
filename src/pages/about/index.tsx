@@ -1,11 +1,10 @@
-import { useSelector } from "react-redux";
-import { RootState } from "../../types";
+import { useLanguage } from "../../context/language";
 import "./about.css";
 import PopUp from "../../components/popup";
 import { useState } from "react";
 
 function About() {
-  const language_page = useSelector((state: RootState) => state.language);
+  const language_page = useLanguage().language;
   const [isHovering, setIsHovering] = useState(false);
 
   const changingHovering = () => {
