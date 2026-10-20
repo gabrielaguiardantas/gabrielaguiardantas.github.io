@@ -16,6 +16,19 @@ Este documento orienta a modernização do portfólio e registra o andamento. A 
 | 5 | [Seções em aberto: Stacks, Projetos e Contato](#fase-5-seções-em-aberto) | 💬 |
 | 6 | [Release v2.0](#fase-6-release-v20) | ⬜ |
 
+## Estado atual e próximo passo
+
+_Atualizado em 2026-10-19, ao fim da sessão._
+
+- **Onde paramos:** pré-desenvolvimento concluído e roadmap criado. A Fase 1 ainda não começou.
+- **Próximo passo:** começar a [Fase 1](#fase-1-fundação-de-versões) congelando a v1 em `src/versions/v1/`.
+- **Decisões pendentes que não bloqueiam a Fase 1:**
+  - validar o hex `#D97757` (Fase 2);
+  - validar o rascunho do footer (Fase 3);
+  - definir o efeito da volta no tempo (Fase 4);
+  - definir a disposição de Stacks, Projetos e Contato (Fase 5).
+- **Ambiente:** Node 24 via fnm (`.node-version`). Dev server com `npm run dev` na porta 5173. Para assistir os testes: `SLOWMO=600 npx playwright test --headed --workers 1`.
+
 ## Princípios
 
 - **A v1 é intocável.** As únicas exceções são as registradas em [D4](#registro-de-decisões).
@@ -201,5 +214,6 @@ Ideias para decidir juntos:
 
 | Data | Fase | O que mudou | Commit |
 | --- | --- | --- | --- |
-| 2026-10-19 | 0 | Pré-desenvolvimento concluído: dependências, E2E, README e CSS da nav | `8c4635d` … `0af8673` |
-| 2026-10-19 | — | Roadmap da v2.0 criado | _pendente_ |
+| 2026-10-19 | 0 | Redux → Context, Node 24, React 19, oxlint, Vite 8 + TS 7, remoção do gh-pages (0 vulnerabilidades, 244 → 29 pacotes) | `8c4635d` … `a7b327e` |
+| 2026-10-19 | 0 | Correção da largura da nav, viewport com `useSyncExternalStore`, smoke tests E2E e README novo | `94fd0c0` … `0af8673` |
+| 2026-10-19 | — | Roadmap da v2.0 criado, com decisões D1 a D7 e arquitetura iframe + `?lang` | `d9491e3` |
