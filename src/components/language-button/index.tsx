@@ -1,4 +1,4 @@
-import { Language, useLanguage } from "../../context/language";
+import { type Language, useLanguage } from "../../context/language";
 
 type LanguageImgProps = {
   languageImgProps: {

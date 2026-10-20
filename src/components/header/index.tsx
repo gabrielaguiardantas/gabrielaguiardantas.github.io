@@ -7,7 +7,7 @@ import facebook from "../../assets/facebook.svg";
 import LanguageButton from "../language-button";
 import brazil from "../../assets/brazil.svg";
 import uk from "../../assets/uk.svg";
-import { Language, useLanguage } from "../../context/language";
+import { type Language, useLanguage } from "../../context/language";
 
 const languagePropsArray: { img: string; alt: Language }[] = [
   { img: brazil, alt: "portuguese" },

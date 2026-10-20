@@ -1,5 +1,5 @@
-import { ReactNode, useMemo, useState } from "react";
-import { Language, LanguageContext } from "./language";
+import { type ReactNode, useMemo, useState } from "react";
+import { type Language, LanguageContext } from "./language";
 
 function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguage] = useState<Language>("portuguese");

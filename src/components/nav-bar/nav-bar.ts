@@ -1,4 +1,4 @@
-import { MouseEvent } from "react";
+import type { MouseEvent } from "react";
 
 // item clicado no nav: respeitado no fim da página, onde as últimas seções ficam visíveis juntas
 let clickedId: string | null = null;

@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "tsc -b && vite build",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
     "lint": "oxlint --max-warnings 0",
@@ -20,12 +20,13 @@
     "react-dom": "^19.3.1"
   },
   "devDependencies": {
+    "@types/node": "^24.19.2",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
-    "@vitejs/plugin-react": "^4.0.3",
+    "@vitejs/plugin-react": "^6.1.2",
     "gh-pages": "^6.0.0",
     "oxlint": "^1.89.0",
-    "typescript": "^5.0.2",
-    "vite": "^4.4.5"
+    "typescript": "~7.0.2",
+    "vite": "^8.3.4"
   }
 }
