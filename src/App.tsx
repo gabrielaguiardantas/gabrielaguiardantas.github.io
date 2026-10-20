@@ -3,20 +3,19 @@ import Header from "./components/header";
 import NavBar from "./components/nav-bar";
 import Footer from "./components/footer";
 import Main from "./components/main";
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 
-const getViewPort = () => (window.innerWidth <= 1024 ? "mobile" : "desktop");
+const mobileQuery = window.matchMedia("(max-width: 1024px)");
+
+function subscribeToViewPort(onChange: () => void) {
+  mobileQuery.addEventListener("change", onChange);
+  return () => mobileQuery.removeEventListener("change", onChange);
+}
+
+const getViewPort = () => (mobileQuery.matches ? "mobile" : "desktop");
 
 function App() {
-  const [viewPort, setViewPort] = useState(getViewPort); // desktop | mobile
-
-  useEffect(() => {
-    const handleResize = () => setViewPort(getViewPort());
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
+  const viewPort = useSyncExternalStore(subscribeToViewPort, getViewPort); // desktop | mobile
 
   return (
     <div className={viewPort}>
