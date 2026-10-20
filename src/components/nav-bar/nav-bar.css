@@ -3,9 +3,9 @@ nav {
     padding: 0;
     position: fixed;
     z-index: 1;
-    width: 0%;
+    width: max-content;
     top: 71%;
-    transform: translate(-50%, -50%);
+    transform: translateY(-50%);
     letter-spacing: -.095em;
 }
   
