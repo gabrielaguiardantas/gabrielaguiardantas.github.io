@@ -49,6 +49,7 @@ _Atualizado em 2026-11-17, na volta da pausa para a UVV (2026-10-31 a 2026-11-17
 | D7 | 2026-10-19 | O `src/assets/family_img.jpg` **não será comprimido**. | Escolha do autor. |
 | D8 | 2026-11-17 | O projeto passa a usar o **Node 26 LTS**, e o `@types/node` acompanha a mesma versão major. | O Node 24 entrou em Maintenance em 2026-10-20. O 26 é Active LTS até 2027-10, com suporte até 2029-04. |
 | D9 | 2026-11-17 | O **Dependabot** checa npm e Actions **uma vez por mês**, com um PR agrupado por ecossistema. Os PRs são validados localmente antes do merge. | Evitar o atraso acumulado que a revisão encontrou: um Vite com falha crítica e Actions de 1 a 3 versões major atrás. |
+| D10 | 2026-11-17 | O **"Voltar" do navegador desfaz uma ação por vez**: primeiro as seções visitadas na v1, depois a volta para 2026. O botão "Voltar para 2026" conta como uma ação nova, então o "Voltar" depois dele reabre 2023. | Comportamento previsível, igual ao de qualquer site com várias telas. Sem o marcador no histórico, o último "Voltar" sairia do site. |
 
 ## Fase 0: Pré-desenvolvimento
 
@@ -88,10 +89,11 @@ Revisão de dependências na volta da pausa, em 2026-11-17:
 
 **Shell da v2:**
 
-- [ ] Guardar a versão ativa em estado (sem persistência, [D3](#registro-de-decisões)).
-- [ ] Quando a v1 estiver ativa, renderizar `<iframe src="/v1.html?lang=…">` em tela cheia.
-- [ ] O card **v1.0** da seção Versões da v2 dispara a troca.
+- [x] Guardar a versão ativa em estado (sem persistência, [D3](#registro-de-decisões)): `VersionProvider` e `useVersion()` em [`src/versions/v2/context/`](../src/versions/v2/context/VersionProvider.tsx), no mesmo molde do idioma.
+- [x] Quando a v1 estiver ativa, renderizar `<iframe src="/v1.html?lang=…">` em tela cheia. A v2 continua montada atrás, preservando a rolagem, mas fica `inert` e sem barra de rolagem.
+- [x] O card **v1.0** da seção Versões da v2 dispara a troca, com o botão "Voltar para 2023" / "Back to 2023". O card v2.0 passa a ser o atual; os textos finais ficam para a Fase 3.
 - [ ] Ouvir `message` do iframe e voltar para a v2 ao receber `{ type: "switch-version", version: "v2" }`, validando a origem.
+- [ ] Ao abrir a v1, empilhar um marcador no histórico (`history.pushState`) e tratar o `popstate`, para o "Voltar" do navegador seguir a [D10](#registro-de-decisões). O botão "Voltar para 2026" também entra no histórico como uma ação nova.
 
 **Exceções na v1** ([D4](#registro-de-decisões)):
 
@@ -232,3 +234,4 @@ Ideias para decidir juntos:
 | 2026-11-17 | 1 | v1 movida para `src/versions/v1/` só com renomeações: mesmo hash de bundle e screenshots idênticos. Achado para a Fase 5: no mobile (390 px), a v1 tem rolagem horizontal, com 504 a 514 px de largura | `338968a` |
 | 2026-11-17 | 1 | v2 criada em `src/versions/v2/` como cópia da v1, ainda fora do build. No Git, só o `Jest JS.svg` difere: o `core.autocrlf` normalizou CRLF → LF, sem efeito visual | `7edede5` |
 | 2026-11-17 | 1 | Build com duas páginas: `/` abre a v2 e `/v1.html` abre a v1. Screenshots de dev e produção idênticos à referência, com o `family_img.jpg` emitido uma vez só | `d8ff841` |
+| 2026-11-17 | 1 | Shell da v2: o card v1.0 abre a v1 num iframe em tela cheia, com a v2 `inert` atrás. Verificado no Chrome em desktop e mobile, PT e EN. Decisão D10 sobre o "Voltar" do navegador | `914654b` |
