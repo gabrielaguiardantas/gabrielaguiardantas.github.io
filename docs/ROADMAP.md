@@ -10,24 +10,27 @@ Este documento orienta a modernização do portfólio e registra o andamento. A 
 | --- | --- | --- |
 | 0 | [Pré-desenvolvimento](#fase-0-pré-desenvolvimento) | ✅ |
 | 1 | [Fundação de versões (v1 congelada + troca em runtime)](#fase-1-fundação-de-versões) | ✅ |
-| 2 | [Identidade visual da v2](#fase-2-identidade-visual-da-v2) | ⬜ |
+| 2 | [Design da v2](#fase-2-design-da-v2) | 🟨 |
 | 3 | [Conteúdo da v2](#fase-3-conteúdo-da-v2) | ⬜ |
 | 4 | [Efeito "volta no tempo"](#fase-4-efeito-volta-no-tempo) | ⬜ 💬 |
-| 5 | [Seções em aberto: Stacks, Projetos e Contato](#fase-5-seções-em-aberto) | 💬 |
+| 5 | [Seções em aberto](#fase-5-seções-em-aberto) (absorvida pela Fase 2) | ➡️ |
 | 6 | [Release v2.0](#fase-6-release-v20) | ⬜ |
 
 ## Estado atual e próximo passo
 
-_Atualizado em 2026-11-17, na volta da pausa para a UVV (2026-10-31 a 2026-11-17)._
+_Atualizado em 2026-11-17, ao fim da sessão. O trabalho está em pausa curta._
 
-- **Onde paramos:** a [Fase 1](#fase-1-fundação-de-versões) está concluída. O site abre na v2, o card v1.0 leva a 2023 num iframe, o botão "Voltar para 2026" e o "Voltar" do navegador ([D10](#registro-de-decisões)) trazem de volta, e tudo isso está coberto pelo E2E. Por enquanto, a v2 ainda tem o mesmo visual e conteúdo da v1.
-- **Próximo passo:** a [Fase 2](#fase-2-identidade-visual-da-v2), a identidade visual da v2. Ela começa pela validação do hex `#D97757`. A ordem das fases foi mantida (decidido em 2026-11-17), com a transição da Fase 4 depois das Fases 2 e 3.
-- **Ao mudar o visual da v2:** os testes do `e2e/smoke.spec.ts` rodam hoje nas duas páginas, porque elas ainda compartilham o layout. Quando a v2 divergir, separe o que vale só para a v1.
+- **Onde paramos:**
+  - A [Fase 1](#fase-1-fundação-de-versões) está concluída. O site abre na v2, o card v1.0 leva a 2023 num iframe, o botão "Voltar para 2026" e o "Voltar" do navegador ([D10](#registro-de-decisões)) trazem de volta, e tudo isso está coberto pelo E2E.
+  - A [Fase 2](#fase-2-design-da-v2) virou o **design novo da v2** ([D11](#registro-de-decisões)). A direção visual está decidida (D12 e D13), e o **protótipo interativo foi aprovado** como está, na versão 3.
+  - No site, a v2 ainda tem o mesmo visual e conteúdo da v1.
+- **Próximo passo:** reabrir o [protótipo](#22-protótipo-interativo) e decidir se ainda vale ajustar os pontos em aberto (entrada da seção, ritmo dos efeitos e convite ao clique). Depois disso, começar a [implementação na v2](#23-implementação-na-v2).
+- **Ao mudar o visual da v2:** os testes do `e2e/smoke.spec.ts` rodam hoje nas duas páginas, porque elas ainda compartilham o layout. O layout novo não tem nav nem seções empilhadas, então esses testes precisam ser separados: os atuais ficam só para a v1, e a v2 ganha testes próprios.
 - **Decisões pendentes:**
-  - validar o hex `#D97757` (Fase 2, bloqueia o início);
-  - validar o rascunho do footer (Fase 3);
-  - definir o efeito da volta no tempo (Fase 4);
-  - definir a disposição de Stacks, Projetos e Contato (Fase 5).
+  - validar o hex `#D97757` com o ícone oficial do Claude (Fase 2);
+  - os pontos em aberto do protótipo (Fase 2);
+  - validar o rascunho do footer, que já aparece no protótipo (Fase 3);
+  - definir o efeito da volta no tempo (Fase 4).
 - **Ambiente:** Node 26 via fnm (`.node-version`). Dev server com `npm run dev` na porta 5173. Para assistir os testes: `SLOWMO=600 npx playwright test --headed --workers 1`.
 
 ## Princípios
@@ -51,6 +54,9 @@ _Atualizado em 2026-11-17, na volta da pausa para a UVV (2026-10-31 a 2026-11-17
 | D8 | 2026-11-17 | O projeto passa a usar o **Node 26 LTS**, e o `@types/node` acompanha a mesma versão major. | O Node 24 entrou em Maintenance em 2026-10-20. O 26 é Active LTS até 2027-10, com suporte até 2029-04. |
 | D9 | 2026-11-17 | O **Dependabot** checa npm e Actions **uma vez por mês**, com um PR agrupado por ecossistema. Os PRs são validados localmente antes do merge. | Evitar o atraso acumulado que a revisão encontrou: um Vite com falha crítica e Actions de 1 a 3 versões major atrás. |
 | D10 | 2026-11-17 | O **"Voltar" do navegador desfaz uma ação por vez**: primeiro as seções visitadas na v1, depois a volta para 2026. O botão "Voltar para 2026" conta como uma ação nova, então o "Voltar" depois dele reabre 2023. | Comportamento previsível, igual ao de qualquer site com várias telas. Sem o marcador no histórico, o último "Voltar" sairia do site. |
+| D11 | 2026-11-17 | A v2 ganha um **design novo**, e não só a troca de cor. A Fase 2 vira "Design da v2" (direção, protótipo e implementação) e absorve a Fase 5. | Só recolorir manteria o layout padrão da v1. A v2 precisa de identidade própria, e o contraste com 2023 reforça a viagem no tempo da Fase 4. |
+| D12 | 2026-11-17 | **A paleta da v1 fica:** fundo `#444444` e texto `#dce6cf`. O laranja `#D97757` substitui o verde. Para texto pequeno, usa-se um tom mais claro, `#EDA48C`. O estilo é uma **base minimalista com detalhes técnicos**: sans no texto e JetBrains Mono nos detalhes (tags, rótulos, datas). | Continuidade com a v1 e com o banner do LinkedIn. O laranja tem contraste de 3.1:1 sobre `#444444`, bom para títulos, ícones e bordas, mas abaixo do mínimo de 4.5:1 para texto pequeno; o `#EDA48C` tem 4.8:1. O verde antigo também não passava (3.8:1). |
+| D13 | 2026-11-17 | **Layout:** a coluna de identidade da v1 continua à esquerda, com nome, cargo, idiomas, tagline, contatos e footer. A nav e as seções empilhadas saem. No **centro da página** fica o componente **`<GAD />`** (as iniciais como um componente React), com um cursor piscando. Clicar nele abre as seções em órbita, como componentes-filhos (`<Sobre />`, `<Stacks />`…), e cada seção abre na área à direita. No celular, a órbita vira uma árvore de componentes (`├── <Sobre />`). | Uma marca de dev memorável, no lugar do layout padrão de portfólio, e coerente com a narrativa de desenvolvimento *AI-oriented*. |
 
 ## Fase 0: Pré-desenvolvimento
 
@@ -112,23 +118,72 @@ Revisão de dependências na volta da pausa, em 2026-11-17:
 
 **Referências:** o shell em [`VersionProvider.tsx`](../src/versions/v2/context/VersionProvider.tsx) e [`version.ts`](../src/versions/v2/context/version.ts), as exceções da v1 em [`LanguageProvider.tsx`](../src/versions/v1/context/LanguageProvider.tsx) e [`pages/versions/index.tsx`](../src/versions/v1/pages/versions/index.tsx), as duas entradas em [`vite.config.ts`](../vite.config.ts) e os testes em [`e2e/`](../e2e/).
 
-## Fase 2: Identidade visual da v2
+## Fase 2: Design da v2
 
-⬜ Objetivo: trocar o verde `#6eb40a` pela cor do Claude em todos os destaques da v2 ([D5](#registro-de-decisões)).
+🟨 Objetivo: dar à v2 um design próprio ([D11](#registro-de-decisões)), com a paleta da v1, o laranja do Claude como destaque ([D5](#registro-de-decisões), [D12](#registro-de-decisões)) e o layout do `<GAD />` em órbita ([D13](#registro-de-decisões)). A fase tem três etapas: direção visual, protótipo e implementação.
 
-- [ ] Criar o token de cor `--accent` na v2, partindo do laranja do Claude: **`#D97757`** (hex a validar com o ícone oficial).
-- [ ] Ajustar **NavBar**: hover e item ativo (`color` e `text-shadow`).
-- [ ] Ajustar **Header**: hover dos ícones de contato e seleção do idioma.
-- [ ] Ajustar **Footer**: hover dos links.
-- [ ] Ajustar **Seções**: card da versão atual, badges de tecnologia dos projetos e envelope do contato.
-- [ ] Os ícones SVG do header e os links do footer usam hoje um `filter: invert(…) hue-rotate(…)` calibrado para o verde. Trocá-lo por uma técnica que aceite `var(--accent)` diretamente, como `mask-image` com `background-color`.
-- [ ] Conferir o contraste do laranja sobre o fundo `#444444`.
+### 2.1 Direção visual
 
-**Referências:** [`nav-bar.css`](../src/versions/v2/components/nav-bar/nav-bar.css), [`Header.module.css`](../src/versions/v2/components/header/Header.module.css), [`footer.css`](../src/versions/v2/components/footer/footer.css), [`versions.css`](../src/versions/v2/pages/versions/versions.css), [`projects.css`](../src/versions/v2/pages/projects/projects.css) e [`contact.css`](../src/versions/v2/pages/contact/contact.css).
+✅ Decidida em 2026-11-17.
+
+- [x] **Paleta:** a da v1 continua, com o laranja no lugar do verde ([D12](#registro-de-decisões)).
+- [x] **Contraste** sobre `#444444`:
+
+  | Cor | Uso | Contraste |
+  | --- | --- | --- |
+  | `#dce6cf` | texto | 7.5:1 |
+  | `#b9c2ad` | texto secundário | 5.3:1 |
+  | `#D97757` | títulos grandes, ícones, bordas e cursor | 3.1:1 |
+  | `#EDA48C` | links e texto pequeno em laranja | 4.8:1 |
+
+- [x] **Estilo:** base minimalista com detalhes técnicos ([D12](#registro-de-decisões)). Na comparação, o estilo editorial foi descartado, porque espalharia o laranja em áreas grandes, onde o contraste dele é fraco.
+- [x] **Layout:** coluna de identidade + `<GAD />` em órbita ([D13](#registro-de-decisões)). O usuário trouxe a ideia do ícone central que abre as seções em volta, e o `<GAD />` foi escolhido entre `<GAD />`, `>_`, `{ G }` e um monograma.
+- [ ] Validar o hex `#D97757` com o ícone oficial do Claude.
+
+### 2.2 Protótipo interativo
+
+🟨 O protótipo foi aprovado como está em 2026-11-17. Antes de implementar, decidir se os pontos em aberto ainda pedem ajuste.
+
+- **Onde ver:** [artifact privado](https://claude.ai/artifact/9yt6MozuLrAMGrAq6QQeRE), na versão 3. O código fica guardado em [`docs/prototypes/v2-orbita.html`](prototypes/v2-orbita.html), num HTML único com os ícones embutidos. A pasta `docs/` fica fora do build e do deploy.
+- **O que ele mostra:**
+  - Estado inicial: o `<GAD />` no centro da página, só a tag e um cursor laranja piscando (sem círculo nem moldura), e o convite `// clique para explorar`.
+  - **Efeito 1, a órbita:** ao clicar, as cinco seções saem do centro uma a uma, como tags sem moldura, ligadas ao `<GAD />` por linhas finas. As linhas vão da borda de um texto à borda do outro. Ao passar o mouse, a seção e a linha dela acendem em laranja.
+  - **Efeito 2, a seção:** a órbita se recolhe, o `<GAD />` encolhe para o canto superior da área de conteúdo e vira o botão de início, e a seção sobe com o título sendo "digitado".
+  - **Navegação:** cada estado tem um endereço (`#explorar`, `#sobre`, `#projetos`…). O "Voltar" do navegador desfaz uma ação por vez, no espírito da [D10](#registro-de-decisões). Esc volta um nível.
+  - **Posição:** o `<GAD />` fica no centro exato da página de 1280 px de largura para cima. A órbita usa o maior raio, até 280 px, que não encoste no texto e nos ícones da coluna de identidade. Em telas mais estreitas, ela desliza para a direita em vez de encolher.
+  - **Celular** (até 820 px): a coluna de identidade vai para o topo, e a órbita vira uma árvore de componentes.
+  - **Acessibilidade:** o `<GAD />` e as seções são botões navegáveis por Tab, com foco visível. Com `prefers-reduced-motion`, as animações são desligadas.
+- **Pontos em aberto:**
+  - a entrada da seção (o `<GAD />` indo para o canto, ou a seção crescendo a partir do satélite clicado);
+  - o ritmo dos efeitos;
+  - se o convite ao clique fica claro só com o cursor e o rótulo. Uma alternativa é o cursor "digitar" o `<GAD />` ao carregar a página.
+
+### 2.3 Implementação na v2
+
+⬜ Recriar o protótipo em React, dentro de `src/versions/v2/`.
+
+- [ ] Tokens de cor e de fonte num CSS global da v2 (`--bg`, `--fg`, `--fg-muted`, `--accent`, `--accent-text`, `--font-mono`…).
+- [ ] Fonte JetBrains Mono. Decidir entre Google Fonts e hospedar o arquivo no próprio site.
+- [ ] Coluna de identidade com o conteúdo novo da [Fase 3](#fase-3-conteúdo-da-v2) (cargo e canais oficiais). Os ícones usam `mask-image` com `background-color`, no lugar do `filter: hue-rotate(…)` calibrado para o verde.
+- [ ] Componentes `<GAD />` e órbita, com o cálculo de raio e deslocamento do protótipo. No celular, a árvore.
+- [ ] Seções no painel da direita, com o efeito de entrada.
+- [ ] Endereços por hash e histórico seguindo a D10. Conferir a convivência com o `pushState` do `VersionProvider`, que hoje marca a troca de versão.
+- [ ] `<Versões />` mantém o botão "Voltar para 2023", que já funciona.
+- [ ] Teclado (Tab e Esc), foco visível e `prefers-reduced-motion`.
+- [ ] E2E: separar o `smoke.spec.ts` (os testes atuais ficam para a v1) e criar testes da v2 (órbita, seções, hash e "Voltar"). Os testes de troca de versão (`versions.spec.ts`) precisam abrir a órbita antes de chegar ao card v1.0.
+- [ ] Remover da v2 o que deixou de ser usado: nav, seções empilhadas e o CSS global herdado da v1.
 
 ## Fase 3: Conteúdo da v2
 
 ⬜
+
+### Coluna de identidade
+
+Ajustes que alinham o site ao LinkedIn e ao GitHub (decididos em 2026-11-17):
+
+- [ ] Cargo: "Desenvolvedor Web FullStack" vira **"Desenvolvedor Full Stack"** / "Full Stack Developer".
+- [ ] Contatos: só os **canais oficiais**, GitHub, LinkedIn e e-mail. Instagram e Facebook saem.
+- [ ] Revisar a tagline "Desenvolvo produtos web responsivos e multi-dispositivos".
 
 ### Sobre
 
@@ -160,7 +215,7 @@ Rascunho para validar:
 
 ## Fase 4: Efeito "volta no tempo"
 
-⬜ 💬 Objetivo: a transição de 2026 para 2023 ao abrir a v1, e o caminho inverso ao voltar.
+⬜ 💬 Objetivo: a transição de 2026 para 2023 ao abrir a v1, e o caminho inverso ao voltar. A ordem das fases foi mantida (decidido em 2026-11-17): esta vem depois do design e do conteúdo. O efeito deve usar a mesma linguagem de movimento da órbita do `<GAD />`, com a mesma curva e durações curtas.
 
 Ideias para decidir juntos:
 
@@ -174,7 +229,9 @@ Ideias para decidir juntos:
 
 ## Fase 5: Seções em aberto
 
-💬 Estas três seções serão pensadas em conjunto antes da implementação.
+➡️ **Absorvida pela [Fase 2](#fase-2-design-da-v2) em 2026-11-17** ([D11](#registro-de-decisões)). Com o layout novo, a disposição de cada seção faz parte do design da v2. O [protótipo](#22-protótipo-interativo) já traz uma primeira proposta: Stacks em grupos de chips, Projetos em lista e Contato em lista de canais. O registro abaixo descreve como as seções eram na v1.
+
+**Achado na v1:** no mobile (390 px), a página tem rolagem horizontal, com 504 a 514 px de largura. O layout novo da v2 não herda esse problema, mas isso precisa ser conferido na implementação.
 
 ### Stacks: disposição dos elementos
 
@@ -239,3 +296,5 @@ Ideias para decidir juntos:
 | 2026-11-17 | 1 | Shell da v2: o card v1.0 abre a v1 num iframe em tela cheia, com a v2 `inert` atrás. Verificado no Chrome em desktop e mobile, PT e EN. Decisão D10 sobre o "Voltar" do navegador | `914654b` |
 | 2026-11-17 | 1 | Ciclo 2026 ⇄ 2023 completo: exceções da v1 (botão "Voltar para 2026" e `?lang=`) e, na v2, `postMessage` com origem validada e histórico seguindo a D10. A v1 passa a ser escondida, não destruída, o que elimina o "Voltar morto". 49 checks no Chrome; na v1 standalone, só a área do botão mudou | `c466c59`, `7d98b7c` |
 | 2026-11-17 | 1 | **Fase 1 concluída.** E2E com 30 testes (antes eram 7): o smoke roda na v2 e na v1, e o `versions.spec.ts` cobre a troca, o idioma, a D10, a segurança e a v1 direta. Dois bugs introduzidos de propósito foram pegos | `54d38c1` |
+| 2026-11-17 | 2 | Decisões D11 a D13: design novo da v2, paleta da v1 com o laranja, base minimalista com detalhes técnicos e o layout do `<GAD />` em órbita. A Fase 5 foi absorvida pela Fase 2 | — |
+| 2026-11-17 | 2 | Protótipo interativo em 3 versões: (1) primeira proposta; (2) sem molduras, só as tags e o cursor; (3) o `<GAD />` no centro da página, com o raio da órbita se ajustando à coluna de identidade. A versão 3 foi aprovada e guardada em `docs/prototypes/` | `2b0d061` |
