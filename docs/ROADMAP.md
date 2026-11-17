@@ -9,7 +9,7 @@ Este documento orienta a modernização do portfólio e registra o andamento. A 
 | Fase | Tema | Status |
 | --- | --- | --- |
 | 0 | [Pré-desenvolvimento](#fase-0-pré-desenvolvimento) | ✅ |
-| 1 | [Fundação de versões (v1 congelada + troca em runtime)](#fase-1-fundação-de-versões) | 🟨 |
+| 1 | [Fundação de versões (v1 congelada + troca em runtime)](#fase-1-fundação-de-versões) | ✅ |
 | 2 | [Identidade visual da v2](#fase-2-identidade-visual-da-v2) | ⬜ |
 | 3 | [Conteúdo da v2](#fase-3-conteúdo-da-v2) | ⬜ |
 | 4 | [Efeito "volta no tempo"](#fase-4-efeito-volta-no-tempo) | ⬜ 💬 |
@@ -20,10 +20,11 @@ Este documento orienta a modernização do portfólio e registra o andamento. A 
 
 _Atualizado em 2026-11-17, na volta da pausa para a UVV (2026-10-31 a 2026-11-17)._
 
-- **Onde paramos:** pré-desenvolvimento concluído, roadmap criado e dependências revisadas na volta da pausa (Vite com correção de segurança, Node 26 LTS, Actions atualizadas e Dependabot). A Fase 1 ainda não começou.
-- **Próximo passo:** começar a [Fase 1](#fase-1-fundação-de-versões) congelando a v1 em `src/versions/v1/`. As entradas do Vite 8 vão em `build.rolldownOptions.input`; o `rollupOptions` ainda funciona, mas está obsoleto.
-- **Decisões pendentes que não bloqueiam a Fase 1:**
-  - validar o hex `#D97757` (Fase 2);
+- **Onde paramos:** a [Fase 1](#fase-1-fundação-de-versões) está concluída. O site abre na v2, o card v1.0 leva a 2023 num iframe, o botão "Voltar para 2026" e o "Voltar" do navegador ([D10](#registro-de-decisões)) trazem de volta, e tudo isso está coberto pelo E2E. Por enquanto, a v2 ainda tem o mesmo visual e conteúdo da v1.
+- **Próximo passo:** a [Fase 2](#fase-2-identidade-visual-da-v2), a identidade visual da v2. Ela começa pela validação do hex `#D97757`. A ordem das fases foi mantida (decidido em 2026-11-17), com a transição da Fase 4 depois das Fases 2 e 3.
+- **Ao mudar o visual da v2:** os testes do `e2e/smoke.spec.ts` rodam hoje nas duas páginas, porque elas ainda compartilham o layout. Quando a v2 divergir, separe o que vale só para a v1.
+- **Decisões pendentes:**
+  - validar o hex `#D97757` (Fase 2, bloqueia o início);
   - validar o rascunho do footer (Fase 3);
   - definir o efeito da volta no tempo (Fase 4);
   - definir a disposição de Stacks, Projetos e Contato (Fase 5).
@@ -76,7 +77,7 @@ Revisão de dependências na volta da pausa, em 2026-11-17:
 
 ## Fase 1: Fundação de versões
 
-🟨 Objetivo: separar a v1 congelada da v2 e permitir trocar entre elas em runtime.
+✅ Concluída em 2026-11-17. Objetivo: separar a v1 congelada da v2 e permitir trocar entre elas em runtime.
 
 **Estrutura de pastas:**
 
@@ -102,13 +103,14 @@ Revisão de dependências na volta da pausa, em 2026-11-17:
 
 **Testes E2E:**
 
-- [ ] Os testes atuais passam a cobrir a v2 como padrão.
-- [ ] Testes da v1 dentro do iframe, via `frameLocator`.
-- [ ] Troca v2 → v1 → v2.
-- [ ] Idioma preservado na ida para a v1.
-- [ ] `/v1.html` aberto direto funciona.
+- [x] Os testes atuais passam a cobrir a v2 como padrão e também rodam na v1 aberta direto (`e2e/smoke.spec.ts`). O que é compartilhado foi para `e2e/fixtures.ts`.
+- [x] Testes da v1 dentro do iframe, via `frameLocator` (`e2e/versions.spec.ts`).
+- [x] Troca v2 → v1 → v2, voltando ao mesmo ponto da v2, e "Voltar"/"Avançar" do navegador seguindo a D10.
+- [x] Idioma preservado na ida para a v1, inclusive quando muda entre duas visitas.
+- [x] `/v1.html` aberto direto funciona, com `?lang=` e o botão levando para `/`.
+- [x] Segurança: a v2 só aceita mensagens do próprio iframe. Para conferir que os testes pegam defeitos reais, dois bugs foram introduzidos de propósito (aceitar mensagens de qualquer janela e destruir a v1 ao voltar), e cada um foi pego pelo teste certo.
 
-**Referências:** o padrão de contexto em [`language.ts`](../src/versions/v1/context/language.ts) e [`LanguageProvider.tsx`](../src/versions/v1/context/LanguageProvider.tsx), e o ponto de troca em [`src/versions/v1/pages/versions/index.tsx`](../src/versions/v1/pages/versions/index.tsx), onde hoje o botão é `disabled`. Testes em [`e2e/smoke.spec.ts`](../e2e/smoke.spec.ts) e [`playwright.config.ts`](../playwright.config.ts).
+**Referências:** o shell em [`VersionProvider.tsx`](../src/versions/v2/context/VersionProvider.tsx) e [`version.ts`](../src/versions/v2/context/version.ts), as exceções da v1 em [`LanguageProvider.tsx`](../src/versions/v1/context/LanguageProvider.tsx) e [`pages/versions/index.tsx`](../src/versions/v1/pages/versions/index.tsx), as duas entradas em [`vite.config.ts`](../vite.config.ts) e os testes em [`e2e/`](../e2e/).
 
 ## Fase 2: Identidade visual da v2
 
@@ -236,3 +238,4 @@ Ideias para decidir juntos:
 | 2026-11-17 | 1 | Build com duas páginas: `/` abre a v2 e `/v1.html` abre a v1. Screenshots de dev e produção idênticos à referência, com o `family_img.jpg` emitido uma vez só | `d8ff841` |
 | 2026-11-17 | 1 | Shell da v2: o card v1.0 abre a v1 num iframe em tela cheia, com a v2 `inert` atrás. Verificado no Chrome em desktop e mobile, PT e EN. Decisão D10 sobre o "Voltar" do navegador | `914654b` |
 | 2026-11-17 | 1 | Ciclo 2026 ⇄ 2023 completo: exceções da v1 (botão "Voltar para 2026" e `?lang=`) e, na v2, `postMessage` com origem validada e histórico seguindo a D10. A v1 passa a ser escondida, não destruída, o que elimina o "Voltar morto". 49 checks no Chrome; na v1 standalone, só a área do botão mudou | `c466c59`, `7d98b7c` |
+| 2026-11-17 | 1 | **Fase 1 concluída.** E2E com 30 testes (antes eram 7): o smoke roda na v2 e na v1, e o `versions.spec.ts` cobre a troca, o idioma, a D10, a segurança e a v1 direta. Dois bugs introduzidos de propósito foram pegos | `54d38c1` |
