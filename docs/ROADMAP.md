@@ -92,13 +92,13 @@ Revisão de dependências na volta da pausa, em 2026-11-17:
 - [x] Guardar a versão ativa em estado (sem persistência, [D3](#registro-de-decisões)): `VersionProvider` e `useVersion()` em [`src/versions/v2/context/`](../src/versions/v2/context/VersionProvider.tsx), no mesmo molde do idioma.
 - [x] Quando a v1 estiver ativa, renderizar `<iframe src="/v1.html?lang=…">` em tela cheia. A v2 continua montada atrás, preservando a rolagem, mas fica `inert` e sem barra de rolagem.
 - [x] O card **v1.0** da seção Versões da v2 dispara a troca, com o botão "Voltar para 2023" / "Back to 2023". O card v2.0 passa a ser o atual; os textos finais ficam para a Fase 3.
-- [ ] Ouvir `message` do iframe e voltar para a v2 ao receber `{ type: "switch-version", version: "v2" }`, validando a origem.
-- [ ] Ao abrir a v1, empilhar um marcador no histórico (`history.pushState`) e tratar o `popstate`, para o "Voltar" do navegador seguir a [D10](#registro-de-decisões). O botão "Voltar para 2026" também entra no histórico como uma ação nova.
+- [x] Ouvir `message` do iframe e voltar para a v2 ao receber `{ type: "switch-version", version: "v2" }`. Só vale a mensagem com a mesma origem (`origin`) e vinda do próprio iframe (`source`).
+- [x] Ao abrir a v1, empilhar um marcador no histórico (`history.pushState`) e tratar o `popstate`, para o "Voltar" do navegador seguir a [D10](#registro-de-decisões). O botão "Voltar para 2026" também entra no histórico como uma ação nova. Depois de aberta, a v1 é escondida (`visibility: hidden` e `inert`), nunca destruída: assim as entradas da nav dela continuam válidas e não há "Voltar morto". Se o idioma da v2 mudar entre duas visitas, a v1 recarrega no idioma novo.
 
 **Exceções na v1** ([D4](#registro-de-decisões)):
 
-- [ ] O card **v2.0** da seção Versões vira um botão funcional, "Voltar para 2026" / "Back to 2026". Ele envia `postMessage` para a página-mãe. Se a v1 estiver aberta direto, sem página-mãe, o botão leva para `/`. O resto do card continua como está.
-- [ ] O `LanguageProvider` da v1 lê o idioma inicial de `?lang=english|portuguese`. Sem o parâmetro, o padrão continua sendo português.
+- [x] O card **v2.0** da seção Versões vira um botão funcional, "Voltar para 2026" / "Back to 2026". Ele envia `postMessage` para a página-mãe. Se a v1 estiver aberta direto, sem página-mãe, o botão leva para `/`. O resto do card continua como está. O CSS do botão também muda, para ele parecer clicável.
+- [x] O `LanguageProvider` da v1 lê o idioma inicial de `?lang=english|portuguese`. Sem o parâmetro, o padrão continua sendo português. Valores inválidos também caem no português.
 
 **Testes E2E:**
 
@@ -235,3 +235,4 @@ Ideias para decidir juntos:
 | 2026-11-17 | 1 | v2 criada em `src/versions/v2/` como cópia da v1, ainda fora do build. No Git, só o `Jest JS.svg` difere: o `core.autocrlf` normalizou CRLF → LF, sem efeito visual | `7edede5` |
 | 2026-11-17 | 1 | Build com duas páginas: `/` abre a v2 e `/v1.html` abre a v1. Screenshots de dev e produção idênticos à referência, com o `family_img.jpg` emitido uma vez só | `d8ff841` |
 | 2026-11-17 | 1 | Shell da v2: o card v1.0 abre a v1 num iframe em tela cheia, com a v2 `inert` atrás. Verificado no Chrome em desktop e mobile, PT e EN. Decisão D10 sobre o "Voltar" do navegador | `914654b` |
+| 2026-11-17 | 1 | Ciclo 2026 ⇄ 2023 completo: exceções da v1 (botão "Voltar para 2026" e `?lang=`) e, na v2, `postMessage` com origem validada e histórico seguindo a D10. A v1 passa a ser escondida, não destruída, o que elimina o "Voltar morto". 49 checks no Chrome; na v1 standalone, só a área do botão mudou | `c466c59`, `7d98b7c` |
