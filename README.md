@@ -12,7 +12,7 @@ Personal portfolio of Gabriel Aguiar Dantas, available in Portuguese and English
 - [Playwright](https://playwright.dev/) for end-to-end smoke tests
 - GitHub Actions + GitHub Pages for deployment
 
-The current language lives in a React context (`src/context`), consumed through the `useLanguage()` hook.
+The current language lives in a React context (`src/versions/v1/context`), consumed through the `useLanguage()` hook.
 
 ## Requirements
 
@@ -59,13 +59,14 @@ SLOWMO=600 npm run test:e2e -- --headed   # slowed down (PowerShell: $env:SLOWMO
 ## Project structure
 
 ```
-src/
-  components/   layout pieces (header, nav bar, footer, buttons)
-  context/      language context and useLanguage() hook
-  pages/        sections of the single page (about, stacks, projects, versions, contact)
-  assets/       images and icons
-e2e/            Playwright smoke tests
-first_version/  the original static version of the site (2020)
+src/versions/
+  v1/             the 2023 version, kept frozen
+    components/   layout pieces (header, nav bar, footer, buttons)
+    context/      language context and useLanguage() hook
+    pages/        sections of the single page (about, stacks, projects, versions, contact)
+    assets/       images and icons
+e2e/              Playwright smoke tests
+first_version/    the original static version of the site (2020)
 ```
 
 ## Deployment
