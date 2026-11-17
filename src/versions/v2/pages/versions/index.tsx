@@ -1,9 +1,11 @@
 import { useLanguage } from "../../context/language";
+import { useVersion } from "../../context/version";
 import "./versions.css";
 import { versionsArray } from "./versionsData";
 
 function Versions() {
   const languagePage = useLanguage().language;
+  const { setVersion } = useVersion();
   const isPortuguese = languagePage === "portuguese";
   return (
     <section id="versions" role="versions" className="versions">
@@ -16,17 +18,16 @@ function Versions() {
         )}
       </h4>
       <ul className="versionsList">
-        {versionsArray.map(({ version, year, description, current }) => {
+        {versionsArray.map(({ id, version, year, description, current }) => {
           return (
             <li key={version} className={current ? "currentVersion" : ""}>
               <h2>{version}</h2>
               <span>{isPortuguese ? year.ptBr : year.eng}</span>
               <p>{isPortuguese ? description.ptBr : description.eng}</p>
-              {/* switch em runtime será implementado na próxima etapa */}
-              <button disabled>
+              <button disabled={current} onClick={() => setVersion(id)}>
                 {current
                   ? isPortuguese ? "Atual" : "Current"
-                  : isPortuguese ? "Em breve" : "Coming soon"}
+                  : isPortuguese ? `Voltar para ${year.ptBr}` : `Back to ${year.eng}`}
               </button>
             </li>
           );
