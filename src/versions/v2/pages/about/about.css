@@ -1,0 +1,61 @@
+.about > h1 {
+    text-align: center;
+}
+
+.about > p {
+    text-align: left;
+}
+
+.about > p > a {
+    color: inherit;
+    text-decoration: inherit;
+}
+
+.about > p > a:hover:not(.love, .a_family_img) {
+    -webkit-filter: invert(43%) sepia(95%) saturate(403%) hue-rotate(43deg) brightness(115%) contrast(99%);
+    filter: invert(43%) sepia(95%) saturate(403%) hue-rotate(43deg) brightness(115%) contrast(99%);
+}
+
+.love:hover {
+    cursor: url("../../assets/icons8-heart-96.png"), auto;
+    text-transform: uppercase;
+    background-image: linear-gradient(106.5deg, rgba(255, 215, 185, 0.91) 23%, rgba(223, 159, 247, 0.8) 93%);
+    background-size: auto auto;
+    background-clip: border-box;
+    background-size: 200% auto;
+    color: #fff;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: textclip 2s reverse infinite;
+}
+
+.family_img {
+    width: 20%;
+    height: 20%;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 50%;
+    border: 1px solid #dce6cf;
+    box-shadow: 0 0 0 5px #dce6cf;
+    transition: width 2s ease-in-out height 2s ease-in-out;
+    top: 60%;
+    left: 15%;
+    position: absolute;
+    z-index: 3;
+}
+
+.family_img_animation {
+    width: 80%;
+    height: 80%;
+    top: 10%;
+    left: 10%;
+    transition: width 2s ease-in-out;
+}
+
+
+@keyframes textclip {
+    to {
+      background-position: 200% center;
+    }
+  }

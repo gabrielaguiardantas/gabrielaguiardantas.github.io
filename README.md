@@ -65,6 +65,7 @@ src/versions/
     context/      language context and useLanguage() hook
     pages/        sections of the single page (about, stacks, projects, versions, contact)
     assets/       images and icons
+  v2/             the current version, started as a copy of v1 (same layout)
 e2e/              Playwright smoke tests
 first_version/    the original static version of the site (2020)
 ```
