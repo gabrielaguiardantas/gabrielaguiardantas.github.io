@@ -9,3 +9,9 @@
   /* mesmo fundo da v1, para a v2 não aparecer enquanto o iframe carrega */
   background-color: #444444;
 }
+
+/* com a v2 ativa, a v1 fica carregada mas invisível; visibility (e não display: none)
+   mantém a rolagem dela intacta para quando o "Voltar" a reabrir */
+.hidden {
+  visibility: hidden;
+}

@@ -5,7 +5,7 @@ import { versionsArray } from "./versionsData";
 
 function Versions() {
   const languagePage = useLanguage().language;
-  const { setVersion } = useVersion();
+  const { switchVersion } = useVersion();
   const isPortuguese = languagePage === "portuguese";
   return (
     <section id="versions" role="versions" className="versions">
@@ -24,7 +24,7 @@ function Versions() {
               <h2>{version}</h2>
               <span>{isPortuguese ? year.ptBr : year.eng}</span>
               <p>{isPortuguese ? description.ptBr : description.eng}</p>
-              <button disabled={current} onClick={() => setVersion(id)}>
+              <button disabled={current} onClick={() => switchVersion(id)}>
                 {current
                   ? isPortuguese ? "Atual" : "Current"
                   : isPortuguese ? `Voltar para ${year.ptBr}` : `Back to ${year.eng}`}
