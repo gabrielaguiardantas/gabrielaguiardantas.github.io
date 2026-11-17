@@ -40,13 +40,23 @@ The site runs at http://localhost:5173/.
 
 ## End-to-end tests
 
-The smoke tests in [`e2e/`](e2e) run on a desktop (1440×900) and a mobile (390×844) viewport and check that:
+The tests in [`e2e/`](e2e) run on a desktop (1440×900) and a mobile (390×844) viewport.
+
+[`smoke.spec.ts`](e2e/smoke.spec.ts) runs on both pages, v2 (`/`) and v1 opened on its own (`/v1.html`), and checks that:
 
 - the page renders the right layout for the viewport, in Portuguese by default;
 - the flag buttons switch the language and back;
 - resizing the window switches between the desktop and mobile layouts;
-- clicking a nav item highlights it once the smooth scroll ends (desktop only);
-- no console error, uncaught exception or failed request happens along the way.
+- clicking a nav item highlights it once the smooth scroll ends (desktop only).
+
+[`versions.spec.ts`](e2e/versions.spec.ts) checks the switch between versions:
+
+- v1 opens over v2 in a full-screen iframe, in the current language, and the back-to-2026 button returns to the same spot in v2;
+- the browser Back button undoes one action at a time, then returns to 2026, and Forward reopens v1;
+- v2 only accepts switch messages from its own v1 iframe;
+- v1 opened on its own reads `?lang=` and its back-to-2026 button goes to `/`.
+
+Every test also fails on any console error, uncaught exception or failed request, including inside the iframe.
 
 `npm run test:e2e` reuses a dev server already running on port 5173, or starts one. To watch the tests:
 
