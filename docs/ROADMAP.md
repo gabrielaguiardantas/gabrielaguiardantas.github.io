@@ -80,7 +80,7 @@ Revisão de dependências na volta da pausa, em 2026-11-17:
 **Estrutura de pastas:**
 
 - [x] Mover o código atual de `src/` para `src/versions/v1/`, sem alterações. Os assets vão junto, para que a v1 não dependa de mudanças futuras. Validado com o mesmo hash de bundle e screenshots idênticos pixel a pixel (desktop e mobile, PT e EN).
-- [ ] Criar `src/versions/v2/` partindo de uma cópia da v1. É nela que a v2 evolui.
+- [x] Criar `src/versions/v2/` partindo de uma cópia da v1. É nela que a v2 evolui.
 
 **Build multi-página:**
 
@@ -120,7 +120,7 @@ Revisão de dependências na volta da pausa, em 2026-11-17:
 - [ ] Os ícones SVG do header e os links do footer usam hoje um `filter: invert(…) hue-rotate(…)` calibrado para o verde. Trocá-lo por uma técnica que aceite `var(--accent)` diretamente, como `mask-image` com `background-color`.
 - [ ] Conferir o contraste do laranja sobre o fundo `#444444`.
 
-**Referências:** [`nav-bar.css`](../src/components/nav-bar/nav-bar.css), [`Header.module.css`](../src/components/header/Header.module.css), [`footer.css`](../src/components/footer/footer.css), [`versions.css`](../src/pages/versions/versions.css), [`projects.css`](../src/pages/projects/projects.css) e [`contact.css`](../src/pages/contact/contact.css). Os caminhos mudam para `src/versions/v2/` depois da Fase 1.
+**Referências:** [`nav-bar.css`](../src/versions/v2/components/nav-bar/nav-bar.css), [`Header.module.css`](../src/versions/v2/components/header/Header.module.css), [`footer.css`](../src/versions/v2/components/footer/footer.css), [`versions.css`](../src/versions/v2/pages/versions/versions.css), [`projects.css`](../src/versions/v2/pages/projects/projects.css) e [`contact.css`](../src/versions/v2/pages/contact/contact.css).
 
 ## Fase 3: Conteúdo da v2
 
@@ -147,8 +147,8 @@ Rascunho para validar:
 
 - [ ] Adicionar o **Claude** seguindo o padrão das demais stacks:
   1. O ícone oficial vai para `assets/` como `claude.svg`.
-  2. Import e export em [`centralIconsFile.ts`](../src/pages/stacks/centralIconsFile.ts).
-  3. A entrada `{ img: claude, alt: "claude" }` vai em [`stacksData.ts`](../src/pages/stacks/stacksData.ts).
+  2. Import e export em [`centralIconsFile.ts`](../src/versions/v2/pages/stacks/centralIconsFile.ts).
+  3. A entrada `{ img: claude, alt: "claude" }` vai em [`stacksData.ts`](../src/versions/v2/pages/stacks/stacksData.ts).
 
 ### Versões
 
@@ -210,7 +210,7 @@ Ideias para decidir juntos:
 - a navegação dentro do iframe ficar estranha;
 - os testes ficarem frágeis.
 
-**Como funciona:** uma única SPA. Um `VersionProvider`, no mesmo molde do [`LanguageProvider`](../src/context/LanguageProvider.tsx), guarda a versão ativa. A raiz renderiza `<V1App />`, carregada sob demanda com `React.lazy`, ou `<V2App />`. O idioma é compartilhado por um único provider.
+**Como funciona:** uma única SPA. Um `VersionProvider`, no mesmo molde do [`LanguageProvider`](../src/versions/v2/context/LanguageProvider.tsx), guarda a versão ativa. A raiz renderiza `<V1App />`, carregada sob demanda com `React.lazy`, ou `<V2App />`. O idioma é compartilhado por um único provider.
 
 **O que muda:**
 
@@ -230,3 +230,4 @@ Ideias para decidir juntos:
 | 2026-10-31 | — | Pausa longa para colocar as matérias da UVV em dia | — |
 | 2026-11-17 | 0 | Revisão de dependências: Vite com correção de segurança, plugin-react, oxlint, Playwright, Actions do deploy, Node 26 LTS e Dependabot (D8 e D9) | `47dada6` … `2d68a4f` |
 | 2026-11-17 | 1 | v1 movida para `src/versions/v1/` só com renomeações: mesmo hash de bundle e screenshots idênticos. Achado para a Fase 5: no mobile (390 px), a v1 tem rolagem horizontal, com 504 a 514 px de largura | `338968a` |
+| 2026-11-17 | 1 | v2 criada em `src/versions/v2/` como cópia da v1, ainda fora do build. No Git, só o `Jest JS.svg` difere: o `core.autocrlf` normalizou CRLF → LF, sem efeito visual | `7edede5` |
