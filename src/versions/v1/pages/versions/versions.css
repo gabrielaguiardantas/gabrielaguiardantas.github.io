@@ -40,6 +40,19 @@
     opacity: .6;
 }
 
+/* exceção ao congelamento da v1 (D4): o botão "Voltar para 2026" é clicável */
+.versionsList > li > button:enabled {
+    cursor: pointer;
+    opacity: 1;
+    transition: color .2s, border-color .2s;
+}
+
+.versionsList > li > button:enabled:hover,
+.versionsList > li > button:enabled:focus-visible {
+    color: #6eb40a;
+    border-color: #6eb40a;
+}
+
 .versionsList > .currentVersion {
     box-shadow: 5px 5px 5px 5px #6eb40a;
 }
