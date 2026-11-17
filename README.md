@@ -16,7 +16,7 @@ The current language lives in a React context (`src/context`), consumed through 
 
 ## Requirements
 
-- **Node.js 24**, pinned in [`.node-version`](.node-version). Version managers such as [fnm](https://github.com/Schniz/fnm) switch to it automatically inside the project folder.
+- **Node.js 26**, pinned in [`.node-version`](.node-version). Version managers such as [fnm](https://github.com/Schniz/fnm) switch to it automatically inside the project folder.
 - **Google Chrome**, used by the end-to-end tests (no Playwright browser download needed).
 
 ## Getting started
