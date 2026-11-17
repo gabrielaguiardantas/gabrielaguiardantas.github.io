@@ -9,7 +9,7 @@ Este documento orienta a modernização do portfólio e registra o andamento. A 
 | Fase | Tema | Status |
 | --- | --- | --- |
 | 0 | [Pré-desenvolvimento](#fase-0-pré-desenvolvimento) | ✅ |
-| 1 | [Fundação de versões (v1 congelada + troca em runtime)](#fase-1-fundação-de-versões) | ⬜ |
+| 1 | [Fundação de versões (v1 congelada + troca em runtime)](#fase-1-fundação-de-versões) | 🟨 |
 | 2 | [Identidade visual da v2](#fase-2-identidade-visual-da-v2) | ⬜ |
 | 3 | [Conteúdo da v2](#fase-3-conteúdo-da-v2) | ⬜ |
 | 4 | [Efeito "volta no tempo"](#fase-4-efeito-volta-no-tempo) | ⬜ 💬 |
@@ -75,11 +75,11 @@ Revisão de dependências na volta da pausa, em 2026-11-17:
 
 ## Fase 1: Fundação de versões
 
-⬜ Objetivo: separar a v1 congelada da v2 e permitir trocar entre elas em runtime.
+🟨 Objetivo: separar a v1 congelada da v2 e permitir trocar entre elas em runtime.
 
 **Estrutura de pastas:**
 
-- [ ] Mover o código atual de `src/` para `src/versions/v1/`, sem alterações. Os assets também são copiados, para que a v1 não dependa de mudanças futuras.
+- [x] Mover o código atual de `src/` para `src/versions/v1/`, sem alterações. Os assets vão junto, para que a v1 não dependa de mudanças futuras. Validado com o mesmo hash de bundle e screenshots idênticos pixel a pixel (desktop e mobile, PT e EN).
 - [ ] Criar `src/versions/v2/` partindo de uma cópia da v1. É nela que a v2 evolui.
 
 **Build multi-página:**
@@ -106,7 +106,7 @@ Revisão de dependências na volta da pausa, em 2026-11-17:
 - [ ] Idioma preservado na ida para a v1.
 - [ ] `/v1.html` aberto direto funciona.
 
-**Referências:** o padrão de contexto em [`src/context/language.ts`](../src/context/language.ts) e [`LanguageProvider.tsx`](../src/context/LanguageProvider.tsx), e o ponto de troca em [`src/pages/versions/index.tsx`](../src/pages/versions/index.tsx), onde hoje o botão é `disabled`. Testes em [`e2e/smoke.spec.ts`](../e2e/smoke.spec.ts) e [`playwright.config.ts`](../playwright.config.ts).
+**Referências:** o padrão de contexto em [`language.ts`](../src/versions/v1/context/language.ts) e [`LanguageProvider.tsx`](../src/versions/v1/context/LanguageProvider.tsx), e o ponto de troca em [`src/versions/v1/pages/versions/index.tsx`](../src/versions/v1/pages/versions/index.tsx), onde hoje o botão é `disabled`. Testes em [`e2e/smoke.spec.ts`](../e2e/smoke.spec.ts) e [`playwright.config.ts`](../playwright.config.ts).
 
 ## Fase 2: Identidade visual da v2
 
@@ -229,3 +229,4 @@ Ideias para decidir juntos:
 | 2026-10-19 | — | Roadmap da v2.0 criado, com decisões D1 a D7 e arquitetura iframe + `?lang` | `d9491e3` |
 | 2026-10-31 | — | Pausa longa para colocar as matérias da UVV em dia | — |
 | 2026-11-17 | 0 | Revisão de dependências: Vite com correção de segurança, plugin-react, oxlint, Playwright, Actions do deploy, Node 26 LTS e Dependabot (D8 e D9) | `47dada6` … `2d68a4f` |
+| 2026-11-17 | 1 | v1 movida para `src/versions/v1/` só com renomeações: mesmo hash de bundle e screenshots idênticos. Achado para a Fase 5: no mobile (390 px), a v1 tem rolagem horizontal, com 504 a 514 px de largura | `338968a` |
