@@ -84,7 +84,7 @@ Revisão de dependências na volta da pausa, em 2026-11-17:
 
 **Build multi-página:**
 
-- [ ] Configurar o Vite com duas entradas: `index.html` → shell da v2 e `v1.html` → `src/versions/v1/main.tsx`. No Vite 8, as entradas vão em `build.rolldownOptions.input` (confirmado nos tipos em 2026-11-17; `rollupOptions` está obsoleto).
+- [x] Configurar o Vite com duas entradas: `index.html` → `src/versions/v2/main.tsx` (shell da v2) e `v1.html` → `src/versions/v1/main.tsx`, em `build.rolldownOptions.input` (`rollupOptions` está obsoleto no Vite 8). Enquanto o CSS e as imagens forem idênticos, o build os gera uma vez só, e o React fica num chunk compartilhado.
 
 **Shell da v2:**
 
@@ -231,3 +231,4 @@ Ideias para decidir juntos:
 | 2026-11-17 | 0 | Revisão de dependências: Vite com correção de segurança, plugin-react, oxlint, Playwright, Actions do deploy, Node 26 LTS e Dependabot (D8 e D9) | `47dada6` … `2d68a4f` |
 | 2026-11-17 | 1 | v1 movida para `src/versions/v1/` só com renomeações: mesmo hash de bundle e screenshots idênticos. Achado para a Fase 5: no mobile (390 px), a v1 tem rolagem horizontal, com 504 a 514 px de largura | `338968a` |
 | 2026-11-17 | 1 | v2 criada em `src/versions/v2/` como cópia da v1, ainda fora do build. No Git, só o `Jest JS.svg` difere: o `core.autocrlf` normalizou CRLF → LF, sem efeito visual | `7edede5` |
+| 2026-11-17 | 1 | Build com duas páginas: `/` abre a v2 e `/v1.html` abre a v1. Screenshots de dev e produção idênticos à referência, com o `family_img.jpg` emitido uma vez só | `d8ff841` |
