@@ -18,16 +18,16 @@ Este documento orienta a modernização do portfólio e registra o andamento. A 
 
 ## Estado atual e próximo passo
 
-_Atualizado em 2026-10-19, ao fim da sessão._
+_Atualizado em 2026-11-17, na volta da pausa para a UVV (2026-10-31 a 2026-11-17)._
 
-- **Onde paramos:** pré-desenvolvimento concluído e roadmap criado. A Fase 1 ainda não começou.
-- **Próximo passo:** começar a [Fase 1](#fase-1-fundação-de-versões) congelando a v1 em `src/versions/v1/`.
+- **Onde paramos:** pré-desenvolvimento concluído, roadmap criado e dependências revisadas na volta da pausa (Vite com correção de segurança, Node 26 LTS, Actions atualizadas e Dependabot). A Fase 1 ainda não começou.
+- **Próximo passo:** começar a [Fase 1](#fase-1-fundação-de-versões) congelando a v1 em `src/versions/v1/`. As entradas do Vite 8 vão em `build.rolldownOptions.input`; o `rollupOptions` ainda funciona, mas está obsoleto.
 - **Decisões pendentes que não bloqueiam a Fase 1:**
   - validar o hex `#D97757` (Fase 2);
   - validar o rascunho do footer (Fase 3);
   - definir o efeito da volta no tempo (Fase 4);
   - definir a disposição de Stacks, Projetos e Contato (Fase 5).
-- **Ambiente:** Node 24 via fnm (`.node-version`). Dev server com `npm run dev` na porta 5173. Para assistir os testes: `SLOWMO=600 npx playwright test --headed --workers 1`.
+- **Ambiente:** Node 26 via fnm (`.node-version`). Dev server com `npm run dev` na porta 5173. Para assistir os testes: `SLOWMO=600 npx playwright test --headed --workers 1`.
 
 ## Princípios
 
@@ -47,6 +47,8 @@ _Atualizado em 2026-10-19, ao fim da sessão._
 | D5 | 2026-10-19 | A **cor de destaque nova** (laranja do Claude) vale para **todos os destaques da v2**, não só para Header, NavBar e Footer. | Consistência visual. |
 | D6 | 2026-10-19 | O **E2E roda só localmente**, fora do workflow de deploy. | É um site de portfólio, e o deploy deve continuar simples. |
 | D7 | 2026-10-19 | O `src/assets/family_img.jpg` **não será comprimido**. | Escolha do autor. |
+| D8 | 2026-11-17 | O projeto passa a usar o **Node 26 LTS**, e o `@types/node` acompanha a mesma versão major. | O Node 24 entrou em Maintenance em 2026-10-20. O 26 é Active LTS até 2027-10, com suporte até 2029-04. |
+| D9 | 2026-11-17 | O **Dependabot** checa npm e Actions **uma vez por mês**, com um PR agrupado por ecossistema. Os PRs são validados localmente antes do merge. | Evitar o atraso acumulado que a revisão encontrou: um Vite com falha crítica e Actions de 1 a 3 versões major atrás. |
 
 ## Fase 0: Pré-desenvolvimento
 
@@ -63,6 +65,14 @@ _Atualizado em 2026-10-19, ao fim da sessão._
 - [x] Smoke tests E2E com Playwright (`f15910d`)
 - [x] README descrevendo o projeto (`0af8673`)
 
+Revisão de dependências na volta da pausa, em 2026-11-17:
+
+- [x] Vite 8.3.8, que corrige a falha crítica [GHSA-p4f5-76q4-ffq7](https://github.com/vitejs/vite/security/advisories/GHSA-p4f5-76q4-ffq7), além de plugin-react 6.3, oxlint 1.94 e Playwright 1.65 (`47dada6`)
+- [x] Actions do deploy nos runtimes Node 24: checkout v7, setup-node v7, configure-pages v6, upload-pages-artifact v5 e deploy-pages v5 (`7fe02ec`)
+- [x] Node 26 LTS ([D8](#registro-de-decisões)) (`029b3d2`)
+- [x] Dependabot mensal e agrupado ([D9](#registro-de-decisões)) (`2d68a4f`)
+- Avaliados e descartados por ora: React Compiler (app pequeno, traria o Babel de volta ao build), lint com tipos via `oxlint-tsgolint` (pouco código assíncrono) e o formatador `oxfmt` (ainda na versão 0.x). Se um formatador entrar no futuro, ele deve ignorar `src/versions/v1/`.
+
 ## Fase 1: Fundação de versões
 
 ⬜ Objetivo: separar a v1 congelada da v2 e permitir trocar entre elas em runtime.
@@ -74,7 +84,7 @@ _Atualizado em 2026-10-19, ao fim da sessão._
 
 **Build multi-página:**
 
-- [ ] Configurar o Vite com duas entradas: `index.html` → shell da v2 e `v1.html` → `src/versions/v1/main.tsx`. Confirmar na implementação qual opção de entradas o Vite 8 usa (`build.rolldownOptions.input` ou `build.rollupOptions.input`).
+- [ ] Configurar o Vite com duas entradas: `index.html` → shell da v2 e `v1.html` → `src/versions/v1/main.tsx`. No Vite 8, as entradas vão em `build.rolldownOptions.input` (confirmado nos tipos em 2026-11-17; `rollupOptions` está obsoleto).
 
 **Shell da v2:**
 
@@ -217,3 +227,5 @@ Ideias para decidir juntos:
 | 2026-10-19 | 0 | Redux → Context, Node 24, React 19, oxlint, Vite 8 + TS 7, remoção do gh-pages (0 vulnerabilidades, 244 → 29 pacotes) | `8c4635d` … `a7b327e` |
 | 2026-10-19 | 0 | Correção da largura da nav, viewport com `useSyncExternalStore`, smoke tests E2E e README novo | `94fd0c0` … `0af8673` |
 | 2026-10-19 | — | Roadmap da v2.0 criado, com decisões D1 a D7 e arquitetura iframe + `?lang` | `d9491e3` |
+| 2026-10-31 | — | Pausa longa para colocar as matérias da UVV em dia | — |
+| 2026-11-17 | 0 | Revisão de dependências: Vite com correção de segurança, plugin-react, oxlint, Playwright, Actions do deploy, Node 26 LTS e Dependabot (D8 e D9) | `47dada6` … `2d68a4f` |
