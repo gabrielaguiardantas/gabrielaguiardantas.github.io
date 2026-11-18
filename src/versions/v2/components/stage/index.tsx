@@ -1,10 +1,11 @@
 import { type CSSProperties, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useLanguage } from "../../context/language";
-import { navigate, useRoute } from "../../context/route";
+import { type Route, navigate } from "../../context/route";
 import { useVersion } from "../../context/version";
-import { SECTIONS } from "../../sections";
+import { SECTIONS, type SectionId } from "../../sections";
 import Section from "../sections";
 import { type Box, type OrbitGeometry, computeOrbit } from "./orbitLayout";
+import { type Intro, TAG } from "./useIntro";
 import styles from "./stage.module.css";
 
 const TEXT = {
@@ -42,9 +43,14 @@ function obstacles(origin: DOMRect): Box[] {
   });
 }
 
+type StageProps = {
+  route: Route;
+  intro: Intro; // a digitação do <GAD /> ao carregar
+  onPoint: (section: SectionId | null) => void; // a seção sob o mouse ou o foco, para o guia
+};
+
 // o palco: o <GAD /> no centro da página, a órbita com as seções e o painel da seção aberta (D13)
-function Stage() {
-  const route = useRoute();
+function Stage({ route, intro, onPoint }: StageProps) {
   const { language } = useLanguage();
   const { version } = useVersion();
   const text = TEXT[language];
@@ -110,12 +116,34 @@ function Stage() {
   }, [openSection]);
 
   const onCore = () => navigate(state === "orbit" ? "idle" : "explore");
+  const point = (i: number | null) => {
+    setHot(i);
+    onPoint(i === null ? null : SECTIONS[i].id);
+  };
+  // a linha só acende com a órbita aberta
+  const hotLine = state === "orbit" ? hot : null;
+
+  // as letras ainda não digitadas ocupam o espaço, então nada se desloca; o cursor
+  // anda logo depois da última letra e fica aceso enquanto digita
+  const caret = <span key="caret" className={intro.typing ? `${styles.caret} ${styles.solid}` : styles.caret} />;
+  const letters = TAG.map((letter, i) => (
+    <span
+      key={i}
+      className={[letter.match(/[A-Z]/) ? styles.initials : styles.bracket, i >= intro.typed && styles.off]
+        .filter(Boolean)
+        .join(" ")}
+    >
+      {letter}
+    </span>
+  ));
+  letters.splice(intro.typed, 0, caret);
 
   return (
     <main
       ref={stageRef}
       className={styles.stage}
       data-state={state}
+      data-intro={intro.typing ? "typing" : undefined}
       style={vars({ "--shift": `${geometry?.shift ?? 0}px` })}
     >
       <svg className={styles.links} aria-hidden="true">
@@ -126,7 +154,7 @@ function Stage() {
             y1={line.y1}
             x2={line.x2}
             y2={line.y2}
-            className={hot === i ? styles.hot : undefined}
+            className={hotLine === i ? styles.hot : undefined}
             style={vars({ "--i": i, "--len": line.length.toFixed(1) })}
           />
         ))}
@@ -142,10 +170,7 @@ function Stage() {
         onClick={onCore}
       >
         <span className={styles.tag} aria-hidden="true">
-          <span className={styles.bracket}>&lt;</span>
-          <span className={styles.initials}>GAD</span>
-          <span className={styles.bracket}> /&gt;</span>
-          <span className={styles.caret} />
+          {letters}
         </span>
       </button>
       <p className={styles.hint}>{text.hint}</p>
@@ -165,10 +190,10 @@ function Stage() {
                 aria-label={label[language]}
                 style={vars({ "--i": i, "--x": `${position?.x ?? 0}px`, "--y": `${position?.y ?? 0}px` })}
                 onClick={() => navigate(id)}
-                onPointerEnter={() => setHot(i)}
-                onPointerLeave={() => setHot(null)}
-                onFocus={() => setHot(i)}
-                onBlur={() => setHot(null)}
+                onPointerEnter={() => point(i)}
+                onPointerLeave={() => point(null)}
+                onFocus={() => point(i)}
+                onBlur={() => point(null)}
               >
                 <span className={styles.bracket}>&lt;</span>
                 {label[language]}

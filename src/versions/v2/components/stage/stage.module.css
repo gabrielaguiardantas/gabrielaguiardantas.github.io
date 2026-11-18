@@ -70,6 +70,16 @@
   animation: blink 1.1s steps(1) infinite;
 }
 
+/* enquanto digita, o cursor fica aceso, como num terminal */
+.caret.solid {
+  animation: none;
+}
+
+/* letra ainda não digitada: ocupa o espaço, então nada se desloca */
+.off {
+  visibility: hidden;
+}
+
 @keyframes blink {
   50% {
     opacity: 0;
@@ -89,7 +99,8 @@
   transition: opacity calc(0.3s * var(--tempo));
 }
 
-.stage:not([data-state="idle"]) .hint {
+.stage:not([data-state="idle"]) .hint,
+.stage[data-intro="typing"] .hint {
   opacity: 0;
   pointer-events: none;
 }

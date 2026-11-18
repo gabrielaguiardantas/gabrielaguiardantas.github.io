@@ -13,6 +13,18 @@ const core = (page: Page) => page.locator('main > button[aria-controls="orbit"]'
 const satellite = (page: Page, name: string) => page.locator('#orbit').getByRole('button', { name, exact: true })
 const panelSection = (page: Page, id: string) => page.locator(`main [data-section="${id}"]`)
 const browserBack = (page: Page) => page.evaluate(() => history.back())
+const stage = (page: Page) => page.locator('main')
+const hint = (page: Page) => page.getByText('// clique para explorar')
+const guide = (page: Page) => page.locator('aside p[data-orbit-avoid="box"]')
+// o texto digitado (o que se vê), sem as tags <p> decorativas
+const guideTyped = (page: Page) => guide(page).locator('span[aria-hidden="true"]').nth(1)
+const nb = (text: string) => text.replaceAll('-', '‑')
+const GUIDE = {
+  idle: nb('Bem-vindo ao meu portfólio. Tudo aqui orbita o <GAD />: clique nele para explorar.'),
+  orbit: 'Cinco seções, cada uma um componente. Aponte para uma delas para saber o que tem lá.',
+  projects: 'Uma seleção do que já construí, das APIs às aplicações em React, com o link para o código de cada um.',
+  contact: nb('Os canais para conversarmos sobre oportunidades, projetos ou código: LinkedIn, GitHub e e-mail.'),
+}
 
 // a órbita está aberta quando todas as seções podem ser clicadas
 async function expectOrbit(page: Page) {
@@ -274,5 +286,86 @@ test.describe('v2', () => {
       await expectSection(page, 'about')
       expect(await panelSection(page, 'about').locator('..').evaluate((element) => element.scrollTop)).toBe(0)
     })
+  })
+
+  test.describe('invitation', () => {
+    test('types <GAD /> on load, then shows the hint', async ({ page }) => {
+      await expect(stage(page)).toHaveAttribute('data-intro', 'typing')
+      await expect(hint(page)).toHaveCSS('opacity', '0')
+      await expect(stage(page)).not.toHaveAttribute('data-intro', 'typing', { timeout: 4000 })
+      await expect(hint(page)).toHaveCSS('opacity', '1')
+    })
+
+    test('a click while typing completes <GAD /> and opens the orbit', async ({ page }) => {
+      await expect(stage(page)).toHaveAttribute('data-intro', 'typing')
+      await core(page).click()
+      await expectOrbit(page)
+      await expect(stage(page)).not.toHaveAttribute('data-intro')
+    })
+
+    test('skips the typing when the page opens on a section', async ({ page }) => {
+      await page.goto('/#projects')
+      await expectSection(page, 'projects')
+      await expect(stage(page)).not.toHaveAttribute('data-intro')
+    })
+
+    test('skips the typing with reduced motion', async ({ page }) => {
+      await page.emulateMedia({ reducedMotion: 'reduce' })
+      await page.goto('/')
+      await expect(stage(page)).not.toHaveAttribute('data-intro')
+      await expect(hint(page)).toBeVisible()
+    })
+  })
+
+  test.describe('guide', () => {
+    test.skip(({ viewport }) => viewport!.width <= 820, 'the guide is hidden on mobile')
+
+    test('waits for <GAD />, then types the welcome', async ({ page }) => {
+      await expect(stage(page)).toHaveAttribute('data-intro', 'typing')
+      await expect(guide(page)).toHaveCSS('opacity', '0')
+      await expect(guideTyped(page)).toHaveText(GUIDE.idle, { timeout: 6000 })
+      await expect(guide(page)).toHaveCSS('opacity', '1')
+    })
+
+    test('explains the orbit, the pointed section and the open section', async ({ page }) => {
+      await core(page).click()
+      await expectOrbit(page)
+      await expect(guideTyped(page)).toHaveText(GUIDE.orbit)
+
+      await satellite(page, 'Projetos').hover()
+      await expect(guideTyped(page)).toHaveText(GUIDE.projects)
+      // tirar o mouse volta ao texto da órbita
+      await page.mouse.move(5, 5)
+      await expect(guideTyped(page)).toHaveText(GUIDE.orbit)
+
+      // o foco pelo teclado também aponta
+      await satellite(page, 'Contato').focus()
+      await expect(guideTyped(page)).toHaveText(GUIDE.contact)
+      await page.keyboard.press('Enter')
+      await expectSection(page, 'contact')
+      await expect(guideTyped(page)).toHaveText(GUIDE.contact)
+    })
+
+    test('gives screen readers the whole text at once', async ({ page }) => {
+      await page.goto('/#projects')
+      await expect(guide(page)).toContainText(GUIDE.projects)
+    })
+
+    test('follows the language', async ({ page }) => {
+      await page.goto('/#explore')
+      await page.getByRole('button', { name: 'English' }).click()
+      await expect(guideTyped(page)).toHaveText("Five sections, each one a component. Point at one to see what's inside.")
+    })
+
+    test('shows the text at once with reduced motion', async ({ page }) => {
+      await page.emulateMedia({ reducedMotion: 'reduce' })
+      await page.goto('/')
+      await expect(guideTyped(page)).toHaveText(GUIDE.idle, { timeout: 100 })
+    })
+  })
+
+  test('the guide is hidden on mobile', async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== 'mobile', 'mobile only')
+    await expect(guide(page)).toBeHidden()
   })
 })

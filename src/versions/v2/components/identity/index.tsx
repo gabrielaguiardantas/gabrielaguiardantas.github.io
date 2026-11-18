@@ -65,7 +65,8 @@ const LANGUAGES: { id: Language; flag: string; label: string }[] = [
 // os ícones são máscaras pintadas com background-color, então seguem os tokens de cor
 const icon = (src: string) => ({ "--icon": `url("${src}")` }) as CSSProperties;
 
-function Identity() {
+// children: o guia <p>, que ocupa o vão entre o topo e o footer (D14)
+function Identity({ children }: { children?: ReactNode }) {
   const { language, setLanguage } = useLanguage();
   const text = TEXT[language];
 
@@ -111,6 +112,7 @@ function Identity() {
           ))}
         </ul>
       </header>
+      {children}
       <footer className={styles.footer}>
         <p data-orbit-avoid="ink">{text.footer(toolLink)}</p>
       </footer>
