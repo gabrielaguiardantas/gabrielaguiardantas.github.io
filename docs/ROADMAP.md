@@ -23,14 +23,15 @@ _Atualizado em 2026-11-18._
 - **Onde paramos:**
   - A [Fase 1](#fase-1-fundação-de-versões) está concluída. O site abre na v2, o card v1.0 leva a 2023 num iframe, o botão "Voltar para 2026" e o "Voltar" do navegador ([D10](#registro-de-decisões)) trazem de volta, e tudo isso está coberto pelo E2E.
   - A [Fase 2](#fase-2-design-da-v2) virou o **design novo da v2** ([D11](#registro-de-decisões)). A direção visual está decidida (D12 e D13), e o **protótipo está concluído** na versão 8, com os pontos em aberto fechados ([D14](#registro-de-decisões)).
-  - No site, a v2 ainda tem o mesmo visual e conteúdo da v1.
-- **Próximo passo:** começar a [implementação na v2](#23-implementação-na-v2), recriando o protótipo em React.
-- **Ao mudar o visual da v2:** os testes do `e2e/smoke.spec.ts` rodam hoje nas duas páginas, porque elas ainda compartilham o layout. O layout novo não tem nav nem seções empilhadas, então esses testes precisam ser separados: os atuais ficam só para a v1, e a v2 ganha testes próprios.
+  - A [implementação na v2](#23-implementação-na-v2) está em andamento, em 8 passos. Os passos 0 a 3 estão feitos: testes separados, coluna de identidade, endereços, `<GAD />`, órbita e seções no visual novo, com o conteúdo provisório do protótipo.
+- **Próximo passo:** passo 4 da 2.3, a digitação do `<GAD />` ao carregar e o guia `<p>` na coluna de identidade.
+- **Push:** os commits da 2.3 vão direto para a `main`, e o push fica para o fim da etapa, para o site publicado não mostrar uma v2 pela metade.
 - **Decisões pendentes:**
   - validar o hex `#D97757` com o ícone oficial do Claude (Fase 2);
   - se o guia `<p>` aparece no celular, e onde (Fase 2);
   - se a digitação do `<GAD />` aparece em toda visita ou só na primeira da sessão (Fase 2);
-  - validar o rascunho do footer, que já aparece no protótipo (Fase 3);
+  - validar o rascunho do footer, que já aparece no site (Fase 3);
+  - qual texto o Sobre usa: o longo do commit `f082aaa` ou o curto do protótipo, com a trajetória (Fase 3);
   - definir o efeito da volta no tempo (Fase 4).
 - **Ambiente:** Node 26 via fnm (`.node-version`). Dev server com `npm run dev` na porta 5173. Para assistir os testes: `SLOWMO=600 npx playwright test --headed --workers 1`.
 
@@ -59,6 +60,7 @@ _Atualizado em 2026-11-18._
 | D12 | 2026-11-17 | **A paleta da v1 fica:** fundo `#444444` e texto `#dce6cf`. O laranja `#D97757` substitui o verde. Para texto pequeno, usa-se um tom mais claro, `#EDA48C`. O estilo é uma **base minimalista com detalhes técnicos**: sans no texto e JetBrains Mono nos detalhes (tags, rótulos, datas). | Continuidade com a v1 e com o banner do LinkedIn. O laranja tem contraste de 3.1:1 sobre `#444444`, bom para títulos, ícones e bordas, mas abaixo do mínimo de 4.5:1 para texto pequeno; o `#EDA48C` tem 4.8:1. O verde antigo também não passava (3.8:1). |
 | D13 | 2026-11-17 | **Layout:** a coluna de identidade da v1 continua à esquerda, com nome, cargo, idiomas, tagline, contatos e footer. A nav e as seções empilhadas saem. No **centro da página** fica o componente **`<GAD />`** (as iniciais como um componente React), com um cursor piscando. Clicar nele abre as seções em órbita, como componentes-filhos (`<Sobre />`, `<Stacks />`…), e cada seção abre na área à direita. No celular, a órbita vira uma árvore de componentes (`├── <Sobre />`). | Uma marca de dev memorável, no lugar do layout padrão de portfólio, e coerente com a narrativa de desenvolvimento *AI-oriented*. |
 | D14 | 2026-11-18 | **Movimento e guia da v2**, escolhidos num painel de testes do protótipo. **Entrada da seção:** a órbita se recolhe, o `<GAD />` vai para o canto e o título é digitado (a alternativa, a tag clicada voando até virar o título, foi descartada). **Ritmo:** as durações da versão 3, com a órbita em cerca de 0,8 s e a entrada da seção em cerca de 0,8 s. **Convite:** ao carregar, o cursor digita o `<GAD />`, e só depois aparecem o `// clique para explorar` e o guia. **Guia:** no vão da coluna de identidade, onde a v1 tinha a nav, um `<p>` digitado explica a seção apontada ou aberta. **Digitação:** cada uma no seu ritmo: `<GAD />` irregular (70 a 140 ms por letra), títulos a 45 ms por letra e guia a 2 letras a cada 16 ms. | A órbita sozinha não dizia o que cada seção tem, e o vão da coluna ficava vazio. Uma velocidade única de digitação foi testada e descartada: devagar, o guia demora demais; rápida, o `<GAD />` perde o efeito. |
+| D15 | 2026-11-18 | **Endereços e fonte da v2.** Os endereços ficam em **inglês fixo**, iguais nos dois idiomas: `/` para o início, `#explore` para a órbita e `#about`, `#stacks`, `#projects`, `#versions` e `#contact` para as seções. A **JetBrains Mono** é servida pelo próprio site, pelo pacote `@fontsource-variable/jetbrains-mono`. Com a v1 aberta, a barra de endereço continua mostrando o endereço da v2: a nav da v1 muda só o endereço do iframe. | Trocar o idioma não muda o endereço, e um link compartilhado vale nos dois idiomas. A fonte não depende do Google nem da rede, e é atualizada pelo Dependabot. Espelhar o endereço da v1 na barra faria `#stacks` abrir a seção da v2, e um reload teria que reabrir 2023, contra a [D3](#registro-de-decisões). |
 
 ## Fase 0: Pré-desenvolvimento
 
@@ -161,20 +163,20 @@ Revisão de dependências na volta da pausa, em 2026-11-17:
 
 ### 2.3 Implementação na v2
 
-⬜ Recriar o protótipo em React, dentro de `src/versions/v2/`.
+🟨 Recriar o protótipo em React, dentro de `src/versions/v2/`, em 8 passos: (0) testes, (1) tokens e coluna de identidade, (2) endereços, `<GAD />` e órbita, (3) seções, (4) digitação e guia, (5) celular, (6) acessibilidade e E2E, (7) limpeza.
 
-- [ ] Tokens de cor e de fonte num CSS global da v2 (`--bg`, `--fg`, `--fg-muted`, `--accent`, `--accent-text`, `--font-mono`…).
-- [ ] Fonte JetBrains Mono. Decidir entre Google Fonts e hospedar o arquivo no próprio site.
-- [ ] Coluna de identidade com o conteúdo novo da [Fase 3](#fase-3-conteúdo-da-v2) (cargo e canais oficiais). Os ícones usam `mask-image` com `background-color`, no lugar do `filter: hue-rotate(…)` calibrado para o verde.
-- [ ] Componentes `<GAD />` e órbita, com o cálculo de raio e deslocamento do protótipo. No celular, a árvore.
-- [ ] Seções no painel da direita, com o efeito de entrada da [D14](#registro-de-decisões).
-- [ ] Digitação do `<GAD />` ao carregar e guia `<p>` na coluna de identidade, com os tempos da D14. Decidir se a digitação do `<GAD />` aparece em toda visita ou só na primeira da sessão, e se o guia aparece no celular.
+- [x] Tokens de cor e de fonte em [`index.css`](../src/versions/v2/index.css) (`--bg`, `--fg`, `--fg-muted`, `--accent`, `--accent-text`, `--font-mono`…).
+- [x] Fonte JetBrains Mono servida pelo próprio site ([D15](#registro-de-decisões)).
+- [x] Coluna de identidade em [`components/identity/`](../src/versions/v2/components/identity/index.tsx), com o cargo e os canais oficiais da [Fase 3](#fase-3-conteúdo-da-v2). Os ícones usam `mask-image` com `background-color`, no lugar do `filter: hue-rotate(…)`. O footer de 2026 linka Claude, TypeScript, Visual Studio Code, React e Vite. O `lang` da página segue o idioma.
+- [x] Componentes `<GAD />` e órbita em [`components/stage/`](../src/versions/v2/components/stage/index.tsx). O cálculo de raio e deslocamento do protótipo virou uma função sem DOM ([`orbitLayout.ts`](../src/versions/v2/components/stage/orbitLayout.ts)), e a coluna de identidade marca o que a órbita não pode cobrir com `data-orbit-avoid`. No celular, a árvore (adiantada do passo 5).
+- [x] Seções no painel da direita, em [`components/sections/`](../src/versions/v2/components/sections/index.tsx), com o efeito de entrada da [D14](#registro-de-decisões): o `<GAD />` vai para o canto e o título é digitado. O conteúdo é o provisório do protótipo, em português e inglês.
+- [ ] Digitação do `<GAD />` ao carregar e guia `<p>` na coluna de identidade, com os tempos da D14. Decidir se a digitação do `<GAD />` aparece em toda visita ou só na primeira da sessão, e se o guia aparece no celular. O hook `useTyping` ([`motion.ts`](../src/versions/v2/motion.ts)) já existe.
 - [ ] Textos do guia em português e inglês, revisados na [Fase 3](#fase-3-conteúdo-da-v2).
-- [ ] Endereços por hash e histórico seguindo a D10. Conferir a convivência com o `pushState` do `VersionProvider`, que hoje marca a troca de versão.
-- [ ] `<Versões />` mantém o botão "Voltar para 2023", que já funciona.
-- [ ] Teclado (Tab e Esc), foco visível e `prefers-reduced-motion`.
-- [ ] E2E: separar o `smoke.spec.ts` (os testes atuais ficam para a v1) e criar testes da v2 (órbita, seções, hash e "Voltar"). Os testes de troca de versão (`versions.spec.ts`) precisam abrir a órbita antes de chegar ao card v1.0.
-- [ ] Remover da v2 o que deixou de ser usado: nav, seções empilhadas e o CSS global herdado da v1.
+- [x] Endereços por hash ([D15](#registro-de-decisões)) e histórico seguindo a D10, em [`context/route.ts`](../src/versions/v2/context/route.ts). O endereço é a fonte da verdade; o `VersionProvider` guarda a versão no `state` da entrada, sem mudar o endereço, então os dois convivem no mesmo histórico.
+- [x] `<Versões />` mantém o botão "Voltar para 2023", e a volta de 2023 retorna à mesma seção.
+- [ ] Teclado (Tab e Esc), foco visível e `prefers-reduced-motion`. O Esc já volta um nível, e o título digitado já respeita o "menos movimento".
+- [x] E2E: o smoke virou [`e2e/v1.spec.ts`](../e2e/v1.spec.ts), só para a v1, e a v2 ganhou o [`e2e/v2.spec.ts`](../e2e/v2.spec.ts): coluna de identidade, navegação, layout da órbita em 4 tamanhos de tela e seções. O `versions.spec.ts` chega ao card v1.0 pela órbita.
+- [ ] Remover da v2 o que deixou de ser usado. Já saíram a nav, as seções empilhadas, o CSS global herdado da v1 e o popup; faltam os ícones antigos em `assets/`.
 
 ## Fase 3: Conteúdo da v2
 
@@ -190,6 +192,7 @@ Ajustes que alinham o site ao LinkedIn e ao GitHub (decididos em 2026-11-17):
 
 ### Sobre
 
+- [ ] **Escolher o texto:** o site usa hoje o texto curto do protótipo (dois parágrafos e a trajetória). Os dois itens abaixo vêm do plano anterior ao design novo e precisam ser reavaliados.
 - [ ] Usar os textos em português e inglês do commit `f082aaa` (`src/pages/about/index.tsx`), que tinham sido revertidos em `58dee92`. Eles cobrem a transição de carreira pela Trybe, a atuação como Full Stack numa Insurtech (Node.js, React, MariaDB), Ciência da Computação na UVV, Economia na UFES e a experiência no IBGE. Os links abrem em nova aba (`target="_blank"`).
 - [ ] Manter o popup da foto da família no hover de "minha família".
 
@@ -207,14 +210,12 @@ Rascunho para validar:
 
 ### Stacks
 
-- [ ] Adicionar o **Claude** seguindo o padrão das demais stacks:
-  1. O ícone oficial vai para `assets/` como `claude.svg`.
-  2. Import e export em [`centralIconsFile.ts`](../src/versions/v2/pages/stacks/centralIconsFile.ts).
-  3. A entrada `{ img: claude, alt: "claude" }` vai em [`stacksData.ts`](../src/versions/v2/pages/stacks/stacksData.ts).
+- [x] O **Claude** entrou como um chip em destaque no grupo `ferramentas`. O plano anterior (ícone `claude.svg` na grade de ícones da v1) ficou obsoleto com o design novo, que usa grupos de chips sem ícones.
+- [ ] Revisar os grupos e as tecnologias de cada um.
 
 ### Versões
 
-- [ ] Dados da v2: **v1.0** com "2023 · Versão original", que dispara a volta no tempo, e **v2.0** com "2026 · Versão atual".
+- [x] Dados da v2: **v1.0** com "2023 · Versão original", que dispara a volta no tempo, e **v2.0** com "2026 · Versão atual".
 
 ## Fase 4: Efeito "volta no tempo"
 
@@ -302,3 +303,6 @@ Ideias para decidir juntos:
 | 2026-11-17 | 2 | Decisões D11 a D13: design novo da v2, paleta da v1 com o laranja, base minimalista com detalhes técnicos e o layout do `<GAD />` em órbita. A Fase 5 foi absorvida pela Fase 2 | — |
 | 2026-11-17 | 2 | Protótipo interativo em 3 versões: (1) primeira proposta; (2) sem molduras, só as tags e o cursor; (3) o `<GAD />` no centro da página, com o raio da órbita se ajustando à coluna de identidade. A versão 3 foi aprovada e guardada em `docs/prototypes/` | `2b0d061` |
 | 2026-11-18 | 2 | **Protótipo concluído na versão 8** (D14). As versões 4 a 7 tiveram um painel de testes (entrada da seção, ritmo, digitação do `<GAD />` e uma velocidade única de digitação, testada e descartada) e ganharam o guia `<p>` no vão da coluna de identidade. Na versão 8, o painel saiu e ficaram só as escolhas | `a3c9f36` |
+| 2026-11-18 | 2 | 2.3, passos 0 e 1: o smoke virou `e2e/v1.spec.ts`; o fixture ignora o que o navegador cancela ao trocar de página; tokens, JetBrains Mono (D15) e a coluna de identidade nova | `7d1319c`, `f506455`, `5120bf6` |
+| 2026-11-18 | 2 | 2.3, passo 2: endereços em inglês fixo (D15) e histórico da D10, `<GAD />`, órbita com o cálculo do protótipo e árvore no celular. O `versions.spec.ts` passa pela órbita | `39b8f45` |
+| 2026-11-18 | 2 | 2.3, passo 3: seções no visual novo, com o título digitado. 61 testes E2E, estáveis em 3 repetições | `7950d19` |
