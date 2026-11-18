@@ -50,11 +50,6 @@
   font-size: 0.8rem;
 }
 
-.chip.highlight {
-  border-color: var(--accent);
-  color: var(--accent-text);
-}
-
 /* ---------- Sobre: trajetória ---------- */
 .timeline {
   display: grid;

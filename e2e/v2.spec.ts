@@ -287,7 +287,15 @@ test.describe('v2', () => {
       await expect(panelSection(page, 'about')).toContainText('// trajetória')
 
       await page.goto('/#stacks')
-      await expect(panelSection(page, 'stacks').locator('dt')).toHaveText(['frontEnd', 'backEnd', 'dados', 'testes', 'ferramentas'])
+      await expect(panelSection(page, 'stacks').locator('dt')).toHaveText([
+        'frontEnd',
+        'backEnd',
+        'dados',
+        'testes',
+        'devOps',
+        'práticas',
+        'ia',
+      ])
 
       await page.goto('/#projects')
       await expect(panelSection(page, 'projects').getByRole('link')).toHaveCount(6)
