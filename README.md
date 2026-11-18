@@ -42,7 +42,7 @@ The site runs at http://localhost:5173/.
 
 The tests in [`e2e/`](e2e) run on a desktop (1440×900) and a mobile (390×844) viewport.
 
-[`smoke.spec.ts`](e2e/smoke.spec.ts) runs on both pages, v2 (`/`) and v1 opened on its own (`/v1.html`), and checks that:
+[`v1.spec.ts`](e2e/v1.spec.ts) runs on v1 opened on its own (`/v1.html`) and checks that:
 
 - the page renders the right layout for the viewport, in Portuguese by default;
 - the flag buttons switch the language and back;
