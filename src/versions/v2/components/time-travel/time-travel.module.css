@@ -1,0 +1,83 @@
+/* a camada da volta no tempo fica acima de tudo, inclusive do iframe da v1 (z-index 1000),
+   e segura os cliques enquanto a época troca */
+.travel {
+  position: fixed;
+  inset: 0;
+  z-index: 1001;
+  display: grid;
+  place-items: center;
+  /* os tokens da v2 valem aqui: a camada está no documento da v2, por cima do iframe */
+  color: var(--fg);
+  font-family: var(--font-mono);
+}
+
+.veil {
+  position: absolute;
+  inset: 0;
+  background: var(--veil);
+  opacity: 0;
+}
+
+.counter {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  opacity: 0;
+}
+
+.tag {
+  display: inline-flex;
+  white-space: pre;
+  font-size: 100px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+/* realce como num editor: sinais em laranja, atributo apagado e valor em laranja claro */
+.bracket {
+  color: var(--accent);
+}
+
+.attribute {
+  color: var(--fg-muted);
+}
+
+.value {
+  display: inline-flex;
+  color: var(--accent-text);
+}
+
+/* o hodômetro: uma janela de um dígito e, dentro dela, a fita com os dígitos empilhados */
+.roll {
+  display: inline-block;
+  height: 1em;
+  overflow: hidden;
+}
+
+.strip {
+  display: block;
+}
+
+.strip span {
+  display: block;
+  height: 1em;
+}
+
+.caption {
+  margin: 0;
+  color: var(--fg-muted);
+  font-size: clamp(0.75rem, 1.8vw, 0.95rem);
+}
+
+.loading {
+  position: absolute;
+  bottom: 8%;
+  left: 50%;
+  margin: 0;
+  color: var(--fg-muted);
+  font-size: 0.85rem;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateX(-50%);
+}

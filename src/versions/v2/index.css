@@ -9,6 +9,7 @@
   --line-strong: #767676;
   --accent: #d97757; /* títulos grandes, ícones e bordas: 3.1:1, não serve para texto pequeno */
   --accent-text: #eda48c; /* laranja para texto pequeno: 4.8:1 */
+  --veil: #262626; /* a camada escura da volta no tempo (D18) */
 
   --font-body: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   --font-mono: "JetBrains Mono Variable", ui-monospace, "Cascadia Code", Consolas, monospace;

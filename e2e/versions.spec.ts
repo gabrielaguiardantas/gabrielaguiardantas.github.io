@@ -174,6 +174,80 @@ test.describe('switching between v2 and v1', () => {
   })
 })
 
+// D18: a volta no tempo, com o <GAD year={2026} /> rolando até 2023 e de volta
+test.describe('time travel effect', () => {
+  const caption = (page: Page, text: string) => page.getByText(text, { exact: true })
+
+  test.beforeEach(async ({ page }) => {
+    await page.goto('/')
+  })
+
+  test('rolls the year to 2023 and back to 2026 around the switch', async ({ page }) => {
+    await openVersionsSection(page)
+    await v2Versions(page).getByRole('button', { name: LABELS.portuguese.open }).click()
+    // durante o efeito, o contador aparece por cima da v2, e a v1 ainda não
+    await expect(caption(page, '// voltando no tempo')).toBeVisible()
+    await expect(page.getByText('GAD year={')).toBeVisible()
+    await expect(frameElement(page)).toBeVisible()
+    // ao fim, a camada sai de cena
+    await expect(caption(page, '// voltando no tempo')).toHaveCount(0)
+
+    await v1(page).locator('#versions').getByRole('button', { name: LABELS.portuguese.back }).click()
+    await expect(caption(page, '// de volta ao presente')).toBeVisible()
+    await expect(frameElement(page)).toBeHidden()
+    await expect(caption(page, '// de volta ao presente')).toHaveCount(0)
+  })
+
+  test('waits for v1 to load on the first visit', async ({ page }) => {
+    // a v1 demora 1,5 s para responder
+    await page.route('**/v1.html?**', async (route) => {
+      await new Promise((resolve) => setTimeout(resolve, 1500))
+      await route.continue()
+    })
+    await openVersionsSection(page)
+    const start = Date.now()
+    await v2Versions(page).getByRole('button', { name: LABELS.portuguese.open }).click()
+    await expect(caption(page, '// carregando 2023…')).toBeVisible()
+    await expect(frameElement(page)).toBeVisible({ timeout: 8000 })
+    expect(Date.now() - start).toBeGreaterThan(1500)
+  })
+
+  test('a Back in the middle of the trip turns it around', async ({ page }) => {
+    await openVersionsSection(page)
+    await v2Versions(page).getByRole('button', { name: LABELS.portuguese.open }).click()
+    await expect(caption(page, '// voltando no tempo')).toBeVisible()
+    await browserBack(page)
+    await expect(caption(page, '// de volta ao presente')).toBeVisible()
+    await expect(caption(page, '// de volta ao presente')).toHaveCount(0, { timeout: 8000 })
+    await expect(frameElement(page)).toBeHidden()
+    await expect(page).toHaveURL(/#versions$/)
+  })
+
+  test('follows the language', async ({ page }) => {
+    await page.getByRole('button', { name: 'English' }).click()
+    await openVersionsSection(page, 'english')
+    await v2Versions(page).getByRole('button', { name: LABELS.english.open }).click()
+    await expect(caption(page, '// going back in time')).toBeVisible()
+    await expect(frameElement(page)).toBeVisible()
+  })
+
+  test('is a quick crossfade, without the counter, with reduced motion', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' })
+    await openVersionsSection(page)
+    // a v1 já carregada, para medir só o efeito
+    await v2Versions(page).getByRole('button', { name: LABELS.portuguese.open }).click()
+    await expect(frameElement(page)).toBeVisible()
+    await v1(page).locator('#versions').getByRole('button', { name: LABELS.portuguese.back }).click()
+    await expect(frameElement(page)).toBeHidden()
+
+    const start = Date.now()
+    await v2Versions(page).getByRole('button', { name: LABELS.portuguese.open }).click()
+    await expect(frameElement(page)).toBeVisible()
+    expect(Date.now() - start).toBeLessThan(1000)
+    await expect(page.getByText('GAD year={')).toHaveCount(0)
+  })
+})
+
 test.describe('v1 opened on its own', () => {
   test('reads the initial language from ?lang', async ({ page }) => {
     await page.goto('/v1.html?lang=english')
