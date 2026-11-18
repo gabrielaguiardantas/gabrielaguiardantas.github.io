@@ -1,0 +1,116 @@
+import type { CSSProperties, ReactNode } from "react";
+import brazil from "../../assets/brazil.svg";
+import uk from "../../assets/uk.svg";
+import github from "../../assets/github.svg";
+import linkedin from "../../assets/linkedin.svg";
+import email from "../../assets/email.svg";
+import { type Language, useLanguage } from "../../context/language";
+import styles from "./identity.module.css";
+
+// ferramentas citadas no footer, cada uma com o link oficial
+const TOOLS = {
+  claude: { name: "Claude", href: "https://claude.com/" },
+  typescript: { name: "TypeScript", href: "https://www.typescriptlang.org/" },
+  vscode: { name: "Visual Studio Code", href: "https://code.visualstudio.com/" },
+  react: { name: "React", href: "https://react.dev/" },
+  vite: { name: "Vite", href: "https://vite.dev/" },
+};
+
+type ToolLink = (tool: keyof typeof TOOLS) => ReactNode;
+
+const toolLink: ToolLink = (tool) => (
+  <a href={TOOLS[tool].href} target="_blank" rel="noopener noreferrer">
+    {TOOLS[tool].name}
+  </a>
+);
+
+const TEXT = {
+  portuguese: {
+    role: "Desenvolvedor Full Stack",
+    languages: "Idioma",
+    tagline: "Desenvolvo produtos web responsivos e multi‑dispositivos", // U+2011: o hífen não quebra a linha
+    email: "E-mail",
+    footer: (tool: ToolLink) => (
+      <>
+        Desenvolvido por mim, de forma AI-oriented em parceria com o {tool("claude")}, em {tool("typescript")} no{" "}
+        {tool("vscode")}, tendo como base {tool("react")} e {tool("vite")}. © 2026 Gabriel A. Dantas - Todos os
+        direitos reservados. v2.0
+      </>
+    ),
+  },
+  english: {
+    role: "Full Stack Developer",
+    languages: "Language",
+    tagline: "Developing web responsive and multi‑device products",
+    email: "Email",
+    footer: (tool: ToolLink) => (
+      <>
+        Developed by me, AI-oriented in partnership with {tool("claude")}, in {tool("typescript")} on{" "}
+        {tool("vscode")}, built on {tool("react")} and {tool("vite")}. © 2026 Gabriel A. Dantas - All rights
+        reserved. v2.0
+      </>
+    ),
+  },
+} satisfies Record<Language, Record<string, string | ((tool: ToolLink) => ReactNode)>>;
+
+// cada bandeira tem o nome do idioma no próprio idioma
+const LANGUAGES: { id: Language; flag: string; label: string }[] = [
+  { id: "portuguese", flag: brazil, label: "Português" },
+  { id: "english", flag: uk, label: "English" },
+];
+
+// os ícones são máscaras pintadas com background-color, então seguem os tokens de cor
+const icon = (src: string) => ({ "--icon": `url("${src}")` }) as CSSProperties;
+
+function Identity() {
+  const { language, setLanguage } = useLanguage();
+  const text = TEXT[language];
+
+  const socials = [
+    { label: "GitHub", icon: github, href: "https://github.com/gabrielaguiardantas", external: true },
+    { label: "LinkedIn", icon: linkedin, href: "https://www.linkedin.com/in/gabrielaguiardantas", external: true },
+    { label: text.email, icon: email, href: "#contact", external: false },
+  ];
+
+  return (
+    <aside className={styles.identity}>
+      <header className={styles.header}>
+        <h1 className={styles.name}>Gabriel Aguiar Dantas</h1>
+        <p className={styles.role}>{text.role}</p>
+        <div className={styles.flags} role="group" aria-label={text.languages}>
+          {LANGUAGES.map(({ id, flag, label }) => (
+            <button
+              key={id}
+              type="button"
+              aria-pressed={language === id}
+              title={label}
+              onClick={() => setLanguage(id)}
+            >
+              <img src={flag} alt={label} />
+            </button>
+          ))}
+        </div>
+        <p className={styles.tagline}>{text.tagline}</p>
+        <ul className={styles.socials}>
+          {socials.map(({ label, icon: src, href, external }) => (
+            <li key={href}>
+              <a
+                href={href}
+                aria-label={label}
+                title={label}
+                {...(external && { target: "_blank", rel: "noopener noreferrer" })}
+              >
+                <span style={icon(src)} />
+              </a>
+            </li>
+          ))}
+        </ul>
+      </header>
+      <footer className={styles.footer}>
+        <p>{text.footer(toolLink)}</p>
+      </footer>
+    </aside>
+  );
+}
+
+export default Identity;

@@ -1,0 +1,52 @@
+/* tokens da v2 (D12): a paleta da v1, com o laranja do Claude no lugar do verde */
+:root {
+  color-scheme: dark;
+
+  --bg: #444444; /* fundo da v1 */
+  --bg-raised: #4c4c4c;
+  --fg: #dce6cf; /* texto da v1, 7.5:1 */
+  --fg-muted: #b9c2ad; /* 5.3:1 */
+  --line: #5e5e5e;
+  --line-strong: #767676;
+  --accent: #d97757; /* títulos grandes, ícones e bordas: 3.1:1, não serve para texto pequeno */
+  --accent-text: #eda48c; /* laranja para texto pequeno: 4.8:1 */
+
+  --font-body: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, "Cascadia Code", Consolas, monospace;
+
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --tempo: 1; /* multiplicador de todas as durações (D14) */
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 16px;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
+  }
+}

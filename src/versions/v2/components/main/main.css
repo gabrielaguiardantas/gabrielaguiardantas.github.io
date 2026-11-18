@@ -3,7 +3,7 @@ main {
     flex-direction: column;
     text-align: center;
     font-size: larger;
-    padding-left: 40%;
+    /* o envelope do Contato (top: 25%) depende desta altura fixa */
     height: 120rem;
 }
 
