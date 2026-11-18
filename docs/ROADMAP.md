@@ -18,17 +18,18 @@ Este documento orienta a modernização do portfólio e registra o andamento. A 
 
 ## Estado atual e próximo passo
 
-_Atualizado em 2026-11-17, ao fim da sessão. O trabalho está em pausa curta._
+_Atualizado em 2026-11-18._
 
 - **Onde paramos:**
   - A [Fase 1](#fase-1-fundação-de-versões) está concluída. O site abre na v2, o card v1.0 leva a 2023 num iframe, o botão "Voltar para 2026" e o "Voltar" do navegador ([D10](#registro-de-decisões)) trazem de volta, e tudo isso está coberto pelo E2E.
-  - A [Fase 2](#fase-2-design-da-v2) virou o **design novo da v2** ([D11](#registro-de-decisões)). A direção visual está decidida (D12 e D13), e o **protótipo interativo foi aprovado** como está, na versão 3.
+  - A [Fase 2](#fase-2-design-da-v2) virou o **design novo da v2** ([D11](#registro-de-decisões)). A direção visual está decidida (D12 e D13), e o **protótipo está concluído** na versão 8, com os pontos em aberto fechados ([D14](#registro-de-decisões)).
   - No site, a v2 ainda tem o mesmo visual e conteúdo da v1.
-- **Próximo passo:** reabrir o [protótipo](#22-protótipo-interativo) e decidir se ainda vale ajustar os pontos em aberto (entrada da seção, ritmo dos efeitos e convite ao clique). Depois disso, começar a [implementação na v2](#23-implementação-na-v2).
+- **Próximo passo:** começar a [implementação na v2](#23-implementação-na-v2), recriando o protótipo em React.
 - **Ao mudar o visual da v2:** os testes do `e2e/smoke.spec.ts` rodam hoje nas duas páginas, porque elas ainda compartilham o layout. O layout novo não tem nav nem seções empilhadas, então esses testes precisam ser separados: os atuais ficam só para a v1, e a v2 ganha testes próprios.
 - **Decisões pendentes:**
   - validar o hex `#D97757` com o ícone oficial do Claude (Fase 2);
-  - os pontos em aberto do protótipo (Fase 2);
+  - se o guia `<p>` aparece no celular, e onde (Fase 2);
+  - se a digitação do `<GAD />` aparece em toda visita ou só na primeira da sessão (Fase 2);
   - validar o rascunho do footer, que já aparece no protótipo (Fase 3);
   - definir o efeito da volta no tempo (Fase 4).
 - **Ambiente:** Node 26 via fnm (`.node-version`). Dev server com `npm run dev` na porta 5173. Para assistir os testes: `SLOWMO=600 npx playwright test --headed --workers 1`.
@@ -57,6 +58,7 @@ _Atualizado em 2026-11-17, ao fim da sessão. O trabalho está em pausa curta._
 | D11 | 2026-11-17 | A v2 ganha um **design novo**, e não só a troca de cor. A Fase 2 vira "Design da v2" (direção, protótipo e implementação) e absorve a Fase 5. | Só recolorir manteria o layout padrão da v1. A v2 precisa de identidade própria, e o contraste com 2023 reforça a viagem no tempo da Fase 4. |
 | D12 | 2026-11-17 | **A paleta da v1 fica:** fundo `#444444` e texto `#dce6cf`. O laranja `#D97757` substitui o verde. Para texto pequeno, usa-se um tom mais claro, `#EDA48C`. O estilo é uma **base minimalista com detalhes técnicos**: sans no texto e JetBrains Mono nos detalhes (tags, rótulos, datas). | Continuidade com a v1 e com o banner do LinkedIn. O laranja tem contraste de 3.1:1 sobre `#444444`, bom para títulos, ícones e bordas, mas abaixo do mínimo de 4.5:1 para texto pequeno; o `#EDA48C` tem 4.8:1. O verde antigo também não passava (3.8:1). |
 | D13 | 2026-11-17 | **Layout:** a coluna de identidade da v1 continua à esquerda, com nome, cargo, idiomas, tagline, contatos e footer. A nav e as seções empilhadas saem. No **centro da página** fica o componente **`<GAD />`** (as iniciais como um componente React), com um cursor piscando. Clicar nele abre as seções em órbita, como componentes-filhos (`<Sobre />`, `<Stacks />`…), e cada seção abre na área à direita. No celular, a órbita vira uma árvore de componentes (`├── <Sobre />`). | Uma marca de dev memorável, no lugar do layout padrão de portfólio, e coerente com a narrativa de desenvolvimento *AI-oriented*. |
+| D14 | 2026-11-18 | **Movimento e guia da v2**, escolhidos num painel de testes do protótipo. **Entrada da seção:** a órbita se recolhe, o `<GAD />` vai para o canto e o título é digitado (a alternativa, a tag clicada voando até virar o título, foi descartada). **Ritmo:** as durações da versão 3, com a órbita em cerca de 0,8 s e a entrada da seção em cerca de 0,8 s. **Convite:** ao carregar, o cursor digita o `<GAD />`, e só depois aparecem o `// clique para explorar` e o guia. **Guia:** no vão da coluna de identidade, onde a v1 tinha a nav, um `<p>` digitado explica a seção apontada ou aberta. **Digitação:** cada uma no seu ritmo: `<GAD />` irregular (70 a 140 ms por letra), títulos a 45 ms por letra e guia a 2 letras a cada 16 ms. | A órbita sozinha não dizia o que cada seção tem, e o vão da coluna ficava vazio. Uma velocidade única de digitação foi testada e descartada: devagar, o guia demora demais; rápida, o `<GAD />` perde o efeito. |
 
 ## Fase 0: Pré-desenvolvimento
 
@@ -142,21 +144,20 @@ Revisão de dependências na volta da pausa, em 2026-11-17:
 
 ### 2.2 Protótipo interativo
 
-🟨 O protótipo foi aprovado como está em 2026-11-17. Antes de implementar, decidir se os pontos em aberto ainda pedem ajuste.
+✅ Concluído em 2026-11-18, na versão 8. A versão 3 foi aprovada em 2026-11-17. As versões 4 a 7 tiveram um painel de testes temporário para comparar a entrada da seção, o ritmo e o convite; as escolhas estão na [D14](#registro-de-decisões), e o painel saiu na versão 8.
 
-- **Onde ver:** [artifact privado](https://claude.ai/artifact/9yt6MozuLrAMGrAq6QQeRE), na versão 3. O código fica guardado em [`docs/prototypes/v2-orbita.html`](prototypes/v2-orbita.html), num HTML único com os ícones embutidos. A pasta `docs/` fica fora do build e do deploy.
+- **Onde ver:** [artifact privado](https://claude.ai/artifact/9yt6MozuLrAMGrAq6QQeRE), na versão 8. O código fica guardado em [`docs/prototypes/v2-orbita.html`](prototypes/v2-orbita.html), num HTML único com os ícones embutidos. A pasta `docs/` fica fora do build e do deploy.
 - **O que ele mostra:**
-  - Estado inicial: o `<GAD />` no centro da página, só a tag e um cursor laranja piscando (sem círculo nem moldura), e o convite `// clique para explorar`.
+  - **Convite:** ao carregar, o cursor laranja pisca e digita o `<GAD />` no centro da página (só a tag, sem círculo nem moldura). Depois aparecem o `// clique para explorar` e o guia. Clicar durante a digitação completa a tag na hora e abre a órbita. Quem abre o site já num endereço de seção (`#projetos`) não vê a digitação.
+  - **Guia:** no vão da coluna de identidade, um `<p>` digitado com uma apresentação no início, um texto sobre a órbita e a explicação da seção apontada (mouse ou Tab) ou aberta. Ao passar o mouse de uma seção para outra, ele não volta ao texto da órbita no meio do caminho. Ele tem altura reservada, então a página não pula, e a órbita não encosta nele. Os textos são provisórios ([Fase 3](#fase-3-conteúdo-da-v2)).
   - **Efeito 1, a órbita:** ao clicar, as cinco seções saem do centro uma a uma, como tags sem moldura, ligadas ao `<GAD />` por linhas finas. As linhas vão da borda de um texto à borda do outro. Ao passar o mouse, a seção e a linha dela acendem em laranja.
   - **Efeito 2, a seção:** a órbita se recolhe, o `<GAD />` encolhe para o canto superior da área de conteúdo e vira o botão de início, e a seção sobe com o título sendo "digitado".
   - **Navegação:** cada estado tem um endereço (`#explorar`, `#sobre`, `#projetos`…). O "Voltar" do navegador desfaz uma ação por vez, no espírito da [D10](#registro-de-decisões). Esc volta um nível.
   - **Posição:** o `<GAD />` fica no centro exato da página de 1280 px de largura para cima. A órbita usa o maior raio, até 280 px, que não encoste no texto e nos ícones da coluna de identidade. Em telas mais estreitas, ela desliza para a direita em vez de encolher.
-  - **Celular** (até 820 px): a coluna de identidade vai para o topo, e a órbita vira uma árvore de componentes.
-  - **Acessibilidade:** o `<GAD />` e as seções são botões navegáveis por Tab, com foco visível. Com `prefers-reduced-motion`, as animações são desligadas.
-- **Pontos em aberto:**
-  - a entrada da seção (o `<GAD />` indo para o canto, ou a seção crescendo a partir do satélite clicado);
-  - o ritmo dos efeitos;
-  - se o convite ao clique fica claro só com o cursor e o rótulo. Uma alternativa é o cursor "digitar" o `<GAD />` ao carregar a página.
+  - **Celular** (até 820 px): a coluna de identidade vai para o topo, e a órbita vira uma árvore de componentes. O guia fica oculto, porque ali não existe o vão.
+  - **Acessibilidade:** o `<GAD />` e as seções são botões navegáveis por Tab, com foco visível. Com `prefers-reduced-motion`, as animações são desligadas, e o `<GAD />` e o guia já aparecem prontos.
+  - **Tempos:** todas as durações passam por um multiplicador, `--tempo: 1` no CSS e `TEMPO` no script. Foi ele que o painel de testes usou para comparar os ritmos.
+- **Verificação da versão 8 no Chrome:** 1280, 1440 e 1920 px, celular e menos movimento, sem erros no console.
 
 ### 2.3 Implementação na v2
 
@@ -166,7 +167,9 @@ Revisão de dependências na volta da pausa, em 2026-11-17:
 - [ ] Fonte JetBrains Mono. Decidir entre Google Fonts e hospedar o arquivo no próprio site.
 - [ ] Coluna de identidade com o conteúdo novo da [Fase 3](#fase-3-conteúdo-da-v2) (cargo e canais oficiais). Os ícones usam `mask-image` com `background-color`, no lugar do `filter: hue-rotate(…)` calibrado para o verde.
 - [ ] Componentes `<GAD />` e órbita, com o cálculo de raio e deslocamento do protótipo. No celular, a árvore.
-- [ ] Seções no painel da direita, com o efeito de entrada.
+- [ ] Seções no painel da direita, com o efeito de entrada da [D14](#registro-de-decisões).
+- [ ] Digitação do `<GAD />` ao carregar e guia `<p>` na coluna de identidade, com os tempos da D14. Decidir se a digitação do `<GAD />` aparece em toda visita ou só na primeira da sessão, e se o guia aparece no celular.
+- [ ] Textos do guia em português e inglês, revisados na [Fase 3](#fase-3-conteúdo-da-v2).
 - [ ] Endereços por hash e histórico seguindo a D10. Conferir a convivência com o `pushState` do `VersionProvider`, que hoje marca a troca de versão.
 - [ ] `<Versões />` mantém o botão "Voltar para 2023", que já funciona.
 - [ ] Teclado (Tab e Esc), foco visível e `prefers-reduced-motion`.
@@ -298,3 +301,4 @@ Ideias para decidir juntos:
 | 2026-11-17 | 1 | **Fase 1 concluída.** E2E com 30 testes (antes eram 7): o smoke roda na v2 e na v1, e o `versions.spec.ts` cobre a troca, o idioma, a D10, a segurança e a v1 direta. Dois bugs introduzidos de propósito foram pegos | `54d38c1` |
 | 2026-11-17 | 2 | Decisões D11 a D13: design novo da v2, paleta da v1 com o laranja, base minimalista com detalhes técnicos e o layout do `<GAD />` em órbita. A Fase 5 foi absorvida pela Fase 2 | — |
 | 2026-11-17 | 2 | Protótipo interativo em 3 versões: (1) primeira proposta; (2) sem molduras, só as tags e o cursor; (3) o `<GAD />` no centro da página, com o raio da órbita se ajustando à coluna de identidade. A versão 3 foi aprovada e guardada em `docs/prototypes/` | `2b0d061` |
+| 2026-11-18 | 2 | **Protótipo concluído na versão 8** (D14). As versões 4 a 7 tiveram um painel de testes (entrada da seção, ritmo, digitação do `<GAD />` e uma velocidade única de digitação, testada e descartada) e ganharam o guia `<p>` no vão da coluna de identidade. Na versão 8, o painel saiu e ficaram só as escolhas | `a3c9f36` |
