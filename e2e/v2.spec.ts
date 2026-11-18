@@ -109,6 +109,18 @@ test.describe('v2', () => {
       }
     })
 
+    test('has a share preview', async ({ page, request }) => {
+      const meta = (selector: string) => page.locator(`head meta[${selector}]`)
+      await expect(meta('name="description"')).toHaveAttribute('content', /^Desenvolvedor Full Stack \| Node\.js/)
+      await expect(meta('property="og:title"')).toHaveAttribute('content', 'Gabriel Aguiar Dantas · Desenvolvedor Full Stack')
+      await expect(meta('property="og:image"')).toHaveAttribute('content', 'https://gabrielaguiardantas.github.io/og-image.png')
+      await expect(meta('name="twitter:card"')).toHaveAttribute('content', 'summary_large_image')
+      // a imagem está publicada junto com o site
+      const image = await request.get('/og-image.png')
+      expect(image.ok()).toBe(true)
+      expect(image.headers()['content-type']).toBe('image/png')
+    })
+
     test('loads JetBrains Mono from the site itself', async ({ page }) => {
       const fontFiles = await page.evaluate(async () => {
         await document.fonts.load('16px "JetBrains Mono Variable"')
