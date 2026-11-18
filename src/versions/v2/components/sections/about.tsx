@@ -56,8 +56,8 @@ const TEXT = {
       "I'm a Full Stack Developer with almost 3 years of experience at an Insurtech, maintaining and evolving an insurance platform in production (Node.js, React and MariaDB) used by three major insurers.",
     recent: "// recent experience",
     achievements: [
-      "150+ tickets delivered, between new features and bug fixes, in a legacy system with critical insurance business rules.",
-      "Teamwork on the delivery of core platform features, such as the admin module and the economic group section in credit analyses.",
+      "150+ tickets delivered, including new features and bug fixes, in a legacy system with critical insurance business rules.",
+      "Worked as part of the team delivering core platform features, such as the admin module and the corporate group section in credit analyses.",
       "SQL queries and Node.js scripts generating operational data reports used by the finance team and by brokers.",
       "In my last 4 months at Fitinsur, AI-oriented development conducted with Claude.",
     ],

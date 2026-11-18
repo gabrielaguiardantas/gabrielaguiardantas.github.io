@@ -45,7 +45,7 @@ const TEXT = {
     email: "Email",
     footer: (tool: ToolLink) => (
       <>
-        Developed by me, AI-oriented in partnership with {tool("claude")}, in {tool("typescript")} on{" "}
+        Developed by me, AI-oriented, in partnership with {tool("claude")}, in {tool("typescript")} on{" "}
         {tool("vscode")}, built on {tool("react")} and {tool("vite")}. © 2026 Gabriel A. Dantas – All rights
         reserved. v2.0
       </>
