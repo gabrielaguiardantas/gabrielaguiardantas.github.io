@@ -12,7 +12,7 @@ Este documento orienta a modernização do portfólio e registra o andamento. A 
 | 1 | [Fundação de versões (v1 congelada + troca em runtime)](#fase-1-fundação-de-versões) | ✅ |
 | 2 | [Design da v2](#fase-2-design-da-v2) | ✅ |
 | 3 | [Conteúdo da v2](#fase-3-conteúdo-da-v2) | ✅ |
-| 4 | [Efeito "volta no tempo"](#fase-4-efeito-volta-no-tempo) | 🟨 |
+| 4 | [Efeito "volta no tempo"](#fase-4-efeito-volta-no-tempo) | ✅ |
 | 5 | [Seções em aberto](#fase-5-seções-em-aberto) (absorvida pela Fase 2) | ➡️ |
 | 6 | [Release v2.0](#fase-6-release-v20) | ⬜ |
 
@@ -25,7 +25,8 @@ _Atualizado em 2026-11-18._
   - A [Fase 2](#fase-2-design-da-v2) virou o **design novo da v2** ([D11](#registro-de-decisões)). A direção visual está decidida (D12 e D13), e o **protótipo está concluído** na versão 8, com os pontos em aberto fechados ([D14](#registro-de-decisões)).
   - A [implementação na v2](#23-implementação-na-v2) está **concluída** e no ar.
   - A [Fase 3](#fase-3-conteúdo-da-v2) está **concluída**: todo o conteúdo da v2 foi revisado e alinhado ao LinkedIn e ao GitHub ([D17](#registro-de-decisões)).
-- **Próximo passo:** implementar o efeito da [Fase 4](#fase-4-efeito-volta-no-tempo), já escolhido no protótipo ([D18](#registro-de-decisões)).
+  - A [Fase 4](#fase-4-efeito-volta-no-tempo) está **concluída**: toda troca de versão passa pela volta no tempo ([D18](#registro-de-decisões)).
+- **Próximo passo:** a [Fase 6](#fase-6-release-v20), o lançamento da v2.0.
 - **Decisões pendentes:**
   - validar o hex `#D97757` com o ícone oficial do Claude (Fase 2);
   - conferir a v2 com um leitor de tela de verdade, NVDA ou Narrador (Fase 6);
@@ -222,7 +223,7 @@ Revisão de dependências na volta da pausa, em 2026-11-17:
 
 ## Fase 4: Efeito "volta no tempo"
 
-🟨 Objetivo: a transição de 2026 para 2023 ao abrir a v1, e o caminho inverso ao voltar, na mesma linguagem de movimento da órbita do `<GAD />`. O efeito está escolhido ([D18](#registro-de-decisões)); falta implementar.
+✅ Concluída em 2026-11-18. A transição de 2026 para 2023 ao abrir a v1, e o caminho inverso ao voltar, na mesma linguagem de movimento da órbita do `<GAD />` ([D18](#registro-de-decisões)).
 
 ### 4.1 Protótipo
 
@@ -234,15 +235,15 @@ Revisão de dependências na volta da pausa, em 2026-11-17:
 
 ### 4.2 Implementação
 
-⬜
+✅ Concluída em 2026-11-18, em [`components/time-travel/`](../src/versions/v2/components/time-travel/index.tsx) e no [`VersionProvider.tsx`](../src/versions/v2/context/VersionProvider.tsx).
 
-- [ ] O `VersionProvider` passa a separar a versão **pedida** da versão **na tela**: uma troca de versão dispara o efeito, e a versão na tela muda por trás da camada.
-- [ ] A camada do efeito fica acima do iframe, então cobre a v2 na ida e a v1 na volta.
-- [ ] Na ida, o efeito espera a v1 carregar; na primeira visita, para em 2023 com `// carregando 2023…`.
-- [ ] Uma troca no meio do efeito ("Voltar" rápido) recomeça na direção nova.
-- [ ] Textos em português e inglês; "menos movimento" com a troca suave.
-- [ ] O foco e o histórico continuam seguindo a [D10](#registro-de-decisões) e o passo 6 da 2.3.
-- [ ] E2E: ida, volta, troca no meio, primeira visita e menos movimento.
+- [x] O `VersionProvider` separa a versão **pedida** da versão **na tela**: uma troca de versão dispara o efeito, e a versão na tela muda por trás da camada.
+- [x] A camada do efeito fica acima do iframe, então cobre a v2 na ida e a v1 na volta.
+- [x] Na ida, o efeito espera o `load` do iframe da v1; se demorar, mostra `// carregando 2023…`.
+- [x] Uma troca no meio do efeito ("Voltar" rápido) recomeça na direção nova.
+- [x] Textos em português e inglês; com "menos movimento", uma troca suave sem o contador.
+- [x] O foco e o histórico continuam seguindo a [D10](#registro-de-decisões) e o passo 6 da 2.3.
+- [x] E2E: ida e volta, espera pela v1 (com a resposta atrasada de propósito), "Voltar" no meio, idioma e menos movimento. Medido no Chrome: a v1 aparece em cerca de 1,6 s, a v2 volta em cerca de 1,8 s, e com "menos movimento" a troca leva menos de 1 s.
 
 ## Fase 5: Seções em aberto
 
@@ -324,4 +325,5 @@ Revisão de dependências na volta da pausa, em 2026-11-17:
 | 2026-11-18 | 2 | 2.3, passo 6: o foco acompanha a navegação (seções e v1), o título da aba diz a seção, e todos os controles têm contorno de foco | `0ce5c26` |
 | 2026-11-18 | 2 | **2.3 e Fase 2 concluídas.** Passo 7: limpeza (30 ícones antigos e um token sem uso) e build de produção conferido. 96 testes E2E | `40f502a` |
 | 2026-11-18 | 3 | **Fase 3 concluída** (D17). Sobre com a base do LinkedIn e a foto da família ampliável; Stacks nos grupos do LinkedIn; Projetos com os textos do README e o link para todos os repositórios; Contato, tagline, footer e guia revisados; revisão do inglês | `a5e502a` … `61695e0` |
-| 2026-11-18 | 4 | Protótipo da volta no tempo, com quatro efeitos e cinco formas de contador; escolhido o contador com `<GAD year={2026} />` (D18) | _este commit_ |
+| 2026-11-18 | 4 | Protótipo da volta no tempo, com quatro efeitos e cinco formas de contador; escolhido o contador com `<GAD year={2026} />` (D18) | `f01ed89` |
+| 2026-11-18 | 4 | **Fase 4 concluída.** A volta no tempo em toda troca de versão, esperando a v1 carregar e invertendo no meio do caminho; 113 testes E2E | `7bc49a1` |

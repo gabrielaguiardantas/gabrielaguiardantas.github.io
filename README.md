@@ -60,6 +60,7 @@ The tests in [`e2e/`](e2e) run on a desktop (1440×900) and a mobile (390×844) 
 [`versions.spec.ts`](e2e/versions.spec.ts) checks the switch between versions:
 
 - v1 opens over v2 in a full-screen iframe, in the current language, from the versions section of v2, and the back-to-2026 button returns to that section;
+- every switch plays the time travel effect, which waits for v1 to load, turns around on a Back in the middle, follows the language and becomes a quick crossfade with reduced motion;
 - the browser Back button undoes one action at a time, then returns to 2026, and Forward reopens v1;
 - v2 only accepts switch messages from its own v1 iframe;
 - v1 opened on its own reads `?lang=` and its back-to-2026 button goes to `/`.
