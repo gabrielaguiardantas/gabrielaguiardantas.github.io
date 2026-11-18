@@ -12,7 +12,7 @@ Este documento orienta a modernização do portfólio e registra o andamento. A 
 | 1 | [Fundação de versões (v1 congelada + troca em runtime)](#fase-1-fundação-de-versões) | ✅ |
 | 2 | [Design da v2](#fase-2-design-da-v2) | ✅ |
 | 3 | [Conteúdo da v2](#fase-3-conteúdo-da-v2) | ✅ |
-| 4 | [Efeito "volta no tempo"](#fase-4-efeito-volta-no-tempo) | ⬜ 💬 |
+| 4 | [Efeito "volta no tempo"](#fase-4-efeito-volta-no-tempo) | 🟨 |
 | 5 | [Seções em aberto](#fase-5-seções-em-aberto) (absorvida pela Fase 2) | ➡️ |
 | 6 | [Release v2.0](#fase-6-release-v20) | ⬜ |
 
@@ -25,11 +25,10 @@ _Atualizado em 2026-11-18._
   - A [Fase 2](#fase-2-design-da-v2) virou o **design novo da v2** ([D11](#registro-de-decisões)). A direção visual está decidida (D12 e D13), e o **protótipo está concluído** na versão 8, com os pontos em aberto fechados ([D14](#registro-de-decisões)).
   - A [implementação na v2](#23-implementação-na-v2) está **concluída** e no ar.
   - A [Fase 3](#fase-3-conteúdo-da-v2) está **concluída**: todo o conteúdo da v2 foi revisado e alinhado ao LinkedIn e ao GitHub ([D17](#registro-de-decisões)).
-- **Próximo passo:** a [Fase 4](#fase-4-efeito-volta-no-tempo), o efeito da volta no tempo, que ainda precisa ser definido em conjunto.
+- **Próximo passo:** implementar o efeito da [Fase 4](#fase-4-efeito-volta-no-tempo), já escolhido no protótipo ([D18](#registro-de-decisões)).
 - **Decisões pendentes:**
   - validar o hex `#D97757` com o ícone oficial do Claude (Fase 2);
   - conferir a v2 com um leitor de tela de verdade, NVDA ou Narrador (Fase 6);
-  - definir o efeito da volta no tempo (Fase 4).
 - **Ambiente:** Node 26 via fnm (`.node-version`). Dev server com `npm run dev` na porta 5173. Para assistir os testes: `SLOWMO=600 npx playwright test --headed --workers 1`.
 
 ## Princípios
@@ -60,6 +59,7 @@ _Atualizado em 2026-11-18._
 | D15 | 2026-11-18 | **Endereços e fonte da v2.** Os endereços ficam em **inglês fixo**, iguais nos dois idiomas: `/` para o início, `#explore` para a órbita e `#about`, `#stacks`, `#projects`, `#versions` e `#contact` para as seções. A **JetBrains Mono** é servida pelo próprio site, pelo pacote `@fontsource-variable/jetbrains-mono`. Com a v1 aberta, a barra de endereço continua mostrando o endereço da v2: a nav da v1 muda só o endereço do iframe. | Trocar o idioma não muda o endereço, e um link compartilhado vale nos dois idiomas. A fonte não depende do Google nem da rede, e é atualizada pelo Dependabot. Espelhar o endereço da v1 na barra faria `#stacks` abrir a seção da v2, e um reload teria que reabrir 2023, contra a [D3](#registro-de-decisões). |
 | D16 | 2026-11-18 | **Convite, guia e telas baixas.** A digitação do `<GAD />` acontece em **toda visita** que abre no início. O guia `<p>` fica **oculto no celular**. Telas de até 760 px de altura, como a maioria dos notebooks, recebem uma **coluna de identidade compacta**; telas de até 520 px, como o celular deitado, recebem a **coluna única** do celular, com a árvore. | A digitação a cada visita é a opção mais simples e segue a D3, sem nada guardado entre visitas. No celular não existe o vão nem o "apontar" com o mouse. Um notebook de 1366×768 deixa só uns 650 px úteis no navegador, e a coluna precisava de 620 a 720 px; deitado, o celular cortava a órbita. |
 | D17 | 2026-11-18 | **Conteúdo da v2**, alinhado ao LinkedIn e ao GitHub. **Sobre:** a abertura e as conquistas do Sobre do LinkedIn, a formação, um parágrafo sobre a prática na Fitinsur, a trajetória com links e, no fim, como tudo começou, com a foto da família (miniatura ao passar o mouse, ampliada ao clicar). **Stacks:** os grupos das Hard skills do LinkedIn, mais o que os projetos mostram, com o Claude num grupo próprio e todos os chips iguais. **Projetos:** os 6 fixados no GitHub, com os textos do README, uma observação sobre o código privado da Fitinsur e a seleção, e um link para todos os repositórios. **Mantidos:** a tagline em português, o "Vamos conversar?" do Contato e o card "Em breve" da v2.0 dentro da v1. | Os três canais contam a mesma história. Um chip destacado parecia um item selecionado. Um link "no ar" para o próprio site não leva a lugar nenhum. A v1 é a cápsula do tempo de 2023 ([D1](#registro-de-decisões)), quando a v2 era mesmo "em breve". |
+| D18 | 2026-11-18 | **Efeito da volta no tempo:** o **contador** com o `<GAD />`, escolhido num protótipo entre quatro efeitos (terminal, contador, filme antigo e rebobinar) e cinco formas de contador. A página escurece, `<GAD year={2026} />` aparece grande e o último dígito rola 6 → 5 → 4 → 3, com `// voltando no tempo` embaixo; depois a v1 aparece. Na volta, o mesmo efeito rola de 2023 a 2026, com `// de volta ao presente`. O efeito roda em toda troca de versão (card, botão "Voltar para 2026" e "Voltar"/"Avançar" do navegador), dura cerca de 1,7 s e, na primeira visita, espera a v1 carregar, parado em 2023 com `// carregando 2023…`. Com "menos movimento", vira uma troca suave de 0,3 s. | O `<GAD />` é o centro da navegação da v2, então vê-lo "mudar de ano" liga o efeito à identidade do site. A forma é curta o bastante para ficar grande na tela e ser lida em menos de 2 segundos. O efeito cobre o carregamento do iframe, que antes aparecia de repente. |
 
 ## Fase 0: Pré-desenvolvimento
 
@@ -222,17 +222,27 @@ Revisão de dependências na volta da pausa, em 2026-11-17:
 
 ## Fase 4: Efeito "volta no tempo"
 
-⬜ 💬 Objetivo: a transição de 2026 para 2023 ao abrir a v1, e o caminho inverso ao voltar. A ordem das fases foi mantida (decidido em 2026-11-17): esta vem depois do design e do conteúdo. O efeito deve usar a mesma linguagem de movimento da órbita do `<GAD />`, com a mesma curva e durações curtas.
+🟨 Objetivo: a transição de 2026 para 2023 ao abrir a v1, e o caminho inverso ao voltar, na mesma linguagem de movimento da órbita do `<GAD />`. O efeito está escolhido ([D18](#registro-de-decisões)); falta implementar.
 
-Ideias para decidir juntos:
+### 4.1 Protótipo
 
-- Contador de ano rolando de 2026 até 2023.
-- Filtro sépia, grão de filme ou glitch durante a transição.
-- Animação inversa (2023 → 2026) ao voltar para a v2.
-- A animação cobre o tempo de carregamento do iframe e só termina quando a v1 estiver pronta.
-- Respeitar `prefers-reduced-motion`, com uma transição simples para quem prefere menos movimento.
+✅ Concluído em 2026-11-18. O protótipo fica em [`docs/prototypes/v2-volta-no-tempo.html`](prototypes/v2-volta-no-tempo.html) ([artifact privado](https://claude.ai/artifact/WbQPBTdYN1WgyB5smvgH6u)), com capturas reais da v2 e da v1.
 
-**Decisão:** _a definir_
+- Quatro efeitos comparados: **terminal** (`git checkout v1.0` digitado), **contador** (o ano rolando), **filme antigo** (sépia, grão e vinheta) e **rebobinar** (linhas de VHS, tremor e `◀◀`).
+- Cinco formas para o contador: `<2026 />`, `<time datetime="2026">`, `<data value="2026">`, `<GAD year={2026} />` e `<Site version="2.0" year={2026} />`. O usuário escolheu o contador com `<GAD year={2026} />`.
+- O painel também testa as duas direções, a primeira visita (a v1 ainda carregando) e o "menos movimento".
+
+### 4.2 Implementação
+
+⬜
+
+- [ ] O `VersionProvider` passa a separar a versão **pedida** da versão **na tela**: uma troca de versão dispara o efeito, e a versão na tela muda por trás da camada.
+- [ ] A camada do efeito fica acima do iframe, então cobre a v2 na ida e a v1 na volta.
+- [ ] Na ida, o efeito espera a v1 carregar; na primeira visita, para em 2023 com `// carregando 2023…`.
+- [ ] Uma troca no meio do efeito ("Voltar" rápido) recomeça na direção nova.
+- [ ] Textos em português e inglês; "menos movimento" com a troca suave.
+- [ ] O foco e o histórico continuam seguindo a [D10](#registro-de-decisões) e o passo 6 da 2.3.
+- [ ] E2E: ida, volta, troca no meio, primeira visita e menos movimento.
 
 ## Fase 5: Seções em aberto
 
@@ -314,3 +324,4 @@ Ideias para decidir juntos:
 | 2026-11-18 | 2 | 2.3, passo 6: o foco acompanha a navegação (seções e v1), o título da aba diz a seção, e todos os controles têm contorno de foco | `0ce5c26` |
 | 2026-11-18 | 2 | **2.3 e Fase 2 concluídas.** Passo 7: limpeza (30 ícones antigos e um token sem uso) e build de produção conferido. 96 testes E2E | `40f502a` |
 | 2026-11-18 | 3 | **Fase 3 concluída** (D17). Sobre com a base do LinkedIn e a foto da família ampliável; Stacks nos grupos do LinkedIn; Projetos com os textos do README e o link para todos os repositórios; Contato, tagline, footer e guia revisados; revisão do inglês | `a5e502a` … `61695e0` |
+| 2026-11-18 | 4 | Protótipo da volta no tempo, com quatro efeitos e cinco formas de contador; escolhido o contador com `<GAD year={2026} />` (D18) | _este commit_ |
