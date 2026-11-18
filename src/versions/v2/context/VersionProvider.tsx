@@ -52,16 +52,21 @@ function VersionProvider({ children }: { children: ReactNode }) {
   }, [switchVersion]);
 
   // com a v1 na frente, a v2 fica montada atrás (preserva a rolagem),
-  // mas inerte (sem foco nem leitor de tela) e sem barra de rolagem própria
+  // mas inerte (sem foco nem leitor de tela) e sem barra de rolagem própria.
+  // O foco entra na v1, para o teclado já navegar nela, e ao voltar retorna ao botão que a abriu
   useEffect(() => {
     if (!isV1) return;
     const root = document.getElementById("root")!;
     const html = document.documentElement;
+    const active = document.activeElement;
+    const trigger = active instanceof HTMLElement && active !== document.body ? active : null;
     root.inert = true;
     html.style.overflow = "hidden";
+    frameRef.current?.focus();
     return () => {
       root.inert = false;
       html.style.overflow = "";
+      if (trigger?.isConnected) trigger.focus({ preventScroll: true });
     };
   }, [isV1]);
 

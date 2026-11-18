@@ -399,4 +399,88 @@ test.describe('v2', () => {
     test.skip(testInfo.project.name !== 'mobile', 'mobile only')
     await expect(guide(page)).toBeHidden()
   })
+
+  test.describe('keyboard and screen readers', () => {
+    const title = (page: Page, id: string) => panelSection(page, id).getByRole('heading', { level: 2 })
+
+    test('the focus follows the navigation', async ({ page }) => {
+      await core(page).focus()
+      await page.keyboard.press('Enter')
+      await expectOrbit(page)
+      await expect(core(page)).toBeFocused()
+
+      await page.keyboard.press('Tab')
+      await expect(satellite(page, 'Sobre')).toBeFocused()
+      await page.keyboard.press('Tab')
+      await expect(satellite(page, 'Stacks')).toBeFocused()
+      await page.keyboard.press('Enter')
+      await expectSection(page, 'stacks')
+      // o título recebe o foco, e o leitor de tela anuncia a seção
+      await expect(title(page, 'stacks')).toBeFocused()
+
+      // ao voltar, o foco vai para a seção de onde se veio e, depois, para o <GAD />
+      await page.keyboard.press('Escape')
+      await expectOrbit(page)
+      await expect(satellite(page, 'Stacks')).toBeFocused()
+      await page.keyboard.press('Escape')
+      await expectIdle(page)
+      await expect(core(page)).toBeFocused()
+    })
+
+    test('the browser Back also brings the focus back to the orbit', async ({ page }) => {
+      await core(page).click()
+      await satellite(page, 'Projetos').click()
+      await expect(title(page, 'projects')).toBeFocused()
+      await browserBack(page)
+      await expectOrbit(page)
+      await expect(satellite(page, 'Projetos')).toBeFocused()
+    })
+
+    test('opening the page on a section leaves the focus alone', async ({ page }) => {
+      // um carregamento de verdade: o goto para '/#projects' a partir de '/' só trocaria o #
+      await page.goto('/#projects')
+      await page.reload()
+      await expectSection(page, 'projects')
+      expect(await page.evaluate(() => document.activeElement === document.body)).toBe(true)
+    })
+
+    test('the tab title says where you are, in the current language', async ({ page }) => {
+      await expect(page).toHaveTitle('Gabriel Aguiar Dantas')
+      await page.goto('/#projects')
+      await expect(page).toHaveTitle('Projetos · Gabriel Aguiar Dantas')
+      await page.getByRole('button', { name: 'English' }).click()
+      await expect(page).toHaveTitle('Projects · Gabriel Aguiar Dantas')
+      await page.keyboard.press('Escape')
+      await expect(page).toHaveTitle('Gabriel Aguiar Dantas')
+    })
+
+    // percorre os controles com Tab e confere que cada um mostra o contorno de foco
+    for (const address of ['/#explore', '/#projects', '/#versions', '/#contact']) {
+      test(`every control shows a focus ring (${address})`, async ({ page }) => {
+        // carregamento de verdade, para o Tab começar do topo da página
+        await page.goto(address)
+        await page.reload()
+        await page.waitForTimeout(1000)
+        let count = 0
+        for (let i = 0; i < 40; i++) {
+          await page.keyboard.press('Tab')
+          const focused = await page.evaluate(() => {
+            const element = document.activeElement as HTMLElement
+            // o fim da página, ou a volta ao primeiro controle
+            if (element === document.body || element.dataset.tabbed) return null
+            element.dataset.tabbed = 'yes'
+            const style = getComputedStyle(element)
+            return {
+              name: element.getAttribute('aria-label') || element.title || element.textContent?.trim().slice(0, 40),
+              outline: style.outlineStyle !== 'none' && parseFloat(style.outlineWidth) > 0,
+            }
+          })
+          if (!focused) break
+          count += 1
+          expect(focused.outline, focused.name).toBe(true)
+        }
+        expect(count).toBeGreaterThan(5)
+      })
+    }
+  })
 })

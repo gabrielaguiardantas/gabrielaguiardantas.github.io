@@ -20,6 +20,11 @@
   font-weight: 500;
 }
 
+/* o título recebe o foco ao abrir a seção só para o leitor de tela anunciá-la; não é um controle */
+.title:focus {
+  outline: none;
+}
+
 .srOnly {
   position: absolute;
   width: 1px;
@@ -220,7 +225,11 @@
 .version button:focus-visible {
   border-color: var(--accent);
   color: var(--accent-text);
-  outline: none;
+}
+
+.version button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .version button:disabled {
@@ -262,7 +271,13 @@
 .contact a:hover,
 .contact a:focus-visible {
   text-decoration: underline;
-  outline: none;
+}
+
+.projects a:focus-visible,
+.contact a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 2px;
 }
 
 /* ---------- coluna única (SINGLE_COLUMN em layout.ts): uma coluna por item ---------- */

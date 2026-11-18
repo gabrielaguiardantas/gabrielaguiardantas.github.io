@@ -116,6 +116,27 @@ function Stage({ route, intro, onPoint }: StageProps) {
     stageRef.current!.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
   }, [openSection]);
 
+  // o foco acompanha a navegação, para quem usa teclado ou leitor de tela: a seção aberta
+  // recebe o foco no título, que o leitor anuncia; ao voltar, se o foco se perdeu (estava
+  // na seção que fechou), ele vai para a seção de onde se veio, na órbita, ou para o <GAD />.
+  // Ao carregar a página, o foco fica onde o navegador o põe
+  const previousRoute = useRef<Route | null>(null);
+  useEffect(() => {
+    const before = previousRoute.current;
+    previousRoute.current = route;
+    if (!before) return;
+    const active = document.activeElement;
+    const lost = !active || active === document.body || active.closest("[inert]") !== null;
+    if (route.view === "section") {
+      panelRef.current!.querySelector<HTMLElement>("h2")?.focus({ preventScroll: true });
+    } else if (lost && route.view === "orbit") {
+      const from = before.view === "section" ? SECTIONS.findIndex(({ id }) => id === before.section) : 0;
+      satRefs.current[from]?.focus({ preventScroll: true });
+    } else if (lost) {
+      coreRef.current!.focus({ preventScroll: true });
+    }
+  }, [route]);
+
   const onCore = () => navigate(state === "orbit" ? "idle" : "explore");
   const point = (i: number | null) => {
     setHot(i);
@@ -174,7 +195,10 @@ function Stage({ route, intro, onPoint }: StageProps) {
           {letters}
         </span>
       </button>
-      <p className={styles.hint}>{text.hint}</p>
+      {/* só um convite visual: o nome do botão ("Explorar as seções") já diz o mesmo ao leitor de tela */}
+      <p className={styles.hint} aria-hidden="true">
+        {text.hint}
+      </p>
 
       {/* fora da órbita, as seções ficam inertes: sem foco nem leitor de tela */}
       <ul id="orbit" className={styles.satellites} inert={state !== "orbit"}>

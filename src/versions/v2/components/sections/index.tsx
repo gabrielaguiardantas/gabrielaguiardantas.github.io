@@ -22,7 +22,7 @@ const CONTENT: Record<SectionId, ComponentType> = {
 function SectionTitle({ label }: { label: string }) {
   const { typed } = useTyping(label, { interval: ms(45), delay: ms(320) });
   return (
-    <h2 className={styles.title}>
+    <h2 className={styles.title} tabIndex={-1}>
       <span aria-hidden="true">
         <span className={styles.bracket}>&lt;</span>
         {typed}

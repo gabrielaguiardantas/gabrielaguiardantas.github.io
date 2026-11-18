@@ -73,6 +73,18 @@ test.describe('switching between v2 and v1', () => {
     await expect(v2Versions(page).getByRole('button', { name: LABELS.portuguese.open })).toBeVisible()
   })
 
+  test('the focus moves into v1, and back to the button that opened it', async ({ page }) => {
+    await openV1(page)
+    await expect(frameElement(page)).toBeFocused()
+    await backTo2026(page)
+    await expect(v2Versions(page).getByRole('button', { name: LABELS.portuguese.open })).toBeFocused()
+
+    await openV1(page)
+    await browserBack(page)
+    await expect(frameElement(page)).toBeHidden()
+    await expect(v2Versions(page).getByRole('button', { name: LABELS.portuguese.open })).toBeFocused()
+  })
+
   test('browser back from v1 returns to the versions section, then to the orbit', async ({ page }) => {
     await openV1(page)
     await browserBack(page)
