@@ -2,6 +2,7 @@ import { type CSSProperties, useEffect, useLayoutEffect, useRef, useState } from
 import { useLanguage } from "../../context/language";
 import { type Route, navigate } from "../../context/route";
 import { useVersion } from "../../context/version";
+import { SINGLE_COLUMN } from "../../layout";
 import { SECTIONS, type SectionId } from "../../sections";
 import Section from "../sections";
 import { type Box, type OrbitGeometry, computeOrbit } from "./orbitLayout";
@@ -19,8 +20,8 @@ const TEXT = {
   },
 };
 
-// no celular a órbita vira uma árvore e não precisa de geometria
-const narrow = window.matchMedia("(max-width: 820px)");
+// em coluna única a órbita vira uma árvore e não precisa de geometria
+const narrow = window.matchMedia(SINGLE_COLUMN);
 
 const vars = (values: Record<string, string | number>) => values as CSSProperties;
 

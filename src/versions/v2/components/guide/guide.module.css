@@ -61,8 +61,17 @@
   white-space: nowrap;
 }
 
-/* no celular não existe o vão nem o "apontar" com o mouse */
-@media (max-width: 820px) {
+/* telas baixas: o guia reserva uma linha a menos (os textos usam no máximo 5) */
+@media (max-height: 760px) {
+  .guide {
+    min-height: calc(6 * 1.6em);
+    font-size: 0.8rem;
+    line-height: 1.6;
+  }
+}
+
+/* coluna única (SINGLE_COLUMN em layout.ts): não existe o vão nem o "apontar" com o mouse */
+@media (max-width: 820px), (max-height: 520px) {
   .guide {
     display: none;
   }

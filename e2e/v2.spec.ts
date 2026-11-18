@@ -194,9 +194,12 @@ test.describe('v2', () => {
   test.describe('orbit layout', () => {
     test.skip(({ viewport }) => viewport!.width <= 820, 'on mobile the orbit is a tree')
 
-    // a órbita nunca cobre o texto nem os ícones da coluna de identidade, e cabe na tela
+    // a órbita nunca cobre o texto nem os ícones da coluna de identidade, e cabe na tela;
+    // inclui notebooks de tela baixa, em que a coluna fica compacta
     for (const size of [
+      { width: 1024, height: 600 },
       { width: 1024, height: 768 },
+      { width: 1366, height: 650 },
       { width: 1280, height: 800 },
       { width: 1440, height: 900 },
       { width: 1920, height: 1080 },
@@ -228,8 +231,36 @@ test.describe('v2', () => {
           expect(sat.y + sat.height).toBeLessThanOrEqual(size.height)
           for (const obstacle of obstacles) expect(overlaps(sat, obstacle), portuguese).toBe(false)
         }
+        // a coluna de identidade inteira cabe na tela, sem rolagem
+        expect((await box(page.locator('aside footer'))).y + (await box(page.locator('aside footer'))).height).toBeLessThanOrEqual(
+          size.height,
+        )
+        expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(size.width)
       })
     }
+
+    // celular deitado: não cabe a órbita, então vale a coluna única do celular, com a árvore
+    test('a landscape phone gets the single column with the tree', async ({ page }) => {
+      await page.setViewportSize({ width: 844, height: 390 })
+      await core(page).click()
+      await expectOrbit(page)
+      // espera a entrada da árvore, em que cada item desliza da esquerda (o cursor pisca sem fim, e fica de fora)
+      await page.evaluate(() =>
+        Promise.all(
+          document
+            .getAnimations()
+            .filter((animation) => animation.effect?.getTiming().iterations !== Infinity)
+            .map((animation) => animation.finished),
+        ),
+      )
+      const items = await Promise.all(SECTIONS.map(({ portuguese }) => box(satellite(page, portuguese))))
+      // na árvore, as seções ficam uma embaixo da outra, alinhadas à esquerda
+      for (let i = 1; i < items.length; i++) {
+        expect(items[i].y).toBeGreaterThan(items[i - 1].y)
+        expect(items[i].x).toBe(items[0].x)
+      }
+      expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(844)
+    })
   })
 
   test.describe('sections', () => {

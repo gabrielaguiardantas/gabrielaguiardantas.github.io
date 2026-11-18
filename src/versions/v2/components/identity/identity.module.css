@@ -102,9 +102,15 @@
   transition: background-color 0.2s;
 }
 
-.socials a:hover span,
 .socials a:focus-visible span {
   background-color: var(--accent);
+}
+
+/* só com mouse: no toque, o navegador "gruda" o hover no último elemento tocado */
+@media (hover: hover) {
+  .socials a:hover span {
+    background-color: var(--accent);
+  }
 }
 
 .flags button:focus-visible,
@@ -141,8 +147,44 @@
   border-radius: 2px;
 }
 
-/* celular: a coluna se desfaz e os filhos entram no fluxo da página, com o footer no fim */
-@media (max-width: 820px) {
+/* telas baixas, como a maioria dos notebooks (1366x768 deixa uns 650 px úteis):
+   tudo um pouco menor, para o footer e o guia caberem sem cortar */
+@media (max-height: 760px) {
+  .identity {
+    gap: 16px;
+    padding-block: 20px;
+  }
+
+  .header {
+    gap: 10px;
+  }
+
+  .name {
+    font-size: 2.4rem;
+  }
+
+  .role {
+    font-size: 1.25rem;
+  }
+
+  .flags button {
+    width: 60px;
+    height: 34px;
+  }
+
+  .socials a {
+    width: 32px;
+    height: 32px;
+  }
+
+  .footer {
+    font-size: 0.8rem;
+  }
+}
+
+/* coluna única (SINGLE_COLUMN em layout.ts): a coluna se desfaz e os filhos entram no fluxo
+   da página, com o footer no fim */
+@media (max-width: 820px), (max-height: 520px) {
   .identity {
     display: contents;
     pointer-events: auto;

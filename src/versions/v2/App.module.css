@@ -7,8 +7,9 @@
   padding-right: max(16px, env(safe-area-inset-right, 0px));
 }
 
-/* celular: tudo numa coluna, e a página rola */
-@media (max-width: 820px) {
+/* coluna única (celular em pé ou deitado; a mesma consulta de SINGLE_COLUMN em layout.ts):
+   tudo numa coluna, e a página rola */
+@media (max-width: 820px), (max-height: 520px) {
   .app {
     height: auto;
     min-height: 100dvh;
