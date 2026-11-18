@@ -112,7 +112,8 @@ test.describe('v2', () => {
     test('has a share preview', async ({ page, request }) => {
       const meta = (selector: string) => page.locator(`head meta[${selector}]`)
       await expect(meta('name="description"')).toHaveAttribute('content', /^Desenvolvedor Full Stack \| Node\.js/)
-      await expect(meta('property="og:title"')).toHaveAttribute('content', 'Gabriel Aguiar Dantas · Desenvolvedor Full Stack')
+      await expect(meta('property="og:title"')).toHaveAttribute('content', 'Gabriel Aguiar Dantas · Portfólio de Desenvolvedor Full Stack')
+      await expect(meta('name="author"')).toHaveAttribute('content', 'Gabriel Aguiar Dantas')
       await expect(meta('property="og:image"')).toHaveAttribute('content', 'https://gabrielaguiardantas.github.io/og-image.png')
       await expect(meta('name="twitter:card"')).toHaveAttribute('content', 'summary_large_image')
       // a imagem está publicada junto com o site
