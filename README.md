@@ -14,6 +14,17 @@ Personal portfolio of Gabriel Aguiar Dantas, available in Portuguese and English
 
 The current language lives in a React context (`context/LanguageProvider.tsx` in each version), consumed through the `useLanguage()` hook. In v2, each state has its own address (`/`, `#explore`, `#about`…), read by the `useRoute()` hook, so the browser Back button undoes one step at a time. JetBrains Mono is served by the site itself ([`@fontsource-variable/jetbrains-mono`](https://fontsource.org/fonts/jetbrains-mono)).
 
+## How the versions work
+
+The site keeps its 2023 version (v1) frozen as a milestone and opens on the current one (v2, 2026):
+
+- **v1** is a second Vite entry ([`v1.html`](v1.html)) with its own React tree in [`src/versions/v1/`](src/versions/v1). It only changed in two places: its v2.0 card became a "back to 2026" button, and it reads the initial language from `?lang=`.
+- **v2** ([`index.html`](index.html), [`src/versions/v2/`](src/versions/v2)) opens v1 in a full-screen iframe on top of itself, so the two never share CSS or state. After the first visit, v1 is only hidden, never destroyed.
+- **Switching** goes through the time travel effect: the page dims while `<GAD year={2026} />` rolls to 2023 (or back), waiting for v1 to load on the first visit. Each switch is a browser history step, so Back undoes one action at a time, including the sections visited inside v1.
+- The version is never stored: a reload always opens v2.
+
+The decisions behind each step are in [`docs/ROADMAP.md`](docs/ROADMAP.md).
+
 ## Requirements
 
 - **Node.js 26**, pinned in [`.node-version`](.node-version). Version managers such as [fnm](https://github.com/Schniz/fnm) switch to it automatically inside the project folder.

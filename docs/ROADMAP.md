@@ -14,7 +14,7 @@ Este documento orienta a modernização do portfólio e registra o andamento. A 
 | 3 | [Conteúdo da v2](#fase-3-conteúdo-da-v2) | ✅ |
 | 4 | [Efeito "volta no tempo"](#fase-4-efeito-volta-no-tempo) | ✅ |
 | 5 | [Seções em aberto](#fase-5-seções-em-aberto) (absorvida pela Fase 2) | ➡️ |
-| 6 | [Release v2.0](#fase-6-release-v20) | ⬜ |
+| 6 | [Release v2.0](#fase-6-release-v20) | ✅ |
 
 ## Estado atual e próximo passo
 
@@ -26,9 +26,9 @@ _Atualizado em 2026-11-18._
   - A [implementação na v2](#23-implementação-na-v2) está **concluída** e no ar.
   - A [Fase 3](#fase-3-conteúdo-da-v2) está **concluída**: todo o conteúdo da v2 foi revisado e alinhado ao LinkedIn e ao GitHub ([D17](#registro-de-decisões)).
   - A [Fase 4](#fase-4-efeito-volta-no-tempo) está **concluída**: toda troca de versão passa pela volta no tempo ([D18](#registro-de-decisões)).
-- **Próximo passo:** a [Fase 6](#fase-6-release-v20), o lançamento da v2.0.
+  - A [Fase 6](#fase-6-release-v20) está **concluída**: a v2.0 foi lançada, com a tag `v2.0.0`.
+- **Próximo passo:** nenhum previsto. Ficam os itens do plano de presença profissional que dependiam do site (Destaques do LinkedIn e o post de lançamento) e a conferência com um leitor de tela.
 - **Decisões pendentes:**
-  - validar o hex `#D97757` com o ícone oficial do Claude (Fase 2);
   - conferir a v2 com um leitor de tela de verdade, NVDA ou Narrador (Fase 6);
 - **Ambiente:** Node 26 via fnm (`.node-version`). Dev server com `npm run dev` na porta 5173. Para assistir os testes: `SLOWMO=600 npx playwright test --headed --workers 1`.
 
@@ -142,7 +142,7 @@ Revisão de dependências na volta da pausa, em 2026-11-17:
 
 - [x] **Estilo:** base minimalista com detalhes técnicos ([D12](#registro-de-decisões)). Na comparação, o estilo editorial foi descartado, porque espalharia o laranja em áreas grandes, onde o contraste dele é fraco.
 - [x] **Layout:** coluna de identidade + `<GAD />` em órbita ([D13](#registro-de-decisões)). O usuário trouxe a ideia do ícone central que abre as seções em volta, e o `<GAD />` foi escolhido entre `<GAD />`, `>_`, `{ G }` e um monograma.
-- [ ] Validar o hex `#D97757` com o ícone oficial do Claude.
+- [x] Hex `#D97757` validado (2026-11-18): é a cor oficial do Claude no catálogo Simple Icons, que cita o claude.ai como fonte.
 
 ### 2.2 Protótipo interativo
 
@@ -271,12 +271,13 @@ Revisão de dependências na volta da pausa, em 2026-11-17:
 
 ## Fase 6: Release v2.0
 
-⬜
+✅ Concluída em 2026-11-18, com a tag `v2.0.0`.
 
-- [ ] Atualizar a versão no `package.json` para `2.0.0`.
-- [ ] Atualizar o README com a arquitetura de versões (v1 congelada + iframe).
-- [ ] Rodar o E2E completo (v2, v1 e troca entre elas) e fazer a revisão visual final.
-- [ ] Fazer o push na `main` e acompanhar o deploy no GitHub Actions.
+- [x] Versão `2.0.0` no `package.json`.
+- [x] README com a seção "How the versions work": a v1 congelada no iframe, a troca com a volta no tempo, o histórico e a versão que nunca fica guardada.
+- [x] Prévia de compartilhamento (incluída nesta fase): descrição e meta tags Open Graph no `index.html`, com a bio curta da base comum aos canais, e a imagem `public/og-image.png`, de 1200×630, no estilo do site.
+- [x] Revisão final: E2E completo três vezes (345 execuções), build de produção conferido no Chrome (desktop, celular, inglês e a volta no tempo, sem erros nem requisições externas) e varredura de acessibilidade com o axe (WCAG 2.2 AA) em 16 estados. A varredura pediu um sublinhado nos links do footer, que só se distinguiam pela cor.
+- [x] Push na `main` e deploy no GitHub Actions, feitos pelo usuário depois do commit do lançamento.
 
 ## Plano B: duas árvores React
 
@@ -327,3 +328,4 @@ Revisão de dependências na volta da pausa, em 2026-11-17:
 | 2026-11-18 | 3 | **Fase 3 concluída** (D17). Sobre com a base do LinkedIn e a foto da família ampliável; Stacks nos grupos do LinkedIn; Projetos com os textos do README e o link para todos os repositórios; Contato, tagline, footer e guia revisados; revisão do inglês | `a5e502a` … `61695e0` |
 | 2026-11-18 | 4 | Protótipo da volta no tempo, com quatro efeitos e cinco formas de contador; escolhido o contador com `<GAD year={2026} />` (D18) | `f01ed89` |
 | 2026-11-18 | 4 | **Fase 4 concluída.** A volta no tempo em toda troca de versão, esperando a v1 carregar e invertendo no meio do caminho; 113 testes E2E | `7bc49a1` |
+| 2026-11-18 | 6 | **v2.0 lançada.** Prévia de compartilhamento, sublinhado nos links do footer (axe), README com as versões, `package.json` em 2.0.0 e o hex do Claude validado | `fe9190f`, `d460d88`, tag `v2.0.0` |
