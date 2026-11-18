@@ -11,7 +11,7 @@ const SECTIONS = [
 
 const core = (page: Page) => page.locator('main > button[aria-controls="orbit"]')
 const satellite = (page: Page, name: string) => page.locator('#orbit').getByRole('button', { name, exact: true })
-const panelSection = (page: Page, id: string) => page.locator(`main #${id}`)
+const panelSection = (page: Page, id: string) => page.locator(`main [data-section="${id}"]`)
 const browserBack = (page: Page) => page.evaluate(() => history.back())
 
 // a órbita está aberta quando todas as seções podem ser clicadas
@@ -218,5 +218,61 @@ test.describe('v2', () => {
         }
       })
     }
+  })
+
+  test.describe('sections', () => {
+    test('types the section title in, with the full name for screen readers', async ({ page }) => {
+      await page.goto('/#projects')
+      const title = panelSection(page, 'projects').getByRole('heading', { level: 2 })
+      await expect(title).toHaveAccessibleName('Projetos')
+      // o texto visível termina com o nome inteiro
+      await expect(title.locator('[aria-hidden="true"]')).toHaveText('<Projetos />')
+    })
+
+    test('shows the title at once with reduced motion', async ({ page }) => {
+      await page.emulateMedia({ reducedMotion: 'reduce' })
+      await page.goto('/#stacks')
+      await expect(panelSection(page, 'stacks').getByRole('heading', { level: 2 }).locator('[aria-hidden="true"]')).toHaveText(
+        '<Stacks />',
+        { timeout: 100 },
+      )
+    })
+
+    test('each section has its content, in both languages', async ({ page }) => {
+      await page.goto('/#about')
+      await expect(panelSection(page, 'about').locator('ol li')).toHaveCount(5)
+      await expect(panelSection(page, 'about')).toContainText('// trajetória')
+
+      await page.goto('/#stacks')
+      await expect(panelSection(page, 'stacks').locator('dt')).toHaveText(['frontEnd', 'backEnd', 'dados', 'testes', 'ferramentas'])
+
+      await page.goto('/#projects')
+      await expect(panelSection(page, 'projects').getByRole('link')).toHaveCount(6)
+
+      await page.goto('/#contact')
+      await expect(panelSection(page, 'contact').getByRole('link', { name: 'gabrielaguiardantas@gmail.com' })).toHaveAttribute(
+        'href',
+        'mailto:gabrielaguiardantas@gmail.com',
+      )
+
+      await page.goto('/#versions')
+      await expect(panelSection(page, 'versions').getByRole('button', { name: 'Atual' })).toBeDisabled()
+
+      await page.getByRole('button', { name: 'English' }).click()
+      await expect(panelSection(page, 'versions').getByRole('heading', { level: 2 })).toHaveAccessibleName('Versions')
+      await expect(panelSection(page, 'versions').getByRole('button', { name: 'Back to 2023' })).toBeEnabled()
+      await expect(panelSection(page, 'versions').getByRole('button', { name: 'Current' })).toBeDisabled()
+    })
+
+    test('every section opens scrolled to the top', async ({ page }) => {
+      await page.setViewportSize({ width: 1280, height: 500 })
+      await page.goto('/#projects')
+      const panel = panelSection(page, 'projects').locator('..')
+      await panel.evaluate((element) => element.scrollTo(0, element.scrollHeight))
+      await core(page).click()
+      await satellite(page, 'Sobre').click()
+      await expectSection(page, 'about')
+      expect(await panelSection(page, 'about').locator('..').evaluate((element) => element.scrollTop)).toBe(0)
+    })
   })
 })

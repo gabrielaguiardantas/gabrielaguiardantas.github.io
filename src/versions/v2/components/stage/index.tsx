@@ -1,13 +1,9 @@
-import { type CSSProperties, type ComponentType, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { type CSSProperties, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useLanguage } from "../../context/language";
 import { navigate, useRoute } from "../../context/route";
 import { useVersion } from "../../context/version";
-import { SECTIONS, type SectionId } from "../../sections";
-import About from "../../pages/about";
-import Stacks from "../../pages/stacks";
-import Projects from "../../pages/projects";
-import Versions from "../../pages/versions";
-import Contact from "../../pages/contact";
+import { SECTIONS } from "../../sections";
+import Section from "../sections";
 import { type Box, type OrbitGeometry, computeOrbit } from "./orbitLayout";
 import styles from "./stage.module.css";
 
@@ -20,15 +16,6 @@ const TEXT = {
     core: { idle: "Explore the sections", orbit: "Close the sections", section: "Back to the sections" },
     hint: "// click to explore",
   },
-};
-
-// provisório até o passo 3, que traz as seções no visual novo
-const CONTENT: Record<SectionId, ComponentType> = {
-  about: About,
-  stacks: Stacks,
-  projects: Projects,
-  versions: Versions,
-  contact: Contact,
 };
 
 // no celular a órbita vira uma árvore e não precisa de geometria
@@ -65,6 +52,7 @@ function Stage() {
 
   const stageRef = useRef<HTMLElement>(null);
   const coreRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   const satRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const [geometry, setGeometry] = useState<OrbitGeometry | null>(null);
   const [hot, setHot] = useState<number | null>(null);
@@ -111,16 +99,17 @@ function Stage() {
     return () => document.removeEventListener("keydown", onKeyDown);
   }, [state, version]);
 
-  // no celular a seção abre abaixo da árvore; a página rola até ela
+  // cada seção abre do topo; no celular, ela fica abaixo da árvore e a página rola até ela
   const openSection = route.view === "section" ? route.section : null;
   useEffect(() => {
-    if (!openSection || !narrow.matches) return;
+    if (!openSection) return;
+    panelRef.current!.scrollTop = 0;
+    if (!narrow.matches) return;
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     stageRef.current!.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "start" });
   }, [openSection]);
 
   const onCore = () => navigate(state === "orbit" ? "idle" : "explore");
-  const Content = openSection && CONTENT[openSection];
 
   return (
     <main
@@ -190,7 +179,10 @@ function Stage() {
         })}
       </ul>
 
-      <div className={styles.panel}>{Content && <Content />}</div>
+      {/* a key remonta a seção a cada entrada, e o título volta a ser digitado */}
+      <div ref={panelRef} className={styles.panel}>
+        {openSection && <Section key={openSection} section={openSection} />}
+      </div>
     </main>
   );
 }

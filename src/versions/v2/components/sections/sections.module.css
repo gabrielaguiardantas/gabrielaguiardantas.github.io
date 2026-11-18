@@ -1,0 +1,299 @@
+/* as seções abertas no painel da direita (D13), no estilo minimalista com detalhes técnicos (D12) */
+.section {
+  max-width: 68ch;
+}
+
+.section p {
+  margin: 0 0 16px;
+  line-height: 1.65;
+}
+
+.bracket {
+  color: var(--accent);
+}
+
+.title {
+  min-height: 1.3em; /* reserva a linha enquanto o título é digitado */
+  margin: 0 0 28px;
+  font-family: var(--font-mono);
+  font-size: 2rem;
+  font-weight: 500;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.eyebrow {
+  margin: 32px 0 12px !important;
+  color: var(--fg-muted);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+}
+
+.chip {
+  padding: 4px 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+}
+
+.chip.highlight {
+  border-color: var(--accent);
+  color: var(--accent-text);
+}
+
+/* ---------- Sobre: trajetória ---------- */
+.timeline {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.timeline li {
+  display: grid;
+  grid-template-columns: 9.5rem 1fr;
+  gap: 16px;
+  align-items: baseline;
+}
+
+.timeline time {
+  color: var(--accent-text);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.timeline span {
+  color: var(--fg-muted);
+}
+
+.timeline strong {
+  color: var(--fg);
+  font-weight: 600;
+}
+
+/* ---------- Stacks: grupos de chips ---------- */
+.stackGroups {
+  display: grid;
+  gap: 18px;
+  margin: 0;
+}
+
+.stackGroups div {
+  display: grid;
+  grid-template-columns: 9rem 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+.stackGroups dt {
+  padding-top: 5px;
+  color: var(--fg-muted);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+}
+
+.stackGroups dd {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+}
+
+/* ---------- Projetos: lista ---------- */
+.projects {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.projects li {
+  display: grid;
+  grid-template-columns: 5.5rem 1fr auto;
+  gap: 6px 18px;
+  padding: 16px 0;
+  border-top: 1px solid var(--line);
+}
+
+.projects li:last-child {
+  border-bottom: 1px solid var(--line);
+}
+
+.year {
+  padding-top: 3px;
+  color: var(--fg-muted);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.projects h3 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+.section .projects p {
+  grid-column: 2;
+  margin: 0;
+  color: var(--fg-muted);
+  line-height: 1.5;
+}
+
+.chips {
+  grid-column: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.projects a {
+  grid-row: 1;
+  grid-column: 3;
+  padding-top: 3px;
+  color: var(--accent-text);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  text-decoration: none;
+}
+
+/* ---------- Versões: um card por versão ---------- */
+.versions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.version {
+  display: grid;
+  gap: 6px;
+  justify-items: start;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.version.current {
+  border-color: var(--accent);
+}
+
+.version h3 {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 1.4rem;
+}
+
+.version.current h3 {
+  color: var(--accent);
+}
+
+.section .meta {
+  margin: 0 0 10px;
+  color: var(--fg-muted);
+}
+
+.version button {
+  padding: 6px 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: none;
+  color: var(--fg);
+  font: 500 0.85rem var(--font-mono);
+  cursor: pointer;
+  transition:
+    border-color 0.2s,
+    color 0.2s;
+}
+
+.version button:hover,
+.version button:focus-visible {
+  border-color: var(--accent);
+  color: var(--accent-text);
+  outline: none;
+}
+
+.version button:disabled {
+  border-color: var(--accent);
+  color: var(--accent-text);
+  cursor: default;
+}
+
+/* ---------- Contato: lista de canais ---------- */
+.contact {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.contact li {
+  display: grid;
+  grid-template-columns: 6rem 1fr;
+  gap: 16px;
+  align-items: baseline;
+}
+
+.contact span {
+  color: var(--fg-muted);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+}
+
+.contact a {
+  color: var(--accent-text);
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.projects a:hover,
+.projects a:focus-visible,
+.contact a:hover,
+.contact a:focus-visible {
+  text-decoration: underline;
+  outline: none;
+}
+
+/* ---------- celular: uma coluna por item ---------- */
+@media (max-width: 820px) {
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .timeline li,
+  .stackGroups div,
+  .contact li {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+
+  .projects li {
+    grid-template-columns: 1fr auto;
+  }
+
+  .year {
+    grid-column: 1;
+  }
+
+  .projects h3,
+  .section .projects p,
+  .chips {
+    grid-column: 1 / -1;
+  }
+
+  .projects a {
+    grid-column: 2;
+    grid-row: 1;
+  }
+}

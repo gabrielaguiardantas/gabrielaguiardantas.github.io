@@ -13,6 +13,9 @@ const v1 = (page: Page) => page.frameLocator('iframe')
 const v1Hash = (page: Page) => page.frame({ url: /\/v1\.html/ })!.evaluate(() => location.hash)
 const isV2Inert = (page: Page) => page.evaluate(() => document.getElementById('root')!.inert)
 
+// a seção Versões da v2, aberta no painel da direita
+const v2Versions = (page: Page) => page.locator('[data-section="versions"]')
+
 // na v2, abre a órbita e a seção Versões, como um visitante faria
 async function openVersionsSection(page: Page, language: Language = 'portuguese') {
   await page.getByRole('button', { name: LABELS[language].explore }).click()
@@ -23,7 +26,7 @@ async function openVersionsSection(page: Page, language: Language = 'portuguese'
 // clica no card v1.0 da v2 e espera a v1 aparecer no iframe
 async function openV1(page: Page, language: Language = 'portuguese') {
   if (!page.url().endsWith('#versions')) await openVersionsSection(page, language)
-  await page.locator('#versions').getByRole('button', { name: LABELS[language].open }).click()
+  await v2Versions(page).getByRole('button', { name: LABELS[language].open }).click()
   await expect(frameElement(page)).toBeVisible()
   await expect(v1(page).locator('#versions')).toBeAttached()
 }
@@ -67,7 +70,7 @@ test.describe('switching between v2 and v1', () => {
     expect(await isV2Inert(page)).toBe(false)
     // a v2 continua na seção Versões
     await expect(page).toHaveURL(/#versions$/)
-    await expect(page.locator('#versions').getByRole('button', { name: LABELS.portuguese.open })).toBeVisible()
+    await expect(v2Versions(page).getByRole('button', { name: LABELS.portuguese.open })).toBeVisible()
   })
 
   test('browser back from v1 returns to the versions section, then to the orbit', async ({ page }) => {
