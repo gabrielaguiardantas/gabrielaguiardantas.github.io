@@ -82,9 +82,151 @@
   color: var(--fg-muted);
 }
 
-.timeline strong {
+.timeline a {
   color: var(--fg);
   font-weight: 600;
+  text-decoration: none;
+}
+
+.timeline a:hover,
+.timeline a:focus-visible {
+  color: var(--accent-text);
+  text-decoration: underline;
+}
+
+.timeline a:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.achievements {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 24px;
+  padding-left: 1.2em;
+  line-height: 1.55;
+}
+
+.achievements li::marker {
+  color: var(--accent);
+}
+
+/* "minha família": parece um link do texto; a foto abre por cima do parágrafo */
+.family {
+  position: relative;
+}
+
+.familyButton {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--accent-text);
+  font: inherit;
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.familyButton:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* a miniatura fica por cima da palavra; o respiro embaixo faz parte dela, para o mouse
+   poder ir da palavra até a miniatura sem ela sumir no caminho */
+.familyPopover {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  z-index: 5;
+  width: min(320px, 80vw);
+  padding-bottom: 10px;
+  transform: translateX(-50%);
+  animation: photo-in calc(0.25s * var(--tempo)) var(--ease);
+}
+
+/* a moldura da foto, igual na miniatura e na foto ampliada */
+.familyFrame,
+.lightbox {
+  padding: 6px;
+  border: 1px solid var(--accent);
+  border-radius: 10px;
+  background: var(--bg);
+  box-shadow: 0 12px 32px rgb(0 0 0 / 0.35);
+}
+
+.familyFrame {
+  display: block;
+  width: 100%;
+  cursor: zoom-in;
+}
+
+.familyFrame img,
+.lightbox img {
+  display: block;
+  border-radius: 6px;
+}
+
+.familyFrame img {
+  width: 100%;
+  height: auto;
+}
+
+/* ampliada: o tamanho original da foto, limitado à tela */
+.lightbox {
+  max-width: none;
+  max-height: none;
+  margin: auto;
+  overflow: visible;
+  color: var(--fg);
+  cursor: zoom-out;
+  animation: lightbox-in calc(0.25s * var(--tempo)) var(--ease);
+}
+
+.lightbox img {
+  width: auto;
+  height: auto;
+  max-width: min(2048px, calc(100vw - 48px));
+  max-height: calc(100dvh - 48px);
+}
+
+.lightbox::backdrop {
+  background: rgb(0 0 0 / 0.65);
+}
+
+.lightboxClose {
+  position: absolute;
+  top: -14px;
+  right: -14px;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--accent);
+  border-radius: 50%;
+  background: var(--bg);
+  color: var(--fg);
+  font: 500 1.1rem/1 var(--font-mono);
+  cursor: pointer;
+}
+
+.lightboxClose:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+@keyframes lightbox-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+
+@keyframes photo-in {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(6px);
+  }
 }
 
 /* ---------- Stacks: grupos de chips ---------- */

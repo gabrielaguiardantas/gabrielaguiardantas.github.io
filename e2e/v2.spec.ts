@@ -275,10 +275,10 @@ test.describe('v2', () => {
     test('shows the title at once with reduced motion', async ({ page }) => {
       await page.emulateMedia({ reducedMotion: 'reduce' })
       await page.goto('/#stacks')
-      await expect(panelSection(page, 'stacks').getByRole('heading', { level: 2 }).locator('[aria-hidden="true"]')).toHaveText(
-        '<Stacks />',
-        { timeout: 100 },
-      )
+      const typed = panelSection(page, 'stacks').getByRole('heading', { level: 2 }).locator('[aria-hidden="true"]')
+      await expect(typed).toBeVisible()
+      // já na primeira leitura o título está inteiro: digitado, levaria mais de 300 ms
+      expect(await typed.textContent()).toBe('<Stacks />')
     })
 
     test('each section has its content, in both languages', async ({ page }) => {
@@ -391,13 +391,111 @@ test.describe('v2', () => {
     test('shows the text at once with reduced motion', async ({ page }) => {
       await page.emulateMedia({ reducedMotion: 'reduce' })
       await page.goto('/')
-      await expect(guideTyped(page)).toHaveText(GUIDE.idle, { timeout: 100 })
+      await expect(guide(page)).toBeVisible()
+      // já na primeira leitura o texto está inteiro: digitado, levaria mais de 600 ms
+      expect(await guideTyped(page).textContent()).toBe(GUIDE.idle)
     })
   })
 
   test('the guide is hidden on mobile', async ({ page }, testInfo) => {
     test.skip(testInfo.project.name !== 'mobile', 'mobile only')
     await expect(guide(page)).toBeHidden()
+  })
+
+  test.describe('about', () => {
+    const about = (page: Page) => panelSection(page, 'about')
+    const familyButton = (page: Page) => about(page).getByRole('button', { name: 'minha família' })
+    // a miniatura é decorativa (o botão já diz o que é); a foto ampliada abre num diálogo
+    const thumbnail = (page: Page) => about(page).locator('button[aria-hidden="true"] img')
+    const lightbox = (page: Page) => page.getByRole('dialog', { name: 'Foto da minha família' })
+
+    test.beforeEach(async ({ page }) => {
+      await page.goto('/#about')
+      await expectSection(page, 'about')
+    })
+
+    test('has the achievements, the journey with links and how it started', async ({ page }) => {
+      await expect(about(page).locator('ul li')).toHaveCount(4)
+      await expect(about(page)).toContainText('Mais de 150 tickets entregues')
+      const places = about(page).locator('ol a')
+      await expect(places).toHaveText(['UFES', 'IBGE', 'Trybe', 'Fitinsur', 'UVV'])
+      expect(await places.evaluateAll((links) => links.map((link) => link.getAttribute('href')))).toEqual([
+        'https://www.ufes.br/',
+        'https://www.ibge.gov.br/',
+        'https://www.betrybe.com/',
+        'https://www.fitinsur.com.br/',
+        'https://www.uvv.br/',
+      ])
+      for (const link of await places.all()) await expect(link).toHaveAttribute('target', '_blank')
+      await expect(about(page)).toContainText('// como comecei')
+    })
+
+    test('the mouse shows the thumbnail, and a click enlarges the photo', async ({ page }, testInfo) => {
+      test.skip(testInfo.project.name === 'mobile', 'no mouse on mobile')
+      await expect(thumbnail(page)).toHaveCount(0)
+      await familyButton(page).hover()
+      await expect(thumbnail(page)).toBeVisible()
+      await page.mouse.move(5, 5)
+      await expect(thumbnail(page)).toHaveCount(0)
+
+      await familyButton(page).hover()
+      await familyButton(page).click()
+      await expect(lightbox(page)).toBeVisible()
+      // ampliada: o tamanho original, até o limite da tela (medido depois da animação de entrada)
+      await lightbox(page).evaluate((dialog) => Promise.all(dialog.getAnimations().map((animation) => animation.finished)))
+      const size = await lightbox(page).getByRole('img').evaluate((img) => {
+        const rect = img.getBoundingClientRect()
+        return { width: rect.width, height: rect.height }
+      })
+      const viewport = page.viewportSize()!
+      expect(size.width <= 2048 && size.height <= viewport.height).toBe(true)
+      expect(Math.max(size.width / (viewport.width - 48), size.height / (viewport.height - 48))).toBeGreaterThan(0.98)
+
+      // um clique em qualquer lugar fecha, e a seção continua aberta
+      await page.mouse.click(5, 5)
+      await expect(lightbox(page)).toHaveCount(0)
+      await expectSection(page, 'about')
+    })
+
+    test('a tap shows the thumbnail, and a tap on it enlarges the photo', async ({ browser }) => {
+      const context = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true })
+      const page = await context.newPage()
+      await page.goto('/#about')
+      await familyButton(page).tap()
+      await expect(thumbnail(page)).toBeVisible()
+      await thumbnail(page).tap()
+      await expect(lightbox(page)).toBeVisible()
+      await lightbox(page).tap()
+      await expect(lightbox(page)).toHaveCount(0)
+      await familyButton(page).tap()
+      await expect(thumbnail(page)).toHaveCount(0)
+      await context.close()
+    })
+
+    test('the keyboard opens and closes it all, one Escape at a time', async ({ page }) => {
+      // chega ao botão pelo Tab, a partir do último link da trajetória
+      await about(page).locator('ol a').last().focus()
+      await page.keyboard.press('Tab')
+      await expect(familyButton(page)).toBeFocused()
+      await expect(thumbnail(page)).toBeVisible()
+      await expect(familyButton(page)).toHaveAttribute('aria-expanded', 'true')
+
+      await page.keyboard.press('Enter')
+      await expect(lightbox(page)).toBeVisible()
+      await expect(lightbox(page).getByRole('button', { name: 'Fechar a foto' })).toBeFocused()
+
+      // 1º Esc: fecha a foto ampliada e devolve o foco ao botão
+      await page.keyboard.press('Escape')
+      await expect(lightbox(page)).toHaveCount(0)
+      await expect(familyButton(page)).toBeFocused()
+      await expectSection(page, 'about')
+      // 2º Esc: fecha a miniatura; 3º: volta para a órbita, como sempre
+      await page.keyboard.press('Escape')
+      await expect(thumbnail(page)).toHaveCount(0)
+      await expectSection(page, 'about')
+      await page.keyboard.press('Escape')
+      await expectOrbit(page)
+    })
   })
 
   test.describe('keyboard and screen readers', () => {
