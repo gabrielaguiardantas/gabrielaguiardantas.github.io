@@ -24,7 +24,12 @@ export const test = base.extend<{ pageErrors: void }>({
       page.on('console', (message) => {
         if (message.type() === 'error') errors.push(`console: ${message.text()}`)
       })
-      page.on('requestfailed', (request) => errors.push(`requestfailed: ${request.url()}`))
+      // ERR_ABORTED é o navegador cancelando o que ainda carregava ao sair da página;
+      // um arquivo quebrado de verdade aparece como HTTP >= 400 ou outro erro de rede
+      page.on('requestfailed', (request) => {
+        const reason = request.failure()?.errorText
+        if (reason !== 'net::ERR_ABORTED') errors.push(`requestfailed: ${request.url()} (${reason})`)
+      })
       page.on('response', (response) => {
         if (response.status() >= 400) errors.push(`HTTP ${response.status()}: ${response.url()}`)
       })
