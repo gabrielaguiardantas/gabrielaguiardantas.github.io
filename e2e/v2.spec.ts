@@ -298,7 +298,13 @@ test.describe('v2', () => {
       ])
 
       await page.goto('/#projects')
-      await expect(panelSection(page, 'projects').getByRole('link')).toHaveCount(6)
+      await expect(panelSection(page, 'projects').getByRole('link', { name: /^Código de .* no GitHub$/ })).toHaveCount(6)
+      await expect(panelSection(page, 'projects')).toContainText('O código do meu trabalho na Fitinsur é privado')
+      // depois da seleção, o link para todos os repositórios
+      await expect(panelSection(page, 'projects').getByRole('link', { name: '// todos os repositórios no GitHub ↗' })).toHaveAttribute(
+        'href',
+        'https://github.com/gabrielaguiardantas?tab=repositories',
+      )
 
       await page.goto('/#contact')
       await expect(panelSection(page, 'contact').getByRole('link', { name: 'gabrielaguiardantas@gmail.com' })).toHaveAttribute(

@@ -13,7 +13,7 @@ const GROUPS = [
   { label: { portuguese: "dados", english: "data" }, items: ["MariaDB", "MySQL", "MongoDB"] },
   {
     label: { portuguese: "testes", english: "tests" },
-    items: ["Jest", "RTL", "Mocha", "Chai", "Cypress", "Pytest", "Playwright"],
+    items: ["Jest", "RTL", "Mocha", "Chai", "Sinon", "Cypress", "Pytest", "Playwright"],
   },
   { label: { portuguese: "devOps", english: "devOps" }, items: ["Docker", "Git", "GitHub", "CI/CD", "Linux", "Bash"] },
   {

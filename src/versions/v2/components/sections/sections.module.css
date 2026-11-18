@@ -300,6 +300,32 @@
   margin-top: 4px;
 }
 
+.section .note {
+  margin-bottom: 20px;
+  color: var(--fg-muted);
+  font-size: 0.95rem;
+}
+
+.allRepositories {
+  display: inline-block;
+  margin-top: 20px;
+  color: var(--accent-text);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  text-decoration: none;
+}
+
+.allRepositories:hover,
+.allRepositories:focus-visible {
+  text-decoration: underline;
+}
+
+.allRepositories:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
 .projects a {
   grid-row: 1;
   grid-column: 3;
