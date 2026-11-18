@@ -275,7 +275,7 @@ Revisão de dependências na volta da pausa, em 2026-11-17:
 
 - [x] Versão `2.0.0` no `package.json`.
 - [x] README com a seção "How the versions work": a v1 congelada no iframe, a troca com a volta no tempo, o histórico e a versão que nunca fica guardada.
-- [x] Prévia de compartilhamento (incluída nesta fase): descrição e meta tags Open Graph no `index.html`, com a bio curta da base comum aos canais, e a imagem `public/og-image.png`, de 1200×630, no estilo do site.
+- [x] Prévia de compartilhamento (incluída nesta fase): descrição e meta tags Open Graph no `index.html`, com a bio curta da base comum aos canais, e a imagem `public/og-image-v2.png`, de 2400×1260, no estilo do site. O nome tem versão porque o LinkedIn guarda a imagem pela URL.
 - [x] Revisão final: E2E completo três vezes (345 execuções), build de produção conferido no Chrome (desktop, celular, inglês e a volta no tempo, sem erros nem requisições externas) e varredura de acessibilidade com o axe (WCAG 2.2 AA) em 16 estados. A varredura pediu um sublinhado nos links do footer, que só se distinguiam pela cor.
 - [x] Push na `main` e deploy no GitHub Actions, feitos pelo usuário depois do commit do lançamento.
 

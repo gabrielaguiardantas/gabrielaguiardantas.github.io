@@ -114,10 +114,10 @@ test.describe('v2', () => {
       await expect(meta('name="description"')).toHaveAttribute('content', /^Desenvolvedor Full Stack \| Node\.js/)
       await expect(meta('property="og:title"')).toHaveAttribute('content', 'Gabriel Aguiar Dantas · Portfólio de Desenvolvedor Full Stack')
       await expect(meta('name="author"')).toHaveAttribute('content', 'Gabriel Aguiar Dantas')
-      await expect(meta('property="og:image"')).toHaveAttribute('content', 'https://gabrielaguiardantas.github.io/og-image.png')
+      await expect(meta('property="og:image"')).toHaveAttribute('content', 'https://gabrielaguiardantas.github.io/og-image-v2.png')
       await expect(meta('name="twitter:card"')).toHaveAttribute('content', 'summary_large_image')
       // a imagem está publicada junto com o site
-      const image = await request.get('/og-image.png')
+      const image = await request.get('/og-image-v2.png')
       expect(image.ok()).toBe(true)
       expect(image.headers()['content-type']).toBe('image/png')
     })
