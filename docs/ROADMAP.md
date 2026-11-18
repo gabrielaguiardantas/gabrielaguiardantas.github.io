@@ -11,7 +11,7 @@ Este documento orienta a modernização do portfólio e registra o andamento. A 
 | 0 | [Pré-desenvolvimento](#fase-0-pré-desenvolvimento) | ✅ |
 | 1 | [Fundação de versões (v1 congelada + troca em runtime)](#fase-1-fundação-de-versões) | ✅ |
 | 2 | [Design da v2](#fase-2-design-da-v2) | ✅ |
-| 3 | [Conteúdo da v2](#fase-3-conteúdo-da-v2) | ⬜ |
+| 3 | [Conteúdo da v2](#fase-3-conteúdo-da-v2) | ✅ |
 | 4 | [Efeito "volta no tempo"](#fase-4-efeito-volta-no-tempo) | ⬜ 💬 |
 | 5 | [Seções em aberto](#fase-5-seções-em-aberto) (absorvida pela Fase 2) | ➡️ |
 | 6 | [Release v2.0](#fase-6-release-v20) | ⬜ |
@@ -23,13 +23,12 @@ _Atualizado em 2026-11-18._
 - **Onde paramos:**
   - A [Fase 1](#fase-1-fundação-de-versões) está concluída. O site abre na v2, o card v1.0 leva a 2023 num iframe, o botão "Voltar para 2026" e o "Voltar" do navegador ([D10](#registro-de-decisões)) trazem de volta, e tudo isso está coberto pelo E2E.
   - A [Fase 2](#fase-2-design-da-v2) virou o **design novo da v2** ([D11](#registro-de-decisões)). A direção visual está decidida (D12 e D13), e o **protótipo está concluído** na versão 8, com os pontos em aberto fechados ([D14](#registro-de-decisões)).
-  - A [implementação na v2](#23-implementação-na-v2) está **concluída**: o site já tem o design novo, com o conteúdo provisório do protótipo.
-- **Próximo passo:** a [Fase 3](#fase-3-conteúdo-da-v2), a revisão de todo o conteúdo (seções, guia, tagline, footer e tradução para o inglês).
-- **Push:** a 2.3 terminou, então os commits dela já podem ir para o ar.
+  - A [implementação na v2](#23-implementação-na-v2) está **concluída** e no ar.
+  - A [Fase 3](#fase-3-conteúdo-da-v2) está **concluída**: todo o conteúdo da v2 foi revisado e alinhado ao LinkedIn e ao GitHub ([D17](#registro-de-decisões)).
+- **Próximo passo:** a [Fase 4](#fase-4-efeito-volta-no-tempo), o efeito da volta no tempo, que ainda precisa ser definido em conjunto.
 - **Decisões pendentes:**
   - validar o hex `#D97757` com o ícone oficial do Claude (Fase 2);
-  - validar o rascunho do footer, que já aparece no site (Fase 3);
-  - qual texto o Sobre usa: o longo do commit `f082aaa` ou o curto do protótipo, com a trajetória (Fase 3);
+  - conferir a v2 com um leitor de tela de verdade, NVDA ou Narrador (Fase 6);
   - definir o efeito da volta no tempo (Fase 4).
 - **Ambiente:** Node 26 via fnm (`.node-version`). Dev server com `npm run dev` na porta 5173. Para assistir os testes: `SLOWMO=600 npx playwright test --headed --workers 1`.
 
@@ -60,6 +59,7 @@ _Atualizado em 2026-11-18._
 | D14 | 2026-11-18 | **Movimento e guia da v2**, escolhidos num painel de testes do protótipo. **Entrada da seção:** a órbita se recolhe, o `<GAD />` vai para o canto e o título é digitado (a alternativa, a tag clicada voando até virar o título, foi descartada). **Ritmo:** as durações da versão 3, com a órbita em cerca de 0,8 s e a entrada da seção em cerca de 0,8 s. **Convite:** ao carregar, o cursor digita o `<GAD />`, e só depois aparecem o `// clique para explorar` e o guia. **Guia:** no vão da coluna de identidade, onde a v1 tinha a nav, um `<p>` digitado explica a seção apontada ou aberta. **Digitação:** cada uma no seu ritmo: `<GAD />` irregular (70 a 140 ms por letra), títulos a 45 ms por letra e guia a 2 letras a cada 16 ms. | A órbita sozinha não dizia o que cada seção tem, e o vão da coluna ficava vazio. Uma velocidade única de digitação foi testada e descartada: devagar, o guia demora demais; rápida, o `<GAD />` perde o efeito. |
 | D15 | 2026-11-18 | **Endereços e fonte da v2.** Os endereços ficam em **inglês fixo**, iguais nos dois idiomas: `/` para o início, `#explore` para a órbita e `#about`, `#stacks`, `#projects`, `#versions` e `#contact` para as seções. A **JetBrains Mono** é servida pelo próprio site, pelo pacote `@fontsource-variable/jetbrains-mono`. Com a v1 aberta, a barra de endereço continua mostrando o endereço da v2: a nav da v1 muda só o endereço do iframe. | Trocar o idioma não muda o endereço, e um link compartilhado vale nos dois idiomas. A fonte não depende do Google nem da rede, e é atualizada pelo Dependabot. Espelhar o endereço da v1 na barra faria `#stacks` abrir a seção da v2, e um reload teria que reabrir 2023, contra a [D3](#registro-de-decisões). |
 | D16 | 2026-11-18 | **Convite, guia e telas baixas.** A digitação do `<GAD />` acontece em **toda visita** que abre no início. O guia `<p>` fica **oculto no celular**. Telas de até 760 px de altura, como a maioria dos notebooks, recebem uma **coluna de identidade compacta**; telas de até 520 px, como o celular deitado, recebem a **coluna única** do celular, com a árvore. | A digitação a cada visita é a opção mais simples e segue a D3, sem nada guardado entre visitas. No celular não existe o vão nem o "apontar" com o mouse. Um notebook de 1366×768 deixa só uns 650 px úteis no navegador, e a coluna precisava de 620 a 720 px; deitado, o celular cortava a órbita. |
+| D17 | 2026-11-18 | **Conteúdo da v2**, alinhado ao LinkedIn e ao GitHub. **Sobre:** a abertura e as conquistas do Sobre do LinkedIn, a formação, um parágrafo sobre a prática na Fitinsur, a trajetória com links e, no fim, como tudo começou, com a foto da família (miniatura ao passar o mouse, ampliada ao clicar). **Stacks:** os grupos das Hard skills do LinkedIn, mais o que os projetos mostram, com o Claude num grupo próprio e todos os chips iguais. **Projetos:** os 6 fixados no GitHub, com os textos do README, uma observação sobre o código privado da Fitinsur e a seleção, e um link para todos os repositórios. **Mantidos:** a tagline em português, o "Vamos conversar?" do Contato e o card "Em breve" da v2.0 dentro da v1. | Os três canais contam a mesma história. Um chip destacado parecia um item selecionado. Um link "no ar" para o próprio site não leva a lugar nenhum. A v1 é a cápsula do tempo de 2023 ([D1](#registro-de-decisões)), quando a v2 era mesmo "em breve". |
 
 ## Fase 0: Pré-desenvolvimento
 
@@ -181,42 +181,44 @@ Revisão de dependências na volta da pausa, em 2026-11-17:
 
 ## Fase 3: Conteúdo da v2
 
-⬜
+✅ Concluída em 2026-11-18 ([D17](#registro-de-decisões)). O conteúdo segue a base comum aos três canais: o Sobre do LinkedIn, a linha do tempo canônica e os projetos fixados no GitHub. Os textos estão nos próprios componentes de [`components/sections/`](../src/versions/v2/components/sections/about.tsx), de [`components/guide/`](../src/versions/v2/components/guide/index.tsx) e de [`components/identity/`](../src/versions/v2/components/identity/index.tsx), em português e inglês.
 
 ### Coluna de identidade
 
-Ajustes que alinham o site ao LinkedIn e ao GitHub (decididos em 2026-11-17):
-
-- [ ] Cargo: "Desenvolvedor Web FullStack" vira **"Desenvolvedor Full Stack"** / "Full Stack Developer".
-- [ ] Contatos: só os **canais oficiais**, GitHub, LinkedIn e e-mail. Instagram e Facebook saem.
-- [ ] Revisar a tagline "Desenvolvo produtos web responsivos e multi-dispositivos".
+- [x] Cargo "Desenvolvedor Full Stack" / "Full Stack Developer".
+- [x] Só os **canais oficiais**: GitHub, LinkedIn e e-mail.
+- [x] Tagline revisada: o português fica, e o inglês passa a "I build responsive, multi‑device web products".
+- [x] Footer validado, com o desenvolvimento *AI-oriented* com o Claude, 2026, v2.0 e os links de Claude, TypeScript, Visual Studio Code, React e Vite.
 
 ### Sobre
 
-- [ ] **Escolher o texto:** o site usa hoje o texto curto do protótipo (dois parágrafos e a trajetória). Os dois itens abaixo vêm do plano anterior ao design novo e precisam ser reavaliados.
-- [ ] Usar os textos em português e inglês do commit `f082aaa` (`src/pages/about/index.tsx`), que tinham sido revertidos em `58dee92`. Eles cobrem a transição de carreira pela Trybe, a atuação como Full Stack numa Insurtech (Node.js, React, MariaDB), Ciência da Computação na UVV, Economia na UFES e a experiência no IBGE. Os links abrem em nova aba (`target="_blank"`).
-- [ ] Manter o popup da foto da família no hover de "minha família".
-
-Para recuperar o texto: `git show f082aaa:src/pages/about/index.tsx`
-
-### Footer
-
-- [ ] Citar o desenvolvimento *AI-oriented* com o Claude, atualizar o ano para 2026 e a versão para v2.0.
-
-Rascunho para validar:
-
-> **PT:** Desenvolvido por mim, de forma AI-oriented em parceria com o Claude, em TypeScript no Visual Studio Code, tendo como base React e Vite. © 2026 Gabriel A. Dantas - Todos os direitos reservados. v2.0
->
-> **EN:** Developed by me, AI-oriented in partnership with Claude, in TypeScript on Visual Studio Code, built on React and Vite. © 2026 Gabriel A. Dantas - All rights reserved. v2.0
+- [x] Estrutura escolhida: a abertura e as conquistas do Sobre do LinkedIn, a formação, a prática na Fitinsur, a trajetória e o `// como comecei`. O texto longo do `f082aaa` virou só esse parágrafo final.
+- [x] Ajustes do usuário, levados também ao LinkedIn e ao `linkedin-sobre.txt`: "três grandes seguradoras", "utilizados", o desenvolvimento *AI-oriented* com o Claude nos 4 meses finais e o parágrafo da Fitinsur.
+- [x] Links da trajetória (UFES, IBGE, Trybe, Fitinsur e UVV), os mesmos do README do GitHub.
+- [x] A foto da família em "minha família": miniatura com o mouse, o foco ou um toque, e ampliada até o tamanho original, limitada à tela, num `<dialog>` nativo.
 
 ### Stacks
 
-- [x] O **Claude** entrou como um chip em destaque no grupo `ferramentas`. O plano anterior (ícone `claude.svg` na grade de ícones da v1) ficou obsoleto com o design novo, que usa grupos de chips sem ícones.
-- [ ] Revisar os grupos e as tecnologias de cada um.
+- [x] Os grupos das Hard skills do LinkedIn: `frontEnd`, `backEnd`, `dados`, `testes`, `devOps`, `práticas` e `ia`. Ficam também MongoDB, Cypress, Pytest, Playwright e Sinon, que os projetos mostram. O VS Code sai.
+- [x] O Claude tem um grupo próprio, e todos os chips são iguais: o chip destacado parecia selecionado.
 
-### Versões
+### Projetos
 
-- [x] Dados da v2: **v1.0** com "2023 · Versão original", que dispara a volta no tempo, e **v2.0** com "2026 · Versão atual".
+- [x] Os 6 projetos fixados no GitHub, com as descrições e as stacks do README do perfil. O texto do portfólio já diz que a v2 está no ar.
+- [x] Observação sobre o código privado da Fitinsur e a seleção, e o link `// todos os repositórios no GitHub ↗` no fim da lista.
+- [x] Sem o link "no ar" no portfólio: quem lê já está nele.
+- [ ] Lembrete fora deste repo: o README do perfil no GitHub ainda diz "em evolução para a v2.0".
+
+### Versões e Contato
+
+- [x] Dados da v2: **v1.0** com "2023 · Versão original", que abre a v1, e **v2.0** com "2026 · Versão atual".
+- [x] O card "Em breve" da v2.0, dentro da v1, fica como está ([D17](#registro-de-decisões)).
+- [x] O Contato mantém "Vamos conversar?" ("Shall we talk?" em inglês), e o LinkedIn passa a usar o mesmo final.
+
+### Guia e inglês
+
+- [x] Os 7 textos do guia revisados; o do Stacks passou a cobrir dos testes ao deploy.
+- [x] Revisão do inglês: "including" no lugar de "between", "Worked as part of the team", "corporate group" para "grupo econômico" e as vírgulas do footer.
 
 ## Fase 4: Efeito "volta no tempo"
 
@@ -311,3 +313,4 @@ Ideias para decidir juntos:
 | 2026-11-18 | 2 | 2.3, passo 5: coluna compacta em telas de até 760 px de altura e coluna única no celular deitado (D16); hover só com mouse | `ca7b5d8` |
 | 2026-11-18 | 2 | 2.3, passo 6: o foco acompanha a navegação (seções e v1), o título da aba diz a seção, e todos os controles têm contorno de foco | `0ce5c26` |
 | 2026-11-18 | 2 | **2.3 e Fase 2 concluídas.** Passo 7: limpeza (30 ícones antigos e um token sem uso) e build de produção conferido. 96 testes E2E | `40f502a` |
+| 2026-11-18 | 3 | **Fase 3 concluída** (D17). Sobre com a base do LinkedIn e a foto da família ampliável; Stacks nos grupos do LinkedIn; Projetos com os textos do README e o link para todos os repositórios; Contato, tagline, footer e guia revisados; revisão do inglês | `a5e502a` … `61695e0` |
