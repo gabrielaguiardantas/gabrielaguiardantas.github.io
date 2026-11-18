@@ -33,7 +33,7 @@ const TEXT = {
     footer: (tool: ToolLink) => (
       <>
         Desenvolvido por mim, de forma AI-oriented em parceria com o {tool("claude")}, em {tool("typescript")} no{" "}
-        {tool("vscode")}, tendo como base {tool("react")} e {tool("vite")}. © 2026 Gabriel A. Dantas - Todos os
+        {tool("vscode")}, tendo como base {tool("react")} e {tool("vite")}. © 2026 Gabriel A. Dantas – Todos os
         direitos reservados. v2.0
       </>
     ),
@@ -41,12 +41,12 @@ const TEXT = {
   english: {
     role: "Full Stack Developer",
     languages: "Language",
-    tagline: "Developing web responsive and multi‑device products",
+    tagline: "I build responsive, multi‑device web products",
     email: "Email",
     footer: (tool: ToolLink) => (
       <>
         Developed by me, AI-oriented in partnership with {tool("claude")}, in {tool("typescript")} on{" "}
-        {tool("vscode")}, built on {tool("react")} and {tool("vite")}. © 2026 Gabriel A. Dantas - All rights
+        {tool("vscode")}, built on {tool("react")} and {tool("vite")}. © 2026 Gabriel A. Dantas – All rights
         reserved. v2.0
       </>
     ),

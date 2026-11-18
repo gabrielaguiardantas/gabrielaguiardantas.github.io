@@ -60,7 +60,7 @@ test.describe('v2', () => {
       const identity = page.locator('aside')
       await expect(identity.getByRole('heading', { level: 1 })).toHaveText('Gabriel Aguiar Dantas')
       await expect(identity).toContainText('Desenvolvedor Full Stack')
-      await expect(identity.locator('footer')).toContainText('© 2026 Gabriel A. Dantas - Todos os direitos reservados. v2.0')
+      await expect(identity.locator('footer')).toContainText('© 2026 Gabriel A. Dantas – Todos os direitos reservados. v2.0')
       await expect(page.locator('html')).toHaveAttribute('lang', 'pt-BR')
       await expect(page.getByRole('button', { name: 'Português' })).toHaveAttribute('aria-pressed', 'true')
     })

@@ -5,7 +5,7 @@ const EMAIL = "gabrielaguiardantas@gmail.com";
 
 const TEXT = {
   portuguese: { intro: "Aberto a novas oportunidades como Desenvolvedor Full Stack. Vamos conversar?", email: "e-mail" },
-  english: { intro: "Open to new opportunities as a Full Stack Developer. Let's talk?", email: "email" },
+  english: { intro: "Open to new opportunities as a Full Stack Developer. Shall we talk?", email: "email" },
 };
 
 // só os canais oficiais (Fase 3)

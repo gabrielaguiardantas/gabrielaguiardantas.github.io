@@ -7,15 +7,14 @@ import styles from "./guide.module.css";
 
 type GuideKey = "idle" | "orbit" | SectionId;
 
-// textos provisórios, revisados na Fase 3
+// textos revisados na Fase 3
 const TEXT: Record<Language, Record<GuideKey, string>> = {
   portuguese: {
     idle: "Bem-vindo ao meu portfólio. Tudo aqui orbita o <GAD />: clique nele para explorar.",
     orbit: "Cinco seções, cada uma um componente. Aponte para uma delas para saber o que tem lá.",
     about:
       "Quem sou e como cheguei aqui: da Economia e do IBGE à programação, passando pela Trybe e por quase 3 anos numa Insurtech.",
-    stacks:
-      "As tecnologias que uso no dia a dia, do front-end ao banco de dados, e as ferramentas com que trabalho, incluindo o Claude.",
+    stacks: "As tecnologias com que trabalho, do front-end ao banco de dados, dos testes ao deploy.",
     projects: "Uma seleção do que já construí, das APIs às aplicações em React, com o link para o código de cada um.",
     versions: "Este site tem história: a v1, de 2023, continua no ar. Daqui dá para voltar no tempo e ver como ele começou.",
     contact: "Os canais para conversarmos sobre oportunidades, projetos ou código: LinkedIn, GitHub e e-mail.",
@@ -25,8 +24,7 @@ const TEXT: Record<Language, Record<GuideKey, string>> = {
     orbit: "Five sections, each one a component. Point at one to see what's inside.",
     about:
       "Who I am and how I got here: from Economics and IBGE to programming, through Trybe and almost 3 years at an Insurtech.",
-    stacks:
-      "The technologies I use every day, from the front end to the database, and the tools I work with, Claude included.",
+    stacks: "The technologies I work with, from the front end to the database, from testing to deployment.",
     projects: "A selection of what I've built, from APIs to React apps, with a link to the code of each one.",
     versions: "This site has a history: v1, from 2023, is still online. From here you can go back in time and see how it started.",
     contact: "Where we can talk about opportunities, projects or code: LinkedIn, GitHub and email.",
