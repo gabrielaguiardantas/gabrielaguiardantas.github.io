@@ -1,11 +1,11 @@
 import type { Page } from '@playwright/test'
-import { ENGLISH, PORTUGUESE, expect, expectLanguage, test, waitForScrollEnd } from './fixtures.ts'
+import { ENGLISH, PORTUGUESE, expect, expectLanguage, test } from './fixtures.ts'
 
 type Language = 'portuguese' | 'english'
 
 const LABELS = {
-  portuguese: { open: 'Voltar para 2023', back: 'Voltar para 2026' },
-  english: { open: 'Back to 2023', back: 'Back to 2026' },
+  portuguese: { open: 'Voltar para 2023', back: 'Voltar para 2026', explore: 'Explorar as seções', versions: 'Versões' },
+  english: { open: 'Back to 2023', back: 'Back to 2026', explore: 'Explore the sections', versions: 'Versions' },
 }
 
 const frameElement = (page: Page) => page.locator('iframe')
@@ -13,8 +13,16 @@ const v1 = (page: Page) => page.frameLocator('iframe')
 const v1Hash = (page: Page) => page.frame({ url: /\/v1\.html/ })!.evaluate(() => location.hash)
 const isV2Inert = (page: Page) => page.evaluate(() => document.getElementById('root')!.inert)
 
+// na v2, abre a órbita e a seção Versões, como um visitante faria
+async function openVersionsSection(page: Page, language: Language = 'portuguese') {
+  await page.getByRole('button', { name: LABELS[language].explore }).click()
+  await page.getByRole('button', { name: LABELS[language].versions, exact: true }).click()
+  await expect(page).toHaveURL(/#versions$/)
+}
+
 // clica no card v1.0 da v2 e espera a v1 aparecer no iframe
 async function openV1(page: Page, language: Language = 'portuguese') {
+  if (!page.url().endsWith('#versions')) await openVersionsSection(page, language)
   await page.locator('#versions').getByRole('button', { name: LABELS[language].open }).click()
   await expect(frameElement(page)).toBeVisible()
   await expect(v1(page).locator('#versions')).toBeAttached()
@@ -50,10 +58,6 @@ test.describe('switching between v2 and v1', () => {
   })
 
   test('opens v1 over v2 and comes back to the same spot', async ({ page }) => {
-    await page.locator('#versions').getByRole('button', { name: LABELS.portuguese.open }).scrollIntoViewIfNeeded()
-    await waitForScrollEnd(page)
-    const scrollY = await page.evaluate(() => window.scrollY)
-
     await openV1(page)
     await expectLanguage(v1(page), PORTUGUESE)
     // a v2 fica montada atrás, mas inerte
@@ -61,11 +65,24 @@ test.describe('switching between v2 and v1', () => {
 
     await backTo2026(page)
     expect(await isV2Inert(page)).toBe(false)
-    expect(await page.evaluate(() => window.scrollY)).toBe(scrollY)
+    // a v2 continua na seção Versões
+    await expect(page).toHaveURL(/#versions$/)
+    await expect(page.locator('#versions').getByRole('button', { name: LABELS.portuguese.open })).toBeVisible()
+  })
+
+  test('browser back from v1 returns to the versions section, then to the orbit', async ({ page }) => {
+    await openV1(page)
+    await browserBack(page)
+    await expect(frameElement(page)).toBeHidden()
+    await expect(page).toHaveURL(/#versions$/)
+
+    await browserBack(page)
+    await expect(page).toHaveURL(/#explore$/)
+    await expect(page.getByRole('button', { name: LABELS.portuguese.versions, exact: true })).toBeVisible()
   })
 
   test('carries the current language to v1', async ({ page }) => {
-    await page.getByRole('button', { name: 'english' }).click()
+    await page.getByRole('button', { name: 'English' }).click()
     await openV1(page, 'english')
     await expectLanguage(v1(page), ENGLISH)
     await backTo2026(page, 'english')
@@ -74,7 +91,7 @@ test.describe('switching between v2 and v1', () => {
   test('reloads v1 in the new language when it changes between visits', async ({ page }) => {
     await openV1(page)
     await backTo2026(page)
-    await page.getByRole('button', { name: 'english' }).click()
+    await page.getByRole('button', { name: 'English' }).click()
 
     await openV1(page, 'english')
     await expectLanguage(v1(page), ENGLISH)
@@ -155,6 +172,6 @@ test.describe('v1 opened on its own', () => {
     await page.goto('/v1.html')
     await page.locator('#versions').getByRole('button', { name: LABELS.portuguese.back }).click()
     await expect(page).toHaveURL('/')
-    await expect(page.locator('#versions').getByRole('button', { name: LABELS.portuguese.open })).toBeVisible()
+    await expect(page.getByRole('button', { name: LABELS.portuguese.explore })).toBeVisible()
   })
 })

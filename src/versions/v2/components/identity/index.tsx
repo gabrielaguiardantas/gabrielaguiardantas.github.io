@@ -59,6 +59,9 @@ const LANGUAGES: { id: Language; flag: string; label: string }[] = [
   { id: "english", flag: uk, label: "English" },
 ];
 
+// data-orbit-avoid marca o que a órbita não pode cobrir (ver components/stage):
+// "ink" mede só o texto, "box" mede a caixa inteira
+
 // os ícones são máscaras pintadas com background-color, então seguem os tokens de cor
 const icon = (src: string) => ({ "--icon": `url("${src}")` }) as CSSProperties;
 
@@ -75,8 +78,8 @@ function Identity() {
   return (
     <aside className={styles.identity}>
       <header className={styles.header}>
-        <h1 className={styles.name}>Gabriel Aguiar Dantas</h1>
-        <p className={styles.role}>{text.role}</p>
+        <h1 className={styles.name} data-orbit-avoid="ink">Gabriel Aguiar Dantas</h1>
+        <p className={styles.role} data-orbit-avoid="ink">{text.role}</p>
         <div className={styles.flags} role="group" aria-label={text.languages}>
           {LANGUAGES.map(({ id, flag, label }) => (
             <button
@@ -85,12 +88,13 @@ function Identity() {
               aria-pressed={language === id}
               title={label}
               onClick={() => setLanguage(id)}
+              data-orbit-avoid="box"
             >
               <img src={flag} alt={label} />
             </button>
           ))}
         </div>
-        <p className={styles.tagline}>{text.tagline}</p>
+        <p className={styles.tagline} data-orbit-avoid="ink">{text.tagline}</p>
         <ul className={styles.socials}>
           {socials.map(({ label, icon: src, href, external }) => (
             <li key={href}>
@@ -98,6 +102,7 @@ function Identity() {
                 href={href}
                 aria-label={label}
                 title={label}
+                data-orbit-avoid="box"
                 {...(external && { target: "_blank", rel: "noopener noreferrer" })}
               >
                 <span style={icon(src)} />
@@ -107,7 +112,7 @@ function Identity() {
         </ul>
       </header>
       <footer className={styles.footer}>
-        <p>{text.footer(toolLink)}</p>
+        <p data-orbit-avoid="ink">{text.footer(toolLink)}</p>
       </footer>
     </aside>
   );
