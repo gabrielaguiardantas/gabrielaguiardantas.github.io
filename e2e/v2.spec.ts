@@ -499,6 +499,29 @@ test.describe('v2', () => {
       await context.close()
     })
 
+    // a palavra cai em pontos diferentes da linha conforme a largura e a fonte do aparelho
+    // (no Redmi Note 11S, 393px com Roboto, ela ficava no fim da linha e a miniatura saía cortada)
+    test('the thumbnail stays inside the screen at any phone width', async ({ browser }, testInfo) => {
+      test.skip(testInfo.project.name !== 'mobile', 'one run is enough')
+      const context = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true })
+      const page = await context.newPage()
+      await page.goto('/#about')
+      for (let width = 340; width <= 430; width += 6) {
+        await page.setViewportSize({ width, height: 844 })
+        await familyButton(page).scrollIntoViewIfNeeded()
+        await familyButton(page).tap()
+        await expect(thumbnail(page)).toBeVisible()
+        const frame = about(page).locator('button[aria-hidden="true"]')
+        await frame.evaluate((element) => Promise.all(element.parentElement!.getAnimations().map((a) => a.finished)))
+        const box = (await frame.boundingBox())!
+        expect(box.x, `left edge at ${width}px`).toBeGreaterThanOrEqual(15.5)
+        expect(box.x + box.width, `right edge at ${width}px`).toBeLessThanOrEqual(width - 15.5)
+        await familyButton(page).tap()
+        await expect(thumbnail(page)).toHaveCount(0)
+      }
+      await context.close()
+    })
+
     test('the keyboard opens and closes it all, one Escape at a time', async ({ page }) => {
       // chega ao botão pelo Tab, a partir do último link da trajetória
       await about(page).locator('ol a').last().focus()

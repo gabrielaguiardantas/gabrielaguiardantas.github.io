@@ -110,6 +110,8 @@
 /* "minha família": parece um link do texto; a foto abre por cima do parágrafo */
 .family {
   position: relative;
+  /* "minha família" numa linha só: partida em duas, a miniatura perde a referência */
+  white-space: nowrap;
 }
 
 .familyButton {
@@ -138,7 +140,8 @@
   z-index: 5;
   width: min(320px, 80vw);
   padding-bottom: 10px;
-  transform: translateX(-50%);
+  /* --shift vem do about.tsx e mantém a miniatura dentro da tela */
+  transform: translateX(calc(-50% + var(--shift, 0px)));
   animation: photo-in calc(0.25s * var(--tempo)) var(--ease);
 }
 
@@ -220,7 +223,7 @@
 @keyframes photo-in {
   from {
     opacity: 0;
-    transform: translateX(-50%) translateY(6px);
+    transform: translateX(calc(-50% + var(--shift, 0px))) translateY(6px);
   }
 }
 

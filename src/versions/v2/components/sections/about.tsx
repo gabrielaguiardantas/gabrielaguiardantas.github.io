@@ -1,4 +1,4 @@
-import { type FocusEvent, type KeyboardEvent, type ReactNode, useRef, useState } from "react";
+import { type FocusEvent, type KeyboardEvent, type ReactNode, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import familyPhoto from "../../assets/family_img.jpg";
 import { useLanguage } from "../../context/language";
@@ -87,6 +87,20 @@ const TEXT = {
 
 type FamilyText = { label: string; photo: string; close: string };
 
+// a mesma margem lateral da página no celular
+const POPOVER_GUTTER = 16;
+
+// a miniatura nasce centralizada na palavra; se assim ela sairia da tela (a palavra no
+// começo ou no fim da linha), é empurrada para dentro, até a margem da página
+function keepInsideViewport(anchor: HTMLElement, popover: HTMLElement) {
+  const { left, width } = anchor.getBoundingClientRect();
+  const popoverWidth = popover.offsetWidth;
+  const centered = left + width / 2 - popoverWidth / 2;
+  const max = Math.max(POPOVER_GUTTER, document.documentElement.clientWidth - POPOVER_GUTTER - popoverWidth);
+  const inside = Math.min(Math.max(centered, POPOVER_GUTTER), max);
+  popover.style.setProperty("--shift", `${inside - centered}px`);
+}
+
 // "minha família": a miniatura da foto aparece com o mouse em cima ou com o foco do teclado,
 // e some ao sair. No toque não existe "em cima", então um toque mostra a miniatura e outro a
 // esconde. Clicar (ou Enter, ou tocar na miniatura) amplia a foto até o tamanho original,
@@ -96,6 +110,19 @@ function FamilyPhoto({ text }: { text: FamilyText }) {
   const [zoomed, setZoomed] = useState(false);
   const [lastPointer, setLastPointer] = useState<string | null>(null);
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const anchorRef = useRef<HTMLSpanElement>(null);
+  const popoverRef = useRef<HTMLSpanElement>(null);
+
+  // antes da pintura, para a miniatura não aparecer cortada nem por um quadro
+  useLayoutEffect(() => {
+    const anchor = anchorRef.current;
+    const popover = popoverRef.current;
+    if (!anchor || !popover) return;
+    const place = () => keepInsideViewport(anchor, popover);
+    place();
+    window.addEventListener("resize", place);
+    return () => window.removeEventListener("resize", place);
+  }, [open, zoomed]);
 
   const zoom = () => {
     setZoomed(true);
@@ -118,6 +145,7 @@ function FamilyPhoto({ text }: { text: FamilyText }) {
 
   return (
     <span
+      ref={anchorRef}
       className={styles.family}
       onPointerEnter={(event) => event.pointerType === "mouse" && setOpen(true)}
       onPointerLeave={(event) => event.pointerType === "mouse" && setOpen(false)}
@@ -138,7 +166,7 @@ function FamilyPhoto({ text }: { text: FamilyText }) {
       </button>
       {/* com a foto ampliada, a miniatura sai de trás do fundo escurecido */}
       {open && !zoomed && (
-        <span className={styles.familyPopover}>
+        <span ref={popoverRef} className={styles.familyPopover}>
           {/* a miniatura também amplia; quem usa teclado já tem o Enter no botão acima */}
           <button type="button" className={styles.familyFrame} tabIndex={-1} aria-hidden="true" onClick={zoom}>
             <img src={familyPhoto} alt="" width={2048} height={1365} />
