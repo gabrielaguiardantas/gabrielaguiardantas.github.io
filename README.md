@@ -48,6 +48,7 @@ The site runs at http://localhost:5173/.
 | `npm run preview` | Serves the production build locally |
 | `npm run lint` | Lints with oxlint (fails on any warning) |
 | `npm run test:e2e` | Runs the Playwright smoke tests |
+| `npm run resume` | Generates the resume PDFs (PT and EN) in `public/` from `resume/content.mjs`, with the installed Chrome |
 
 ## End-to-end tests
 

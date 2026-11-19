@@ -12,6 +12,7 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint --max-warnings 0",
     "test:e2e": "playwright test",
+    "resume": "node resume/build.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -20,6 +21,7 @@
     "react-dom": "^19.3.1"
   },
   "devDependencies": {
+    "@fontsource/lato": "^5.3.0",
     "@playwright/test": "~1.65.1",
     "@types/node": "^26.6.6",
     "@types/react": "^19.3.0",

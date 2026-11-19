@@ -4,6 +4,7 @@ import uk from "../../assets/uk.svg";
 import github from "../../assets/github.svg";
 import linkedin from "../../assets/linkedin.svg";
 import email from "../../assets/email.svg";
+import resume from "../../assets/resume.svg";
 import { type Language, useLanguage } from "../../context/language";
 import styles from "./identity.module.css";
 
@@ -30,6 +31,9 @@ const TEXT = {
     languages: "Idioma",
     tagline: "Desenvolvo produtos web responsivos e multi‑dispositivos", // U+2011: o hífen não quebra a linha
     email: "E-mail",
+    resume: "Currículo em PDF",
+    // gerado por npm run resume, a partir de resume/content.mjs
+    resumeFile: "/Curriculo_Gabriel_Aguiar_Dantas.pdf",
     footer: (tool: ToolLink) => (
       <>
         Desenvolvido por mim, de forma AI-oriented em parceria com o {tool("claude")}, em {tool("typescript")} no{" "}
@@ -43,6 +47,8 @@ const TEXT = {
     languages: "Language",
     tagline: "I build responsive, multi‑device web products",
     email: "Email",
+    resume: "Resume (PDF)",
+    resumeFile: "/Resume_Gabriel_Aguiar_Dantas.pdf",
     footer: (tool: ToolLink) => (
       <>
         Developed by me, AI-oriented, in partnership with {tool("claude")}, in {tool("typescript")} on{" "}
@@ -74,6 +80,8 @@ function Identity({ children }: { children?: ReactNode }) {
     { label: "GitHub", icon: github, href: "https://github.com/gabrielaguiardantas", external: true },
     { label: "LinkedIn", icon: linkedin, href: "https://www.linkedin.com/in/gabrielaguiardantas", external: true },
     { label: text.email, icon: email, href: "#contact", external: false },
+    // o PDF do idioma ativo, numa aba nova
+    { label: text.resume, icon: resume, href: text.resumeFile, external: true },
   ];
 
   return (

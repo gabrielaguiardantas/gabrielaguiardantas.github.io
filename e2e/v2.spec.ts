@@ -84,12 +84,28 @@ test.describe('v2', () => {
         'GitHub',
         'LinkedIn',
         'E-mail',
+        'Currículo em PDF',
       ])
       await expect(links.nth(0)).toHaveAttribute('href', 'https://github.com/gabrielaguiardantas')
       await expect(links.nth(1)).toHaveAttribute('href', 'https://www.linkedin.com/in/gabrielaguiardantas')
-      for (const external of [links.nth(0), links.nth(1)]) {
+      for (const external of [links.nth(0), links.nth(1), links.nth(3)]) {
         await expect(external).toHaveAttribute('target', '_blank')
         await expect(external).toHaveAttribute('rel', 'noopener noreferrer')
+      }
+    })
+
+    test('opens the resume PDF in the language of the site', async ({ page }) => {
+      const resume = (name: string) => page.locator('aside header').getByRole('link', { name, exact: true })
+      await expect(resume('Currículo em PDF')).toHaveAttribute('href', '/Curriculo_Gabriel_Aguiar_Dantas.pdf')
+
+      await page.getByRole('button', { name: 'English' }).click()
+      await expect(resume('Resume (PDF)')).toHaveAttribute('href', '/Resume_Gabriel_Aguiar_Dantas.pdf')
+
+      // os dois PDFs existem no site, e não caem no index.html
+      for (const file of ['/Curriculo_Gabriel_Aguiar_Dantas.pdf', '/Resume_Gabriel_Aguiar_Dantas.pdf']) {
+        const response = await page.request.get(file)
+        expect(response.ok()).toBe(true)
+        expect(response.headers()['content-type']).toBe('application/pdf')
       }
     })
 
