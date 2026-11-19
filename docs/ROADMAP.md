@@ -15,10 +15,11 @@ Este documento orienta a modernização do portfólio e registra o andamento. A 
 | 4 | [Efeito "volta no tempo"](#fase-4-efeito-volta-no-tempo) | ✅ |
 | 5 | [Seções em aberto](#fase-5-seções-em-aberto) (absorvida pela Fase 2) | ➡️ |
 | 6 | [Release v2.0](#fase-6-release-v20) | ✅ |
+| 7 | [v2.1.0: correções e currículo em PDF](#fase-7-v210) | 🟨 |
 
 ## Estado atual e próximo passo
 
-_Atualizado em 2026-11-18._
+_Atualizado em 2026-11-19._
 
 - **Onde paramos:**
   - A [Fase 1](#fase-1-fundação-de-versões) está concluída. O site abre na v2, o card v1.0 leva a 2023 num iframe, o botão "Voltar para 2026" e o "Voltar" do navegador ([D10](#registro-de-decisões)) trazem de volta, e tudo isso está coberto pelo E2E.
@@ -27,9 +28,10 @@ _Atualizado em 2026-11-18._
   - A [Fase 3](#fase-3-conteúdo-da-v2) está **concluída**: todo o conteúdo da v2 foi revisado e alinhado ao LinkedIn e ao GitHub ([D17](#registro-de-decisões)).
   - A [Fase 4](#fase-4-efeito-volta-no-tempo) está **concluída**: toda troca de versão passa pela volta no tempo ([D18](#registro-de-decisões)).
   - A [Fase 6](#fase-6-release-v20) está **concluída**: a v2.0 foi lançada, com a tag `v2.0.0`.
-- **Próximo passo:** nenhum previsto. Ficam os itens do plano de presença profissional que dependiam do site (Destaques do LinkedIn e o post de lançamento) e a conferência com um leitor de tela.
+  - A [Fase 7](#fase-7-v210) está **em andamento**: a miniatura da foto no celular e a leitura pelo NVDA foram corrigidas, e o `vite.svg` sem uso saiu.
+- **Próximo passo:** o currículo em PDF e o botão para ele na coluna de identidade; depois, a release da v2.1.0.
 - **Decisões pendentes:**
-  - conferir a v2 com um leitor de tela de verdade, NVDA ou Narrador (Fase 6);
+  - currículo: uma ou duas páginas, só PT ou PT e EN, e como gerar o PDF ([Fase 7](#fase-7-v210));
 - **Ambiente:** Node 26 via fnm (`.node-version`). Dev server com `npm run dev` na porta 5173. Para assistir os testes: `SLOWMO=600 npx playwright test --headed --workers 1`.
 
 ## Princípios
@@ -175,7 +177,7 @@ Revisão de dependências na volta da pausa, em 2026-11-17:
 - [x] Celular e telas baixas ([D16](#registro-de-decisões)): coluna compacta até 760 px de altura e coluna única até 520 px. A consulta fica em [`layout.ts`](../src/versions/v2/layout.ts). No toque, o hover não "gruda" mais no último elemento tocado.
 - [x] Endereços por hash ([D15](#registro-de-decisões)) e histórico seguindo a D10, em [`context/route.ts`](../src/versions/v2/context/route.ts). O endereço é a fonte da verdade; o `VersionProvider` guarda a versão no `state` da entrada, sem mudar o endereço, então os dois convivem no mesmo histórico.
 - [x] `<Versões />` mantém o botão "Voltar para 2023", e a volta de 2023 retorna à mesma seção.
-- [x] Teclado (Tab e Esc), foco visível e `prefers-reduced-motion`. O foco acompanha a navegação: vai para o título da seção aberta e, ao voltar, para a seção de onde se veio ou para o `<GAD />`. Ele também entra na v1 e volta ao botão que a abriu. O título da aba diz a seção aberta. Conferido na árvore de acessibilidade do Chrome; falta uma conferência manual com um leitor de tela (NVDA ou Narrador).
+- [x] Teclado (Tab e Esc), foco visível e `prefers-reduced-motion`. O foco acompanha a navegação: vai para o título da seção aberta e, ao voltar, para a seção de onde se veio ou para o `<GAD />`. Ele também entra na v1 e volta ao botão que a abriu. O título da aba diz a seção aberta. Conferido na árvore de acessibilidade do Chrome e, na [Fase 7](#fase-7-v210), com o NVDA.
 - [x] E2E: o smoke virou [`e2e/v1.spec.ts`](../e2e/v1.spec.ts), só para a v1, e a v2 ganhou o [`e2e/v2.spec.ts`](../e2e/v2.spec.ts): coluna de identidade, navegação, layout da órbita em 6 tamanhos de tela e no celular deitado, seções, convite, guia, teclado e foco. O `versions.spec.ts` chega ao card v1.0 pela órbita. São 96 testes no total, estáveis em 3 repetições.
 - [x] Remover da v2 o que deixou de ser usado: a nav, as seções empilhadas, o CSS global herdado da v1, o popup e 30 ícones antigos. O `family_img.jpg` ficou para a decisão do Sobre na Fase 3; sem import, ele não entra no build da v2.
 - [x] Build de produção conferido no Chrome (desktop e celular): fonte servida pelo próprio site, nenhuma requisição externa e nenhum erro no console.
@@ -279,6 +281,24 @@ Revisão de dependências na volta da pausa, em 2026-11-17:
 - [x] Revisão final: E2E completo três vezes (345 execuções), build de produção conferido no Chrome (desktop, celular, inglês e a volta no tempo, sem erros nem requisições externas) e varredura de acessibilidade com o axe (WCAG 2.2 AA) em 16 estados. A varredura pediu um sublinhado nos links do footer, que só se distinguiam pela cor.
 - [x] Push na `main` e deploy no GitHub Actions, feitos pelo usuário depois do commit do lançamento.
 
+## Fase 7: v2.1.0
+
+🟨 Em andamento desde 2026-11-19. As correções encontradas depois do lançamento e o botão do currículo saem juntos numa única versão, a **v2.1.0**, por decisão do usuário: sem um patch 2.0.1 só para as correções.
+
+- [x] **Miniatura da foto no celular:** centralizada sobre "minha família", ela saía cortada pela borda quando a palavra caía no começo ou no fim da linha (relatado num Redmi Note 11S: 393 px, com a Roboto). Agora ela é empurrada para dentro da margem de 16 px, e "minha família" não quebra mais a linha. O E2E abre a miniatura em larguras de 340 a 430 px.
+- [x] **Conferência com um leitor de tela**, pendente desde a Fase 6. Feita com o NVDA 2026.3 portátil, pilotado pelo Guidepup a partir do Playwright, com o registro em texto de tudo o que ele falou. Os ajustes, sem mudar nada na tela (as capturas antes e depois são idênticas):
+  - o `//` dos rótulos e o `↗` dos links ficam com `aria-hidden`: o NVDA lia "barra barra trajetória" e "seta para cima e para a direita";
+  - o texto do guia para o leitor diz "GAD", e não "menor GAD barra maior";
+  - os chips de Stacks e Projetos viraram itens de lista: antes eram lidos colados ("HTMLCSS", "POOSOLID");
+  - as bandeiras de idioma ficaram decorativas, com o nome no botão, sem o "gráfico";
+  - uma região `role="status"`, fora do `#root`, anuncia a chegada à v1 e a volta à v2. O NVDA não anuncia o foco no iframe, e a viagem no tempo ficava em silêncio.
+  - O Esc na foto ampliada está certo: o foco volta ao botão, que o NVDA anuncia logo depois de dizer o título da página.
+  - Na v1, os ícones duplicados e a tabela de 35 links "git Hub Icon" ficam como estão, porque ela é a cápsula do tempo de 2023 ([D1](#registro-de-decisões)).
+- [x] O `public/vite.svg`, sobra do template do Vite, foi removido: nada o usava.
+- [ ] 💬 Currículo em PDF, alinhado ao LinkedIn.
+- [ ] Botão do currículo na coluna de identidade, junto a GitHub, LinkedIn e E-mail: ícone com `mask-image`, PT e EN e E2E.
+- [ ] Release: `package.json` em 2.1.0, os rótulos "v2.0" do site passam a "v2.1" (o card da v1 é exceção da [D4](#registro-de-decisões) e será combinado antes) e a tag `v2.1.0`.
+
 ## Plano B: duas árvores React
 
 > **Observação:** se a arquitetura de iframe ([D4](#registro-de-decisões)) não ficar boa, migramos para esta.
@@ -329,3 +349,6 @@ Revisão de dependências na volta da pausa, em 2026-11-17:
 | 2026-11-18 | 4 | Protótipo da volta no tempo, com quatro efeitos e cinco formas de contador; escolhido o contador com `<GAD year={2026} />` (D18) | `f01ed89` |
 | 2026-11-18 | 4 | **Fase 4 concluída.** A volta no tempo em toda troca de versão, esperando a v1 carregar e invertendo no meio do caminho; 113 testes E2E | `7bc49a1` |
 | 2026-11-18 | 6 | **v2.0 lançada.** Prévia de compartilhamento, sublinhado nos links do footer (axe), README com as versões, `package.json` em 2.0.0 e o hex do Claude validado | `fe9190f`, `d460d88`, tag `v2.0.0` |
+| 2026-11-18 | 6 | Prévia ajustada pelo Post Inspector do LinkedIn: "Portfólio" no título e na imagem, que ganhou outro nome para escapar do cache | `9bdee3d`, `11d1320` |
+| 2026-11-19 | 7 | A miniatura da foto da família fica dentro da tela no celular (Redmi Note 11S) | `2c57103` |
+| 2026-11-19 | 7 | Conferência com o NVDA: o leitor ouve palavras, sem a decoração de código, e a viagem no tempo é anunciada; `vite.svg` removido. 119 testes E2E | `f4ce5be`, `5241100` |
