@@ -29,7 +29,7 @@ _Atualizado em 2026-11-19._
   - A [Fase 4](#fase-4-efeito-volta-no-tempo) está **concluída**: toda troca de versão passa pela volta no tempo ([D18](#registro-de-decisões)).
   - A [Fase 6](#fase-6-release-v20) está **concluída**: a v2.0 foi lançada, com a tag `v2.0.0`.
   - A [Fase 7](#fase-7-v210) está **concluída**: a v2.1.0 traz as correções pós-lançamento, o currículo em PDF (PT e EN) com o botão na coluna de identidade e a abertura no idioma do navegador ([D19](#registro-de-decisões)), com a tag `v2.1.0`.
-- **Próximo passo:** o push da `main` e da tag `v2.1.0` e o deploy, feitos pelo usuário. Depois disso, nenhuma fase fica aberta.
+- **Próximo passo:** nenhuma fase aberta. A v2.1.0 está no ar desde 2026-11-19.
 - **Decisões pendentes:** nenhuma.
 - **Ambiente:** Node 26 via fnm (`.node-version`). Dev server com `npm run dev` na porta 5173. Para assistir os testes: `SLOWMO=600 npx playwright test --headed --workers 1`.
 
@@ -300,7 +300,7 @@ Revisão de dependências na volta da pausa, em 2026-11-17:
 - [x] **Botão do currículo** na coluna de identidade, depois de GitHub, LinkedIn e E-mail: ícone de PDF com `mask-image` (o `filetype-pdf` do Bootstrap Icons, o mesmo conjunto do ícone do GitHub; escolhido entre dez opções), o PDF do idioma ativo ("Currículo em PDF" ou "Resume (PDF)") numa aba nova. O E2E confere o endereço nos dois idiomas e que os dois PDFs são servidos como `application/pdf`.
 - [x] **Idioma do navegador** ([D19](#registro-de-decisões)): o site abre em português num navegador em português e em inglês em qualquer outro. O E2E fixa o navegador em `pt-BR` e confere pt-PT, en-US e es-ES, e que a escolha da bandeira não sobrevive a um reload. Com o site forçado a abrir sempre em PT, os três testes de inglês falharam, como deveriam.
 - [x] **Release:** `package.json` em 2.1.0, e os rótulos "v2.0" do site passam a "v2.1": o footer, o card da versão atual na seção Versões e o aviso de volta para o leitor de tela. O card "v2.0 · Em breve" dentro da v1 continua como está, porque ela é a cápsula do tempo de 2023 ([D17](#registro-de-decisões)). E2E completo, build de produção com os dois PDFs no `dist/` e a tag anotada `v2.1.0`.
-- [ ] Push na `main` e deploy no GitHub Actions, feitos pelo usuário depois do commit da release.
+- [x] Push na `main` e da tag `v2.1.0` e deploy no GitHub Actions, feitos pelo usuário. Conferido no ar: os dois PDFs servidos como `application/pdf` e os textos da v2.1 no código publicado.
 
 ## Plano B: duas árvores React
 
