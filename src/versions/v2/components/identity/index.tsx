@@ -38,7 +38,7 @@ const TEXT = {
       <>
         Desenvolvido por mim, de forma AI-oriented em parceria com o {tool("claude")}, em {tool("typescript")} no{" "}
         {tool("vscode")}, tendo como base {tool("react")} e {tool("vite")}. © 2026 Gabriel A. Dantas – Todos os
-        direitos reservados. v2.0
+        direitos reservados. v2.1
       </>
     ),
   },
@@ -53,7 +53,7 @@ const TEXT = {
       <>
         Developed by me, AI-oriented, in partnership with {tool("claude")}, in {tool("typescript")} on{" "}
         {tool("vscode")}, built on {tool("react")} and {tool("vite")}. © 2026 Gabriel A. Dantas – All rights
-        reserved. v2.0
+        reserved. v2.1
       </>
     ),
   },

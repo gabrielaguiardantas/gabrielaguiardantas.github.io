@@ -15,7 +15,7 @@ Este documento orienta a modernização do portfólio e registra o andamento. A 
 | 4 | [Efeito "volta no tempo"](#fase-4-efeito-volta-no-tempo) | ✅ |
 | 5 | [Seções em aberto](#fase-5-seções-em-aberto) (absorvida pela Fase 2) | ➡️ |
 | 6 | [Release v2.0](#fase-6-release-v20) | ✅ |
-| 7 | [v2.1.0: correções e currículo em PDF](#fase-7-v210) | 🟨 |
+| 7 | [v2.1.0: correções e currículo em PDF](#fase-7-v210) | ✅ |
 
 ## Estado atual e próximo passo
 
@@ -28,10 +28,9 @@ _Atualizado em 2026-11-19._
   - A [Fase 3](#fase-3-conteúdo-da-v2) está **concluída**: todo o conteúdo da v2 foi revisado e alinhado ao LinkedIn e ao GitHub ([D17](#registro-de-decisões)).
   - A [Fase 4](#fase-4-efeito-volta-no-tempo) está **concluída**: toda troca de versão passa pela volta no tempo ([D18](#registro-de-decisões)).
   - A [Fase 6](#fase-6-release-v20) está **concluída**: a v2.0 foi lançada, com a tag `v2.0.0`.
-  - A [Fase 7](#fase-7-v210) está **em andamento**: a miniatura da foto (no celular e no computador) e a leitura pelo NVDA foram corrigidas, o `vite.svg` sem uso saiu, o currículo em PDF (PT e EN) ganhou um botão na coluna de identidade e o site abre no idioma do navegador ([D19](#registro-de-decisões)).
-- **Próximo passo:** a release da v2.1.0.
-- **Decisões pendentes:**
-  - o rótulo "v2.0" do card da v1 na release da v2.1.0 (exceção da [D4](#registro-de-decisões));
+  - A [Fase 7](#fase-7-v210) está **concluída**: a v2.1.0 traz as correções pós-lançamento, o currículo em PDF (PT e EN) com o botão na coluna de identidade e a abertura no idioma do navegador ([D19](#registro-de-decisões)), com a tag `v2.1.0`.
+- **Próximo passo:** o push da `main` e da tag `v2.1.0` e o deploy, feitos pelo usuário. Depois disso, nenhuma fase fica aberta.
+- **Decisões pendentes:** nenhuma.
 - **Ambiente:** Node 26 via fnm (`.node-version`). Dev server com `npm run dev` na porta 5173. Para assistir os testes: `SLOWMO=600 npx playwright test --headed --workers 1`.
 
 ## Princípios
@@ -284,7 +283,7 @@ Revisão de dependências na volta da pausa, em 2026-11-17:
 
 ## Fase 7: v2.1.0
 
-🟨 Em andamento desde 2026-11-19. As correções encontradas depois do lançamento e o botão do currículo saem juntos numa única versão, a **v2.1.0**, por decisão do usuário: sem um patch 2.0.1 só para as correções.
+✅ Concluída em 2026-11-19, com a tag `v2.1.0`. As correções encontradas depois do lançamento e o botão do currículo saem juntos numa única versão, a **v2.1.0**, por decisão do usuário: sem um patch 2.0.1 só para as correções.
 
 - [x] **Miniatura da foto no celular:** centralizada sobre "minha família", ela saía cortada pela borda quando a palavra caía no começo ou no fim da linha (relatado num Redmi Note 11S: 393 px, com a Roboto). Agora ela é empurrada para dentro da margem de 16 px, e "minha família" não quebra mais a linha. O E2E abre a miniatura em larguras de 340 a 430 px.
 - [x] **Miniatura da foto no computador:** o painel da seção tem rolagem própria e corta o que passa da borda dele. Em inglês, "my family" começa a linha, e a miniatura saía cortada pela esquerda em todas as larguras. Ela agora fica na faixa visível: a largura da tela recortada pelos contêineres que cortam (o painel no computador, a tela no celular). O E2E confere os dois idiomas em quatro larguras.
@@ -300,7 +299,8 @@ Revisão de dependências na volta da pausa, em 2026-11-17:
 - [x] **Currículo em PDF**, alinhado à base comum do LinkedIn, do GitHub e do site, em PT e EN, com 1 página A4. O PDF anterior vinha de um script Python (ReportLab) que não ficou salvo, então o layout foi refeito em HTML em [`resume/`](../resume/): os textos em `content.mjs`, o modelo em `template.mjs` e o `npm run resume`, que gera os dois PDFs em `public/` com o Chrome instalado e falha se algum passar de 1 página. A Lato vem do pacote `@fontsource/lato`, embutida no HTML, como a fonte do site ([D15](#registro-de-decisões)). Os PDFs ficam no repo já gerados, e o deploy não precisa do Chrome. Para o ATS: uma coluna, texto de verdade e sem kerning nem ligaduras, que faziam o texto extraído perder espaços ("T OEIC(Listening &Reading)").
 - [x] **Botão do currículo** na coluna de identidade, depois de GitHub, LinkedIn e E-mail: ícone de PDF com `mask-image` (o `filetype-pdf` do Bootstrap Icons, o mesmo conjunto do ícone do GitHub; escolhido entre dez opções), o PDF do idioma ativo ("Currículo em PDF" ou "Resume (PDF)") numa aba nova. O E2E confere o endereço nos dois idiomas e que os dois PDFs são servidos como `application/pdf`.
 - [x] **Idioma do navegador** ([D19](#registro-de-decisões)): o site abre em português num navegador em português e em inglês em qualquer outro. O E2E fixa o navegador em `pt-BR` e confere pt-PT, en-US e es-ES, e que a escolha da bandeira não sobrevive a um reload. Com o site forçado a abrir sempre em PT, os três testes de inglês falharam, como deveriam.
-- [ ] Release: `package.json` em 2.1.0, os rótulos "v2.0" do site passam a "v2.1" (o card da v1 é exceção da [D4](#registro-de-decisões) e será combinado antes) e a tag `v2.1.0`.
+- [x] **Release:** `package.json` em 2.1.0, e os rótulos "v2.0" do site passam a "v2.1": o footer, o card da versão atual na seção Versões e o aviso de volta para o leitor de tela. O card "v2.0 · Em breve" dentro da v1 continua como está, porque ela é a cápsula do tempo de 2023 ([D17](#registro-de-decisões)). E2E completo, build de produção com os dois PDFs no `dist/` e a tag anotada `v2.1.0`.
+- [ ] Push na `main` e deploy no GitHub Actions, feitos pelo usuário depois do commit da release.
 
 ## Plano B: duas árvores React
 
@@ -357,3 +357,4 @@ Revisão de dependências na volta da pausa, em 2026-11-17:
 | 2026-11-19 | 7 | Conferência com o NVDA: o leitor ouve palavras, sem a decoração de código, e a viagem no tempo é anunciada; `vite.svg` removido. 119 testes E2E | `f4ce5be`, `5241100` |
 | 2026-11-19 | 7 | A miniatura da foto da família fica dentro do painel da seção no computador (em inglês, ela saía cortada pela esquerda). 240 execuções E2E sem falha, em duas rodadas | `2812a08` |
 | 2026-11-19 | 7 | Currículo em PDF (PT e EN, 1 página, gerado por `npm run resume`) e o botão dele na coluna de identidade, com o ícone de PDF escolhido entre dez opções. O site abre no idioma do navegador (D19). 130 testes E2E | `9125b28`, `83e34c9` |
+| 2026-11-19 | 7 | **v2.1.0 lançada.** `package.json` em 2.1.0 e os rótulos do site em "v2.1" (footer, seção Versões e o aviso do leitor de tela), com o card da v1 intacto (D17) | tag `v2.1.0` |

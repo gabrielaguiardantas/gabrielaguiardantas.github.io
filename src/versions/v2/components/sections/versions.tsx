@@ -27,7 +27,7 @@ function Versions() {
         </button>
       </div>
       <div className={`${styles.version} ${styles.current}`}>
-        <h3>v2.0</h3>
+        <h3>v2.1</h3>
         <p className={styles.meta}>{text.v2.meta}</p>
         <button type="button" disabled>
           {text.v2.action}

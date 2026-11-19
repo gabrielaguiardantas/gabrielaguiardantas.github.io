@@ -92,7 +92,7 @@ test.describe('switching between v2 and v1', () => {
     await openV1(page)
     await expect(announcer).toHaveText('Você está na versão 1.0 do portfólio, de 2023.')
     await backTo2026(page)
-    await expect(announcer).toHaveText('De volta à versão 2.0, de 2026.')
+    await expect(announcer).toHaveText('De volta à versão 2.1, de 2026.')
   })
 
   test('browser back from v1 returns to the versions section, then to the orbit', async ({ page }) => {

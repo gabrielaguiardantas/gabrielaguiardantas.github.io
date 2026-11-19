@@ -11,8 +11,8 @@ type HistoryState = { version?: Version } | null;
 // o aviso de chegada a cada época, para o leitor de tela: o NVDA não anuncia o foco no
 // iframe da v1, e a viagem ficava em silêncio
 const ARRIVAL: Record<Language, Record<Version, string>> = {
-  portuguese: { v1: "Você está na versão 1.0 do portfólio, de 2023.", v2: "De volta à versão 2.0, de 2026." },
-  english: { v1: "You are on version 1.0 of the portfolio, from 2023.", v2: "Back to version 2.0, from 2026." },
+  portuguese: { v1: "Você está na versão 1.0 do portfólio, de 2023.", v2: "De volta à versão 2.1, de 2026." },
+  english: { v1: "You are on version 1.0 of the portfolio, from 2023.", v2: "Back to version 2.1, from 2026." },
 };
 
 // uma promessa que outro trecho resolve depois (aqui, o load do iframe da v1)
