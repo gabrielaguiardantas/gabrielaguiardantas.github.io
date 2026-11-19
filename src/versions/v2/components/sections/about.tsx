@@ -91,14 +91,31 @@ type FamilyText = { label: string; photo: string; close: string };
 // a mesma margem lateral da página no celular
 const POPOVER_GUTTER = 16;
 
-// a miniatura nasce centralizada na palavra; se assim ela sairia da tela (a palavra no
-// começo ou no fim da linha), é empurrada para dentro, até a margem da página
-function keepInsideViewport(anchor: HTMLElement, popover: HTMLElement) {
-  const { left, width } = anchor.getBoundingClientRect();
-  const popoverWidth = popover.offsetWidth;
-  const centered = left + width / 2 - popoverWidth / 2;
-  const max = Math.max(POPOVER_GUTTER, document.documentElement.clientWidth - POPOVER_GUTTER - popoverWidth);
-  const inside = Math.min(Math.max(centered, POPOVER_GUTTER), max);
+// a faixa em que a miniatura aparece inteira: a largura da tela, recortada por cada contêiner
+// que corta o que passa da borda dele. No computador, é o painel da seção, com rolagem própria
+function visibleArea(element: HTMLElement) {
+  const area = { left: 0, right: document.documentElement.clientWidth };
+  for (let parent = element.parentElement; parent; parent = parent.parentElement) {
+    const { overflowX, overflowY } = getComputedStyle(parent);
+    if (overflowX === "visible" && overflowY === "visible") continue;
+    const box = parent.getBoundingClientRect();
+    area.left = Math.max(area.left, box.left);
+    area.right = Math.min(area.right, box.right);
+  }
+  return area;
+}
+
+// a miniatura nasce centralizada em cima da palavra; se assim ela sairia da área visível
+// (a palavra no começo ou no fim da linha), é empurrada para dentro, até a margem
+function keepInside(anchor: HTMLElement, popover: HTMLElement) {
+  const area = visibleArea(popover);
+  const word = anchor.getBoundingClientRect();
+  const width = popover.offsetWidth;
+
+  const centered = word.left + word.width / 2 - width / 2;
+  const min = area.left + POPOVER_GUTTER;
+  const max = Math.max(min, area.right - POPOVER_GUTTER - width);
+  const inside = Math.min(Math.max(centered, min), max);
   popover.style.setProperty("--shift", `${inside - centered}px`);
 }
 
@@ -119,7 +136,7 @@ function FamilyPhoto({ text }: { text: FamilyText }) {
     const anchor = anchorRef.current;
     const popover = popoverRef.current;
     if (!anchor || !popover) return;
-    const place = () => keepInsideViewport(anchor, popover);
+    const place = () => keepInside(anchor, popover);
     place();
     window.addEventListener("resize", place);
     return () => window.removeEventListener("resize", place);

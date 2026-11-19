@@ -140,7 +140,7 @@
   z-index: 5;
   width: min(320px, 80vw);
   padding-bottom: 10px;
-  /* --shift vem do about.tsx e mantém a miniatura dentro da tela */
+  /* --shift vem do about.tsx e mantém a miniatura dentro da área visível */
   transform: translateX(calc(-50% + var(--shift, 0px)));
   animation: photo-in calc(0.25s * var(--tempo)) var(--ease);
 }

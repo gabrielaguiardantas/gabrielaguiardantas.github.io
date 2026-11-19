@@ -484,6 +484,39 @@ test.describe('v2', () => {
       await expectSection(page, 'about')
     })
 
+    // no computador, o painel da seção tem rolagem própria e corta o que passa da borda dele;
+    // em inglês, "my family" cai no começo da linha e a miniatura saía cortada pela esquerda
+    test('on desktop the thumbnail stays inside the section panel, in both languages', async ({ page }, testInfo) => {
+      test.skip(testInfo.project.name === 'mobile', 'desktop only')
+      // sem a rolagem suave do palco: com ela, a palavra ainda se move quando o mouse chega
+      await page.emulateMedia({ reducedMotion: 'reduce' })
+      await page.reload()
+      await expectSection(page, 'about')
+      for (const [language, label] of [['Português', 'minha família'], ['English', 'my family']]) {
+        await page.getByRole('button', { name: language }).click()
+        for (const width of [1024, 1280, 1440, 1920]) {
+          await page.setViewportSize({ width, height: 900 })
+          const word = about(page).getByRole('button', { name: label })
+          await word.scrollIntoViewIfNeeded()
+          await word.hover()
+          await expect(thumbnail(page)).toBeVisible()
+          const frame = about(page).locator('button[aria-hidden="true"]')
+          await frame.evaluate((element) => Promise.all(element.parentElement!.getAnimations().map((a) => a.finished)))
+          const box = (await frame.boundingBox())!
+          const clip = await frame.evaluate((element) => {
+            let parent = element.parentElement
+            while (parent && getComputedStyle(parent).overflowX === 'visible') parent = parent.parentElement
+            const rect = parent!.getBoundingClientRect()
+            return { left: rect.left, right: rect.right }
+          })
+          expect(box.x, `${language} ${width}px, left edge`).toBeGreaterThanOrEqual(clip.left + 15.5)
+          expect(box.x + box.width, `${language} ${width}px, right edge`).toBeLessThanOrEqual(clip.right - 15.5)
+          await page.mouse.move(5, 5)
+          await expect(thumbnail(page)).toHaveCount(0)
+        }
+      }
+    })
+
     test('a tap shows the thumbnail, and a tap on it enlarges the photo', async ({ browser }) => {
       const context = await browser.newContext({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true })
       const page = await context.newPage()
