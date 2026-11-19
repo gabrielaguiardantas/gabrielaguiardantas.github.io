@@ -13,6 +13,8 @@ export default defineConfig({
     baseURL: `http://localhost:${PORT}`,
     // usa o Google Chrome instalado na máquina, sem baixar navegadores do Playwright
     channel: 'chrome',
+    // a v2 abre no idioma do navegador (D19): fixo em português, os testes não dependem da máquina
+    locale: 'pt-BR',
     trace: 'on-first-retry',
     launchOptions: { slowMo: Number(process.env.SLOWMO ?? 0) },
   },

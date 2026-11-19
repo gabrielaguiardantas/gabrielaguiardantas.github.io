@@ -56,7 +56,7 @@ test.describe('v2', () => {
   })
 
   test.describe('identity column', () => {
-    test('renders in Portuguese by default', async ({ page }) => {
+    test('renders in Portuguese for a browser in Portuguese', async ({ page }) => {
       const identity = page.locator('aside')
       await expect(identity.getByRole('heading', { level: 1 })).toHaveText('Gabriel Aguiar Dantas')
       await expect(identity).toContainText('Desenvolvedor Full Stack')
@@ -76,6 +76,33 @@ test.describe('v2', () => {
       await page.getByRole('button', { name: 'Português' }).click()
       await expect(identity).toContainText('Desenvolvedor Full Stack')
       await expect(page.locator('html')).toHaveAttribute('lang', 'pt-BR')
+    })
+
+    // D19: português em PT, qualquer outro idioma em inglês
+    for (const [locale, label, lang] of [
+      ['pt-PT', 'Português', 'pt-BR'],
+      ['en-US', 'English', 'en'],
+      ['es-ES', 'English', 'en'],
+    ] as const) {
+      test.describe(`with the browser in ${locale}`, () => {
+        test.use({ locale })
+
+        test(`opens in ${label}`, async ({ page }) => {
+          await expect(page.getByRole('button', { name: label })).toHaveAttribute('aria-pressed', 'true')
+          await expect(page.locator('html')).toHaveAttribute('lang', lang)
+        })
+      })
+    }
+
+    test.describe('with the browser in en-US', () => {
+      test.use({ locale: 'en-US' })
+
+      test('the flag choice lasts only for the visit', async ({ page }) => {
+        await page.getByRole('button', { name: 'Português' }).click()
+        await expect(page.locator('aside')).toContainText('Desenvolvedor Full Stack')
+        await page.reload()
+        await expect(page.getByRole('button', { name: 'English' })).toHaveAttribute('aria-pressed', 'true')
+      })
     })
 
     test('links only the official channels', async ({ page }) => {
