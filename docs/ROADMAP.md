@@ -28,7 +28,7 @@ _Atualizado em 2026-11-19._
   - A [Fase 3](#fase-3-conteúdo-da-v2) está **concluída**: todo o conteúdo da v2 foi revisado e alinhado ao LinkedIn e ao GitHub ([D17](#registro-de-decisões)).
   - A [Fase 4](#fase-4-efeito-volta-no-tempo) está **concluída**: toda troca de versão passa pela volta no tempo ([D18](#registro-de-decisões)).
   - A [Fase 6](#fase-6-release-v20) está **concluída**: a v2.0 foi lançada, com a tag `v2.0.0`.
-  - A [Fase 7](#fase-7-v210) está **em andamento**: a miniatura da foto no celular e a leitura pelo NVDA foram corrigidas, e o `vite.svg` sem uso saiu.
+  - A [Fase 7](#fase-7-v210) está **em andamento**: a miniatura da foto (no celular e no computador) e a leitura pelo NVDA foram corrigidas, e o `vite.svg` sem uso saiu.
 - **Próximo passo:** o currículo em PDF e o botão para ele na coluna de identidade; depois, a release da v2.1.0.
 - **Decisões pendentes:**
   - currículo: uma ou duas páginas, só PT ou PT e EN, e como gerar o PDF ([Fase 7](#fase-7-v210));
@@ -286,6 +286,7 @@ Revisão de dependências na volta da pausa, em 2026-11-17:
 🟨 Em andamento desde 2026-11-19. As correções encontradas depois do lançamento e o botão do currículo saem juntos numa única versão, a **v2.1.0**, por decisão do usuário: sem um patch 2.0.1 só para as correções.
 
 - [x] **Miniatura da foto no celular:** centralizada sobre "minha família", ela saía cortada pela borda quando a palavra caía no começo ou no fim da linha (relatado num Redmi Note 11S: 393 px, com a Roboto). Agora ela é empurrada para dentro da margem de 16 px, e "minha família" não quebra mais a linha. O E2E abre a miniatura em larguras de 340 a 430 px.
+- [x] **Miniatura da foto no computador:** o painel da seção tem rolagem própria e corta o que passa da borda dele. Em inglês, "my family" começa a linha, e a miniatura saía cortada pela esquerda em todas as larguras. Ela agora fica na faixa visível: a largura da tela recortada pelos contêineres que cortam (o painel no computador, a tela no celular). O E2E confere os dois idiomas em quatro larguras.
 - [x] **Conferência com um leitor de tela**, pendente desde a Fase 6. Feita com o NVDA 2026.3 portátil, pilotado pelo Guidepup a partir do Playwright, com o registro em texto de tudo o que ele falou. Os ajustes, sem mudar nada na tela (as capturas antes e depois são idênticas):
   - o `//` dos rótulos e o `↗` dos links ficam com `aria-hidden`: o NVDA lia "barra barra trajetória" e "seta para cima e para a direita";
   - o texto do guia para o leitor diz "GAD", e não "menor GAD barra maior";
@@ -352,3 +353,4 @@ Revisão de dependências na volta da pausa, em 2026-11-17:
 | 2026-11-18 | 6 | Prévia ajustada pelo Post Inspector do LinkedIn: "Portfólio" no título e na imagem, que ganhou outro nome para escapar do cache | `9bdee3d`, `11d1320` |
 | 2026-11-19 | 7 | A miniatura da foto da família fica dentro da tela no celular (Redmi Note 11S) | `2c57103` |
 | 2026-11-19 | 7 | Conferência com o NVDA: o leitor ouve palavras, sem a decoração de código, e a viagem no tempo é anunciada; `vite.svg` removido. 119 testes E2E | `f4ce5be`, `5241100` |
+| 2026-11-19 | 7 | A miniatura da foto da família fica dentro do painel da seção no computador (em inglês, ela saía cortada pela esquerda). 240 execuções E2E sem falha, em duas rodadas | `2812a08` |
