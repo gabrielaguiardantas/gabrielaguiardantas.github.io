@@ -87,11 +87,13 @@ function Identity({ children }: { children?: ReactNode }) {
               key={id}
               type="button"
               aria-pressed={language === id}
+              aria-label={label}
               title={label}
               onClick={() => setLanguage(id)}
               data-orbit-avoid="box"
             >
-              <img src={flag} alt={label} />
+              {/* a bandeira é decorativa: o nome fica no botão, e o NVDA não diz mais "gráfico" */}
+              <img src={flag} alt="" />
             </button>
           ))}
         </div>

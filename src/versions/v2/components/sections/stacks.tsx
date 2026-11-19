@@ -34,11 +34,14 @@ function Stacks() {
         <div key={label.english}>
           <dt>{label[language]}</dt>
           <dd>
-            {items.map((item) => (
-              <span key={item} className={styles.chip}>
-                {language === "english" ? (ENGLISH[item] ?? item) : item}
-              </span>
-            ))}
+            {/* em lista: o leitor de tela lia os chips colados ("HTMLCSS", "POOSOLID") */}
+            <ul className={styles.stackChips}>
+              {items.map((item) => (
+                <li key={item} className={styles.chip}>
+                  {language === "english" ? (ENGLISH[item] ?? item) : item}
+                </li>
+              ))}
+            </ul>
           </dd>
         </div>
       ))}

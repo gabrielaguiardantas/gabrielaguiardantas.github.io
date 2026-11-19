@@ -81,7 +81,8 @@ function Guide({ route, pointed, hidden }: GuideProps) {
       <span className={`${styles.tag} ${styles.close}`} aria-hidden="true">
         <span className={styles.bracket}>&lt;/</span>p<span className={styles.bracket}>&gt;</span>
       </span>
-      <span className={styles.srOnly}>{text}</span>
+      {/* o "<GAD />" do texto vira "GAD": o NVDA lia "menor GAD barra maior" */}
+      <span className={styles.srOnly}>{text.replaceAll("<GAD />", "GAD")}</span>
     </p>
   );
 }

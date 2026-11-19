@@ -249,10 +249,16 @@
 }
 
 .stackGroups dd {
+  margin: 0;
+}
+
+.stackChips {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 /* ---------- Projetos: lista ---------- */
@@ -263,7 +269,7 @@
   list-style: none;
 }
 
-.projects li {
+.projects > li {
   display: grid;
   grid-template-columns: 5.5rem 1fr auto;
   gap: 6px 18px;
@@ -271,7 +277,7 @@
   border-top: 1px solid var(--line);
 }
 
-.projects li:last-child {
+.projects > li:last-child {
   border-bottom: 1px solid var(--line);
 }
 
@@ -300,7 +306,9 @@
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin-top: 4px;
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
 }
 
 .section .note {
@@ -459,7 +467,7 @@
     gap: 4px;
   }
 
-  .projects li {
+  .projects > li {
     grid-template-columns: 1fr auto;
   }
 

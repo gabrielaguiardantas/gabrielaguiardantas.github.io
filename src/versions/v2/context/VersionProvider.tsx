@@ -8,6 +8,13 @@ import styles from "./VersionProvider.module.css";
 
 type HistoryState = { version?: Version } | null;
 
+// o aviso de chegada a cada época, para o leitor de tela: o NVDA não anuncia o foco no
+// iframe da v1, e a viagem ficava em silêncio
+const ARRIVAL: Record<Language, Record<Version, string>> = {
+  portuguese: { v1: "Você está na versão 1.0 do portfólio, de 2023.", v2: "De volta à versão 2.0, de 2026." },
+  english: { v1: "You are on version 1.0 of the portfolio, from 2023.", v2: "Back to version 2.0, from 2026." },
+};
+
 // uma promessa que outro trecho resolve depois (aqui, o load do iframe da v1)
 function deferred() {
   let resolve!: () => void;
@@ -27,6 +34,8 @@ function VersionProvider({ children }: { children: ReactNode }) {
   const [travel, setTravel] = useState<{ id: number; to: Version } | null>(null);
   // idioma com que a v1 foi carregada; null enquanto ela nunca foi aberta
   const [frameLanguage, setFrameLanguage] = useState<Language | null>(null);
+  // o texto fica fixo no idioma da viagem: trocar o idioma depois não repete o aviso
+  const [announcement, setAnnouncement] = useState("");
   const { language } = useLanguage();
   const reduced = useReducedMotion();
   const languageRef = useRef(language);
@@ -134,10 +143,21 @@ function VersionProvider({ children }: { children: ReactNode }) {
             reduced={reduced}
             language={language}
             onSwap={() => setShown(travel.to)}
-            onDone={() => setTravel((current) => (current?.id === travel.id ? null : current))}
+            onDone={() => {
+              setTravel((current) => (current?.id === travel.id ? null : current));
+              setAnnouncement(ARRIVAL[language][travel.to]);
+            }}
           />,
           document.body,
         )}
+      {/* fora do #root, que fica inerte com a v1 na frente; existe desde o início, porque o
+          leitor de tela só anuncia mudanças numa região que já estava na página */}
+      {createPortal(
+        <p role="status" className={styles.announcer}>
+          {announcement}
+        </p>,
+        document.body,
+      )}
     </VersionContext>
   );
 }

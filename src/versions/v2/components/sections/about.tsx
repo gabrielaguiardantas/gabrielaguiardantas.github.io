@@ -2,6 +2,7 @@ import { type FocusEvent, type KeyboardEvent, type ReactNode, useLayoutEffect, u
 import { createPortal } from "react-dom";
 import familyPhoto from "../../assets/family_img.jpg";
 import { useLanguage } from "../../context/language";
+import { Slashes } from "./decoration";
 import styles from "./sections.module.css";
 
 // os mesmos links do README do GitHub, para os canais contarem a mesma história
@@ -21,7 +22,7 @@ const TEXT = {
   portuguese: {
     intro:
       "Sou Desenvolvedor Full Stack com quase 3 anos de experiência em uma Insurtech, na sustentação e evolução de uma plataforma de seguros em produção (Node.js, React e MariaDB) utilizada por três grandes seguradoras.",
-    recent: "// experiência recente",
+    recent: "experiência recente",
     achievements: [
       "Mais de 150 tickets entregues entre novas funcionalidades e correções de bugs, em um sistema legado com regras de negócio críticas do setor de seguros.",
       "Participação, em time, na entrega de funcionalidades centrais da plataforma, como o módulo de administração e a seção de grupo econômico nas análises de crédito.",
@@ -32,7 +33,7 @@ const TEXT = {
       "Minha trajetória une visão de negócio e rigor técnico: sou graduado em Ciências Econômicas (UFES) e graduando em Ciência da Computação (UVV). A vivência no IBGE consolidou habilidades de comunicação, empatia e resolução de problemas.",
     practice:
       "Na Fitinsur, pude aplicar todo esse ferramental de estudo em situações práticas: as regras de negócio do seguro, as dores do dia a dia de quem usa o sistema e problemas reais que precisavam de solução em produção.",
-    journey: "// trajetória",
+    journey: "trajetória",
     timeline: [
       { period: "2007 – 2012", place: "UFES", role: "Ciências Econômicas" },
       { period: "03/2017 – 03/2020", place: "IBGE", role: "Agente de Pesquisa e Mapeamento" },
@@ -40,7 +41,7 @@ const TEXT = {
       { period: "01/2024 – 10/2026", place: "Fitinsur", role: "Desenvolvedor Full Stack Júnior" },
       { period: "07/2026 – hoje", place: "UVV", role: "Ciência da Computação" },
     ] satisfies { period: string; place: Place; role: string }[],
-    start: "// como comecei",
+    start: "como comecei",
     story: (family: ReactNode) => (
       <>
         Em 2021, ao saber da gravidez da minha então namorada (hoje esposa), decidi correr atrás da paixão por
@@ -54,7 +55,7 @@ const TEXT = {
   english: {
     intro:
       "I'm a Full Stack Developer with almost 3 years of experience at an Insurtech, maintaining and evolving an insurance platform in production (Node.js, React and MariaDB) used by three major insurers.",
-    recent: "// recent experience",
+    recent: "recent experience",
     achievements: [
       "150+ tickets delivered, including new features and bug fixes, in a legacy system with critical insurance business rules.",
       "Worked as part of the team delivering core platform features, such as the admin module and the corporate group section in credit analyses.",
@@ -65,7 +66,7 @@ const TEXT = {
       "My path combines business insight and technical rigor: I hold a degree in Economics (UFES) and I'm studying Computer Science (UVV). My time at IBGE strengthened my communication, empathy and problem-solving skills.",
     practice:
       "At Fitinsur, I put all those studies into practice: insurance business rules, the everyday pain points of the people using the system, and real problems that needed solving in production.",
-    journey: "// journey",
+    journey: "journey",
     timeline: [
       { period: "2007 – 2012", place: "UFES", role: "Economics" },
       { period: "03/2017 – 03/2020", place: "IBGE", role: "Research and Mapping Agent" },
@@ -73,7 +74,7 @@ const TEXT = {
       { period: "01/2024 – 10/2026", place: "Fitinsur", role: "Junior Full Stack Developer" },
       { period: "07/2026 – present", place: "UVV", role: "Computer Science" },
     ] satisfies { period: string; place: Place; role: string }[],
-    start: "// how I started",
+    start: "how I started",
     story: (family: ReactNode) => (
       <>
         In 2021, when I learned my then-girlfriend (now wife) was pregnant, I decided to pursue the passion for
@@ -199,7 +200,10 @@ function About() {
   return (
     <>
       <p>{text.intro}</p>
-      <p className={styles.eyebrow}>{text.recent}</p>
+      <p className={styles.eyebrow}>
+        <Slashes />
+        {text.recent}
+      </p>
       <ul className={styles.achievements}>
         {text.achievements.map((achievement) => (
           <li key={achievement}>{achievement}</li>
@@ -207,7 +211,10 @@ function About() {
       </ul>
       <p>{text.education}</p>
       <p>{text.practice}</p>
-      <p className={styles.eyebrow}>{text.journey}</p>
+      <p className={styles.eyebrow}>
+        <Slashes />
+        {text.journey}
+      </p>
       <ol className={styles.timeline}>
         {text.timeline.map(({ period, place, role }) => (
           <li key={place}>
@@ -221,7 +228,10 @@ function About() {
           </li>
         ))}
       </ol>
-      <p className={styles.eyebrow}>{text.start}</p>
+      <p className={styles.eyebrow}>
+        <Slashes />
+        {text.start}
+      </p>
       <p>{text.story(<FamilyPhoto text={text.family} />)}</p>
     </>
   );

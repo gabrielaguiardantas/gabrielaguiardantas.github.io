@@ -85,6 +85,16 @@ test.describe('switching between v2 and v1', () => {
     await expect(v2Versions(page).getByRole('button', { name: LABELS.portuguese.open })).toBeFocused()
   })
 
+  // o NVDA não anuncia o foco no iframe: sem este aviso, a viagem ficava em silêncio
+  test('screen readers hear the arrival at each version', async ({ page }) => {
+    const announcer = page.getByRole('status')
+    await expect(announcer).toHaveText('')
+    await openV1(page)
+    await expect(announcer).toHaveText('Você está na versão 1.0 do portfólio, de 2023.')
+    await backTo2026(page)
+    await expect(announcer).toHaveText('De volta à versão 2.0, de 2026.')
+  })
+
   test('browser back from v1 returns to the versions section, then to the orbit', async ({ page }) => {
     await openV1(page)
     await browserBack(page)

@@ -314,7 +314,7 @@ test.describe('v2', () => {
       await expect(panelSection(page, 'projects').getByRole('link', { name: /^Código de .* no GitHub$/ })).toHaveCount(6)
       await expect(panelSection(page, 'projects')).toContainText('O código do meu trabalho na Fitinsur é privado')
       // depois da seleção, o link para todos os repositórios
-      await expect(panelSection(page, 'projects').getByRole('link', { name: '// todos os repositórios no GitHub ↗' })).toHaveAttribute(
+      await expect(panelSection(page, 'projects').getByRole('link', { name: 'todos os repositórios no GitHub', exact: true })).toHaveAttribute(
         'href',
         'https://github.com/gabrielaguiardantas?tab=repositories',
       )
@@ -590,6 +590,35 @@ test.describe('v2', () => {
       await page.reload()
       await expectSection(page, 'projects')
       expect(await page.evaluate(() => document.activeElement === document.body)).toBe(true)
+    })
+
+    // o que o leitor de tela recebe, conferido com o NVDA: palavras, sem a decoração de código
+    test('screen readers hear words, not code decoration', async ({ page }, testInfo) => {
+      test.skip(testInfo.project.name === 'mobile', 'the same markup; the guide is hidden on mobile')
+      // o guia diz "GAD", e não "menor GAD barra maior"
+      await expect(guide(page).locator('span').last()).toHaveText(
+        nb('Bem-vindo ao meu portfólio. Tudo aqui orbita o GAD: clique nele para explorar.'),
+        { timeout: 6000 },
+      )
+      // as bandeiras são decorativas: o nome está no botão, sem "gráfico"
+      await expect(page.getByRole('group', { name: 'Idioma' }).getByRole('img')).toHaveCount(0)
+      await expect(page.getByRole('button', { name: 'Português' })).toHaveAttribute('aria-pressed', 'true')
+      // nenhuma seção tem "//" (barra barra) nem "↗" (seta para cima e para a direita) para o
+      // leitor; as linhas /url ficam de fora, porque o "https://" dos links não é lido
+      for (const id of ['about', 'stacks', 'projects', 'versions', 'contact']) {
+        await page.goto(`/#${id}`)
+        await expectSection(page, id)
+        const spoken = (await panelSection(page, id).ariaSnapshot())
+          .split('\n')
+          .filter((line) => !line.includes('/url:'))
+          .join('\n')
+        expect(spoken, id).not.toMatch(/\/\/|↗/)
+      }
+      // os chips são itens de lista, lidos um a um ("HTML", "CSS", e não "HTMLCSS")
+      await page.goto('/#stacks')
+      for (const chip of ['HTML', 'CSS', 'POO', 'SOLID']) {
+        await expect(panelSection(page, 'stacks').getByRole('listitem').filter({ hasText: new RegExp(`^${chip}$`) })).toHaveCount(1)
+      }
     })
 
     test('the tab title says where you are, in the current language', async ({ page }) => {

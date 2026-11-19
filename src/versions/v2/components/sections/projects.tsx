@@ -1,4 +1,5 @@
 import { useLanguage } from "../../context/language";
+import { Arrow, Slashes } from "./decoration";
 import styles from "./sections.module.css";
 
 // os mesmos 6 projetos fixados no GitHub, com as descrições e as stacks do README do perfil (Fase 3)
@@ -80,7 +81,7 @@ const NOTE = {
 // a lista completa, para quem quiser ver além da seleção
 const ALL_REPOSITORIES = {
   href: "https://github.com/gabrielaguiardantas?tab=repositories",
-  label: { portuguese: "// todos os repositórios no GitHub ↗", english: "// all repositories on GitHub ↗" },
+  label: { portuguese: "todos os repositórios no GitHub", english: "all repositories on GitHub" },
 };
 
 const REPO_LABEL = {
@@ -99,26 +100,30 @@ function Projects() {
             <span className={styles.year}>{year}</span>
             <h3>{name[language]}</h3>
             <p>{description[language]}</p>
-            <div className={styles.chips}>
+            {/* em lista: o leitor de tela lê cada stack separada, sem colar uma na outra */}
+            <ul className={styles.chips}>
               {stacks.map((stack) => (
-                <span key={stack} className={styles.chip}>
+                <li key={stack} className={styles.chip}>
                   {stack}
-                </span>
+                </li>
               ))}
-            </div>
+            </ul>
             <a
               href={`https://github.com/gabrielaguiardantas/${repo}`}
               target="_blank"
               rel="noopener noreferrer"
               aria-label={REPO_LABEL[language](name[language])}
             >
-              repo ↗
+              repo
+              <Arrow />
             </a>
           </li>
         ))}
       </ul>
       <a className={styles.allRepositories} href={ALL_REPOSITORIES.href} target="_blank" rel="noopener noreferrer">
+        <Slashes />
         {ALL_REPOSITORIES.label[language]}
+        <Arrow />
       </a>
     </>
   );
